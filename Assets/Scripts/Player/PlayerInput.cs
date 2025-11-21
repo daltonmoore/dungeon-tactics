@@ -1,4 +1,7 @@
 using System;
+using EventBus;
+using Events;
+using Units;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +12,12 @@ namespace Player
         [SerializeField] private Rigidbody2D cameraTarget;
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private new Camera camera;
+        [SerializeField] private GameObject cursor;
+
+        private void Awake()
+        {
+            Bus<GridCellHighlighted>.OnEvent[Owner.Player1] += HandleGridCellHighlighted; 
+        }
 
         private void Start()
         {
@@ -86,6 +95,11 @@ namespace Player
             }
             
             return moveAmount;
+        }
+        
+        private void HandleGridCellHighlighted(GridCellHighlighted args)
+        {
+            cursor.transform.position = args.GridCell.transform.position;
         }
     }
 }

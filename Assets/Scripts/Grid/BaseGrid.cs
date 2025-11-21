@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Grid
 {
@@ -22,7 +23,7 @@ namespace Grid
                     square.name = $"Grid Cell ({x}, {y})";
                     square.transform.position = new Vector3(x, y, -1);
                     square.transform.localScale = new Vector3(.75f, .75f, .75f);
-                    square.AddComponent<GridCell>();
+                    square.AddComponent<GridCell>().Configure(gridConfig);
                 }
             }
         }

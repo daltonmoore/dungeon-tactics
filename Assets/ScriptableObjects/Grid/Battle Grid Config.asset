@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f58e44d9974c0fa770e2926e525a66, type: 3}
   m_Name: Battle Grid Config
   m_EditorClassIdentifier: 
-  <GridSize>k__BackingField: {x: 10, y: 10}
+  <GridSize>k__BackingField: {x: 5, y: 5}
+  <HighlightScale>k__BackingField: 0.85
+  <HighlightScaleLerpDuration>k__BackingField: 0.1

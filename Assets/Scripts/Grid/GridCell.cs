@@ -1,5 +1,8 @@
 using System;
 using DG.Tweening;
+using EventBus;
+using Events;
+using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,6 +12,7 @@ namespace Grid
     public class GridCell : MonoBehaviour, IPointerEnterHandler
     {
         private BoxCollider2D _boxCollider2D;
+        private GridConfig _gridConfig;
         
         private void Awake()
         {
@@ -17,9 +21,16 @@ namespace Grid
             gameObject.layer = LayerMask.NameToLayer("Grid");
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public void Configure(GridConfig gridConfig)
         {
-            transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), .5f).onComplete += () => transform.DOScale(Vector3.one * .75f, .5f);
+            _gridConfig = gridConfig;
+        }
+
+        public void OnPointerEnter(PointerEventData _)
+        {
+            transform.DOScale(Vector3.one * _gridConfig.HighlightScale, _gridConfig.HighlightScaleLerpDuration)
+                .onComplete += () => transform.DOScale(Vector3.one * .75f, _gridConfig.HighlightScaleLerpDuration);
+            Bus<GridCellHighlighted>.Raise(Owner.Player1, new GridCellHighlighted(this));
         }
     }
 }

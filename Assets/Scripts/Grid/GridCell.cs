@@ -5,15 +5,17 @@ using Events;
 using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace Grid
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class GridCell : MonoBehaviour, IPointerEnterHandler
     {
-        private BoxCollider2D _boxCollider2D;
-        private GridConfig _gridConfig;
+        [SerializeField] private GridConfig gridConfig;
         
+        private BoxCollider2D _boxCollider2D;
+
         private void Awake()
         {
             _boxCollider2D = GetComponent<BoxCollider2D>();
@@ -23,13 +25,13 @@ namespace Grid
 
         public void Configure(GridConfig gridConfig)
         {
-            _gridConfig = gridConfig;
+            this.gridConfig = gridConfig;
         }
 
         public void OnPointerEnter(PointerEventData _)
         {
-            transform.DOScale(Vector3.one * _gridConfig.HighlightScale, _gridConfig.HighlightScaleLerpDuration)
-                .onComplete += () => transform.DOScale(Vector3.one * .75f, _gridConfig.HighlightScaleLerpDuration);
+            transform.DOScale(Vector3.one * gridConfig.HighlightScale, gridConfig.HighlightScaleLerpDuration)
+                .onComplete += () => transform.DOScale(Vector3.one * gridConfig.DefaultScale, gridConfig.HighlightScaleLerpDuration);
             Bus<GridCellHighlighted>.Raise(Owner.Player1, new GridCellHighlighted(this));
         }
     }

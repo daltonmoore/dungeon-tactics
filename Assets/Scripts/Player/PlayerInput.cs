@@ -272,7 +272,8 @@ namespace Player
                 interactableLayers | floorLayers);
             
             if (Mouse.current.rightButton.wasReleasedThisFrame
-                && hit.collider != null)
+                && hit.collider != null
+                && abstractUnit != null)
             {
                 CommandContext context = new(_selectedUnit as AbstractCommandable, hit, MouseButton.Right);
                 foreach (ICommand command in GetAvailableCommands(abstractUnit))

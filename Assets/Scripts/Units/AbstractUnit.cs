@@ -11,11 +11,14 @@ namespace Units
         [SerializeField] private Transform flagPrefab;
         [SerializeField] protected float moveSpeed = 10f;
         
+        protected UnitSO unitSO;
+        
         private Transform _flagParent;
 
         protected override void Awake()
         {
             base.Awake();
+            unitSO = UnitSO as UnitSO;
             _flagParent = new GameObject("MoveFlags").transform;
         }
 
@@ -46,6 +49,9 @@ namespace Units
                 Destroy(flag.gameObject);
             }
 
+            Color flagColor = Color.white;
+            int movePointsLeft = unitSO.MovePoints;
+            
             if (path.Count > 1)
             {
                 path.RemoveAt(0);
@@ -55,9 +61,11 @@ namespace Units
                     using (Draw.ingame.WithDuration(2))
                     {
                         Draw.ingame.WireBox(position, Vector3.one * 0.2f, Color.red);
-                        Transform flag = Instantiate(flagPrefab, position, Quaternion.identity);
-                        flag.SetParent(_flagParent);
                     }
+                    
+                    Transform flag = Instantiate(flagPrefab, position, Quaternion.identity);
+                    flag.SetParent(_flagParent);
+                    flag.GetComponent<SpriteRenderer>().color = flagColor;
                 }
             }
         }

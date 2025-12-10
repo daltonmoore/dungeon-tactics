@@ -299,11 +299,11 @@ MonoBehaviour:
   <Transform>k__BackingField: {fileID: 0}
   <IsSelected>k__BackingField: 0
   <Owner>k__BackingField: 1
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: 2354da1c0028ac0428343cac8e35fd6f, type: 2}
   decal: {fileID: 7197680728652791222}
   debug: 0
   flagPrefab: {fileID: 8678833910985855508, guid: 2507468262cd99f43af120aa93219dd5, type: 3}
   moveSpeed: 10
-  testingPathfindingHex: {fileID: 0}
 --- !u!61 &7343889933313293715
 BoxCollider2D:
   m_ObjectHideFlags: 0

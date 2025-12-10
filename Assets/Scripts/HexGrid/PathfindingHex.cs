@@ -1,47 +1,55 @@
+using System;
 using System.Collections.Generic;
+using Dalton.Utils;
+using Drawing;
+using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace HexGrid
 {
     public class PathfindingHex
     {
-        private static readonly Vector3 DEBUG_VISUAL_OFFSET = new Vector3(1.0f, 0.5f);
-
-        private const int MOVE_STRAIGHT_COST = 10;
-        private const int MOVE_DIAGONAL_COST = 14;
+        public const int MOVE_STRAIGHT_COST = 10;
+        public const int MOVE_DIAGONAL_COST = 10;
         private const int DEBUG_VISUAL_SCALE_MULTIPLIER = 4;
         private const string SORTING_LAYER = "Player";
 
         public GridHex<PathNodeHex> grid { get; }
 
-        private bool _showDebug = true; 
         private SpriteRenderer[,] _debugWalkableArray;
+        private SpriteRenderer[,] _debugTerrainArray;
         private List<PathNodeHex> _openList;
-        private List<PathNodeHex> _closedList; 
+        private List<PathNodeHex> _closedList;
+
+        readonly Transform _debugRoot;
         
     
         public PathfindingHex(int width, int height, float cellSize, Transform pfHex)
         {
             grid = new GridHex<PathNodeHex>(width, height, cellSize, Vector3.zero, (g, x, y) => new PathNodeHex(g, x, y));
-
-            if (!_showDebug) return;
         
+            
+            // ------------------------------ DEBUG VISUALS ------------------------------
             _debugWalkableArray = new SpriteRenderer[width, height];
+            _debugTerrainArray = new SpriteRenderer[width, height];
+            
+            _debugRoot = new GameObject("DebugRoot").transform;
             Transform debugWalkableSquares = new GameObject("DebugWalkableSquares").transform;
+            debugWalkableSquares.SetParent(_debugRoot);
+            Transform debugTerrainSquares = new GameObject("DebugTerrainSquares").transform;
+            debugTerrainSquares.SetParent(_debugRoot);
             Transform hexVisuals = new GameObject("HexVisuals").transform;
+            
             for (int x = 0; x < grid.width; x++)
             {
                 for (int y = 0; y < grid.height; y++)
                 {
-                    float squareSize = 4f;
-                    Sprite squareSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, squareSize, squareSize), new Vector2(0f, 0f), 100);
-                    SpriteRenderer spriteRenderer = new GameObject($"DebugWalkableSquare ({x}, {y})").AddComponent<SpriteRenderer>();
-                    spriteRenderer.sprite = squareSprite;
-                    spriteRenderer.transform.position = grid.GetWorldPosition(x, y) - DEBUG_VISUAL_OFFSET;
-                    spriteRenderer.transform.localScale *= cellSize * DEBUG_VISUAL_SCALE_MULTIPLIER;
-                    spriteRenderer.transform.SetParent(debugWalkableSquares);
-                    spriteRenderer.sortingLayerName = SORTING_LAYER;
+                    SpriteRenderer spriteRenderer = CreateDebugSquare(cellSize, x, y, debugWalkableSquares, "W");
                     _debugWalkableArray[x, y] = spriteRenderer;
+                    
+                    spriteRenderer = CreateDebugSquare(cellSize, x, y, debugTerrainSquares,"T", 2);
+                    _debugTerrainArray[x, y] = spriteRenderer;
                     
                     Transform visualTransform =  GameObject.Instantiate(pfHex, grid.GetWorldPosition(x, y), Quaternion.identity);
                     visualTransform.SetParent(hexVisuals);
@@ -54,7 +62,62 @@ namespace HexGrid
             grid.OnGridObjectChanged += (sender, args) =>
             {
                 _debugWalkableArray[args.x, args.y].color = args.gridObject.walkable ? Color.green : Color.red;
+
+                Color GetColor()
+                {
+                    switch (args.gridObject.terrainType)
+                    {
+                        case TerrainType.Forest:
+                            return Color.blue;
+                        case TerrainType.Grass:
+                            return Color.green;
+                        default:
+                            return Color.white;
+                    }
+                }
+
+                _debugTerrainArray[args.x, args.y].color = GetColor();
             };
+        }
+
+        private SpriteRenderer CreateDebugSquare(float cellSize, int x, int y, Transform parentNode, string squareName, int slot = 1)
+        {
+            float squareSize = 4f;
+            Sprite squareSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, squareSize, squareSize), new Vector2(0f, 0f), 100);
+            Vector3 pos = GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / 2.5f);
+            
+            using (Draw.WithDuration(4))
+            {
+                Draw.ingame.Circle(
+                    pos,
+                    Vector3.forward, 
+                    cellSize / 20,
+                    Color.black);
+            }
+            
+            TextMeshPro text = Utils.CreateWorldText(
+                $"{squareName}",
+                null,
+                pos,
+                Mathf.RoundToInt(cellSize),
+                Color.black,
+                TextAlignmentOptions.Center);
+            text.sortingLayerID = SortingLayer.NameToID(SORTING_LAYER);
+            text.transform.SetParent(parentNode);
+            
+            SpriteRenderer spriteRenderer = new GameObject($"({x}, {y})").AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = squareSprite;
+            spriteRenderer.transform.position = pos;
+            spriteRenderer.transform.localScale *= cellSize * DEBUG_VISUAL_SCALE_MULTIPLIER;
+            spriteRenderer.transform.SetParent(parentNode);
+            spriteRenderer.sortingLayerName = SORTING_LAYER;
+            
+            return spriteRenderer;
+        }
+
+        private Vector3 GetRandomPointInHex(Vector3 center, float radius)
+        {
+            return center + radius * (Vector3)Random.insideUnitCircle;
         }
 
         public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition)
@@ -111,8 +174,9 @@ namespace HexGrid
                         _closedList.Add(neighbor);
                         continue;
                     }
-                
-                    int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbor);
+
+                    int tentativeGCost = currentNode.gCost * (int)currentNode.terrainType +
+                                         CalculateDistanceCost(currentNode, neighbor);
                     if (tentativeGCost < neighbor.gCost)
                     {
                         neighbor.gCost = tentativeGCost;
@@ -212,6 +276,11 @@ namespace HexGrid
                 }
             }
             return lowestFCostNode;
+        }
+
+        public void UpdateDebugVisuals(bool debug)
+        {
+            _debugRoot.gameObject.SetActive(debug);
         }
     }
 }

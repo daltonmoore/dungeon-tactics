@@ -10,6 +10,7 @@ public class PathNodeHex
     public int hCost;
     public int fCost;
     public bool walkable;
+    public TerrainType terrainType;
     public PathNodeHex parent;
     public Transform VisualTransform;
     
@@ -32,6 +33,12 @@ public class PathNodeHex
         _grid.TriggerGridObjectChanged(x, y, this);
     }
     
+    public void SetTerrainType(TerrainType value)
+    {
+        terrainType = value;
+        _grid.TriggerGridObjectChanged(x, y, this);
+    }
+    
     public void Show()
     {
         VisualTransform.Find("Selected").gameObject.SetActive(true);
@@ -46,4 +53,10 @@ public class PathNodeHex
     {
         return x + ", " + y;
     }
+}
+
+public enum TerrainType
+{
+    Grass = 1,
+    Forest = 2,
 }

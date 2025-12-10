@@ -13,6 +13,7 @@ namespace Units
         [field: SerializeField] public Transform Transform { get; private set; }
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public Owner Owner { get; set; }
+        [field: SerializeField] public AbstractUnitSO UnitSO { get; private set; }
 
         [SerializeField] protected GameObject decal;
         [SerializeField] protected bool debug;

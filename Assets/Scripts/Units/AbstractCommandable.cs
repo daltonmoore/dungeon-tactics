@@ -15,11 +15,11 @@ namespace Units
         [field: SerializeField] public Owner Owner { get; set; }
 
         [SerializeField] protected GameObject decal;
-        
+        [SerializeField] protected bool debug;
         
         private BaseCommand[] _initialCommands;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             Transform = GetComponent<Transform>();
         }

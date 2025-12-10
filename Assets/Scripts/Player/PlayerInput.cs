@@ -53,6 +53,7 @@ namespace Player
         {
             HandlePanning();
             HandleSelect();
+            HandleRightClick();
             HandleCommandVisualPrefab();
         }
 

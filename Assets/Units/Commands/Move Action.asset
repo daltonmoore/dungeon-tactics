@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Move
   <Icon>k__BackingField: {fileID: 21300000, guid: 1babfd86e407d874f892c5b0c3b92312, type: 3}
-  <Slot>k__BackingField: 0
+  <Slot>k__BackingField: -1
   <RequiresClickToActivate>k__BackingField: 1
   <VisualPrefab>k__BackingField: {fileID: 3319306555048811118, guid: bc3747f4dba4d484f8c0971c7c84b988, type: 3}

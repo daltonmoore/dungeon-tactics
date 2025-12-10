@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dalton.Utils;
+using HexGrid;
 using UnityEngine;
 
 public class TestingPathfindingHex : MonoBehaviour
@@ -15,20 +16,7 @@ public class TestingPathfindingHex : MonoBehaviour
     
     private void Start()
     { 
-        Pathfinding = new PathfindingHex(width, height, cellSize);
-
-        Transform hexVisuals = new GameObject("HexVisuals").transform;
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                Transform visualTransform = Instantiate(pfHex, Pathfinding.grid.GetWorldPosition(x, y), Quaternion.identity);
-                visualTransform.SetParent(hexVisuals);
-                visualTransform.localScale *= cellSize;
-                Pathfinding.grid.GetGridObject(x, y).VisualTransform = visualTransform;
-                Pathfinding.grid.GetGridObject(x, y).Hide();
-            }
-        }
+        Pathfinding = new PathfindingHex(width, height, cellSize, pfHex);
     }
 
     private void Update()

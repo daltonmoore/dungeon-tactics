@@ -8,31 +8,6 @@ namespace Units
 {
     public class BaseMilitaryUnit : AbstractUnit
     {
-        [SerializeField] private TestingPathfindingHex testingPathfindingHex;
-        [SerializeField] private float moveSpeed = 10f;
-
-        void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 mouseWorldPosition = Utils.GetMouseWorldPosition();
-                List<Vector3> path = testingPathfindingHex.Pathfinding.FindPath(transform.position, mouseWorldPosition);
-                StopAllCoroutines();
-                StartCoroutine(MoveToPoint(path));
-                if (path != null)
-                {
-                    for (int i = 0; i < path.Count - 1; i++)
-                    {
-                        Debug.DrawLine(
-                            path[i],
-                            path[i + 1],
-                            Color.green,
-                            3f);
-                    }
-                }
-            }
-        }
-
         private IEnumerator MoveToPoint(List<Vector3> path)
         {
             if (path.Count == 0) yield break;

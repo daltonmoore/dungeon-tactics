@@ -1,18 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using EventBus;
+using Events;
+using Units;
+using UnityEngine;
 
 public class PathNodeHex
 {
     private GridHex<PathNodeHex> _grid;
 
+    
+    
     public int x;
     public int y;
     public int gCost;
     public int hCost;
     public int fCost;
     public bool walkable;
+    public Vector3 worldPosition => _grid.GetWorldPosition(x, y);
     public TerrainType terrainType;
     public PathNodeHex parent;
     public Transform VisualTransform;
+    public Transform Selected;
+    public bool IsOccupied;
     
     public PathNodeHex(GridHex<PathNodeHex> grid, int x, int y)
     {
@@ -41,12 +50,17 @@ public class PathNodeHex
     
     public void Show()
     {
-        VisualTransform.Find("Selected").gameObject.SetActive(true);
+        Selected.gameObject.SetActive(true);
+        foreach (Transform child in Selected)
+        {
+            child.gameObject.SetActive(true);
+        }
+        Bus<HexHighlighted>.Raise(Owner.Player1, new HexHighlighted(this));
     }
         
     public void Hide()
     {
-        VisualTransform.Find("Selected").gameObject.SetActive(false);
+        Selected.gameObject.SetActive(false);
     }
 
     public override string ToString()

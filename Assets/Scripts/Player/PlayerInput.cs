@@ -32,7 +32,7 @@ namespace Player
 
         private void Awake()
         {
-            Bus<GridCellHighlighted>.OnEvent[Owner.Player1] += HandleGridCellHighlighted; 
+            Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleGridCellHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
         }
 
@@ -242,15 +242,23 @@ namespace Player
             if (camera == null) { return; } 
             
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            RaycastHit2D selectableUnitHit =
-                Physics2D.Raycast(ray.origin, ray.direction, float.MaxValue, selectableUnitsLayers);
-            RaycastHit2D commandHit = Physics2D.Raycast(ray.origin, ray.direction, float.MaxValue,
+            RaycastHit2D selectableUnitHit = Physics2D.Raycast(
+                ray.origin, 
+                ray.direction,
+                float.MaxValue,
+                selectableUnitsLayers);
+            RaycastHit2D commandHit = Physics2D.Raycast(
+                ray.origin, 
+                ray.direction, 
+                float.MaxValue,
                 selectableUnitsLayers | interactableLayers | floorLayers);
             
             if (_activeCommand is null 
                 && !RuntimeUI.IsPointerOverCanvas()
                 && selectableUnitHit.collider != null
-                && selectableUnitHit.collider.TryGetComponent(out ISelectable selectable))
+                && selectableUnitHit.collider.TryGetComponent(out ISelectable selectable)
+                && selectableUnitHit.collider.TryGetComponent(out AbstractUnit unit)
+                && unit.Owner == Owner.Player1)
             {
                 selectable.Select();
                 _selectedUnit = selectable;
@@ -288,9 +296,9 @@ namespace Player
             }
         }
         
-        private void HandleGridCellHighlighted(GridCellHighlighted args)
+        private void HandleGridCellHighlighted(HexHighlighted args)
         {
-            cursor.transform.position = args.GridCell.transform.position;
+            cursor.transform.position = args.PathNodeHex.worldPosition;
         }
         
         private void ActivateCommand(RaycastHit2D hit)

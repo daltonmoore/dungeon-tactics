@@ -14,11 +14,13 @@ namespace HexGrid
         public const int MOVE_DIAGONAL_COST = 10;
         private const int DEBUG_VISUAL_SCALE_MULTIPLIER = 4;
         private const string SORTING_LAYER = "Player";
+        private const float INNER_HEX_CIRCLE_RADIUS_DIVISOR = 2.5f;
 
         public GridHex<PathNodeHex> grid { get; }
 
         private SpriteRenderer[,] _debugWalkableArray;
         private SpriteRenderer[,] _debugTerrainArray;
+        private DebugNodeCost[,] _debugNodeCostArray;
         private List<PathNodeHex> _openList;
         private List<PathNodeHex> _closedList;
 
@@ -33,6 +35,7 @@ namespace HexGrid
             // ------------------------------ DEBUG VISUALS ------------------------------
             _debugWalkableArray = new SpriteRenderer[width, height];
             _debugTerrainArray = new SpriteRenderer[width, height];
+            _debugNodeCostArray = new DebugNodeCost[width, height];
             
             _debugRoot = new GameObject("DebugRoot").transform;
             Transform debugWalkableSquares = new GameObject("DebugWalkableSquares").transform;
@@ -48,13 +51,21 @@ namespace HexGrid
                     SpriteRenderer spriteRenderer = CreateDebugSquare(cellSize, x, y, debugWalkableSquares, "W");
                     _debugWalkableArray[x, y] = spriteRenderer;
                     
-                    spriteRenderer = CreateDebugSquare(cellSize, x, y, debugTerrainSquares,"T", 2);
+                    spriteRenderer = CreateDebugSquare(cellSize, x, y, debugTerrainSquares,"T");
                     _debugTerrainArray[x, y] = spriteRenderer;
+
+                    // _debugNodeCostArray[x, y].gCost = CreateDebugWorldText(cellSize, hexVisuals, "g: 0",
+                    //     GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR));
+                    // _debugNodeCostArray[x, y].hCost = CreateDebugWorldText(cellSize, hexVisuals, "h: 0",
+                    //     GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR));
+                    // _debugNodeCostArray[x, y].fCost = CreateDebugWorldText(cellSize, hexVisuals, "f: 0",
+                    //     GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR));
                     
                     Transform visualTransform =  GameObject.Instantiate(pfHex, grid.GetWorldPosition(x, y), Quaternion.identity);
                     visualTransform.SetParent(hexVisuals);
                     visualTransform.localScale *= cellSize;
                     grid.GetGridObject(x, y).VisualTransform = visualTransform;
+                    grid.GetGridObject(x, y).Selected = visualTransform.Find("Selected");
                     grid.GetGridObject(x, y).Hide();
                 }
             }
@@ -77,14 +88,18 @@ namespace HexGrid
                 }
 
                 _debugTerrainArray[args.x, args.y].color = GetColor();
+                
+                // _debugNodeCostArray[args.x, args.y].gCost.text = $"g: {args.gridObject.gCost}";
+                // _debugNodeCostArray[args.x, args.y].hCost.text = $"h: {args.gridObject.hCost}";
+                // _debugNodeCostArray[args.x, args.y].fCost.text = $"f: {args.gridObject.fCost}";
             };
         }
 
-        private SpriteRenderer CreateDebugSquare(float cellSize, int x, int y, Transform parentNode, string squareName, int slot = 1)
+        private SpriteRenderer CreateDebugSquare(float cellSize, int x, int y, Transform parentNode, string squareName)
         {
             float squareSize = 4f;
             Sprite squareSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, squareSize, squareSize), new Vector2(0f, 0f), 100);
-            Vector3 pos = GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / 2.5f);
+            Vector3 pos = GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR);
             
             using (Draw.WithDuration(4))
             {
@@ -95,16 +110,8 @@ namespace HexGrid
                     Color.black);
             }
             
-            TextMeshPro text = Utils.CreateWorldText(
-                $"{squareName}",
-                null,
-                pos,
-                Mathf.RoundToInt(cellSize),
-                Color.black,
-                TextAlignmentOptions.Center);
-            text.sortingLayerID = SortingLayer.NameToID(SORTING_LAYER);
-            text.transform.SetParent(parentNode);
-            
+            CreateDebugWorldText(cellSize, parentNode, squareName, pos);
+
             SpriteRenderer spriteRenderer = new GameObject($"({x}, {y})").AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = squareSprite;
             spriteRenderer.transform.position = pos;
@@ -115,10 +122,26 @@ namespace HexGrid
             return spriteRenderer;
         }
 
+        private static TextMeshPro CreateDebugWorldText(float cellSize, Transform parentNode, string squareName, Vector3 pos)
+        {
+            TextMeshPro text = Utils.CreateWorldText(
+                $"{squareName}",
+                null,
+                pos,
+                Mathf.RoundToInt(cellSize),
+                Color.black,
+                TextAlignmentOptions.Center);
+            text.sortingLayerID = SortingLayer.NameToID(SORTING_LAYER);
+            text.transform.SetParent(parentNode);
+            
+            return text;
+        }
+
         private Vector3 GetRandomPointInHex(Vector3 center, float radius)
         {
             return center + radius * (Vector3)Random.insideUnitCircle;
         }
+        
 
         public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition)
         {
@@ -126,6 +149,14 @@ namespace HexGrid
             grid.GetGridPosition(endWorldPosition, out int endX, out int endY);
         
             return FindPath(startX, startY, endX, endY)?.ConvertAll(node => grid.GetWorldPosition(node.x, node.y));
+        }
+
+        public void FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition, out List<PathNodeHex> path)
+        {
+            grid.GetGridPosition(startWorldPosition, out int startX, out int startY);
+            grid.GetGridPosition(endWorldPosition, out int endX, out int endY);
+            
+            path = FindPath(startX, startY, endX, endY);
         }
 
         public List<PathNodeHex> FindPath(int startX, int startY, int endX, int endY)
@@ -175,7 +206,7 @@ namespace HexGrid
                         continue;
                     }
 
-                    int tentativeGCost = currentNode.gCost * (int)currentNode.terrainType +
+                    int tentativeGCost = currentNode.gCost + (int)currentNode.terrainType +
                                          CalculateDistanceCost(currentNode, neighbor);
                     if (tentativeGCost < neighbor.gCost)
                     {
@@ -282,5 +313,12 @@ namespace HexGrid
         {
             _debugRoot.gameObject.SetActive(debug);
         }
+    }
+
+    struct DebugNodeCost
+    {
+        public TextMeshPro gCost;
+        public TextMeshPro hCost;
+        public TextMeshPro fCost;
     }
 }

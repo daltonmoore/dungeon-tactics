@@ -32,7 +32,7 @@ namespace Grid
         {
             transform.DOScale(Vector3.one * gridConfig.HighlightScale, gridConfig.HighlightScaleLerpDuration)
                 .onComplete += () => transform.DOScale(Vector3.one * gridConfig.DefaultScale, gridConfig.HighlightScaleLerpDuration);
-            Bus<GridCellHighlighted>.Raise(Owner.Player1, new GridCellHighlighted(this));
+            // Bus<GridCellHighlighted>.Raise(Owner.Player1, new GridCellHighlighted(this));
         }
     }
 }

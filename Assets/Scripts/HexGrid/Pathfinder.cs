@@ -15,18 +15,20 @@ namespace HexGrid
         [SerializeField] private int width = 10;
         [SerializeField] private int height = 6;
         
-        private PathfindingHex _pathfinding;
+        public PathfindingHex Pathfinding { get; private set; }
+
         private PathNodeHex _lastGridObject;
 
         private void Awake()
         {
             Instance = this;
-            _pathfinding = new PathfindingHex(width, height, cellSize, pfHex);
+            Pathfinding = new PathfindingHex(width, height, cellSize, pfHex);
+            Pathfinding.UpdateDebugVisuals(debug);
         }
 
         private void OnValidate()
         {
-            _pathfinding.UpdateDebugVisuals(debug);
+            Pathfinding.UpdateDebugVisuals(debug);
         }
 
         private void Update()
@@ -40,14 +42,16 @@ namespace HexGrid
             {
                 DrawPathToMouse();
             }
+
+            var newGridObject = Pathfinding.grid.GetGridObject(Utils.GetMouseWorldPosition());
             
-            if (_lastGridObject != null)
+            if (_lastGridObject != null && _lastGridObject != newGridObject)
             {
                 _lastGridObject.Hide();
             }
         
-            _lastGridObject = _pathfinding.grid.GetGridObject(Utils.GetMouseWorldPosition());
-            if (_lastGridObject != null)
+            _lastGridObject = newGridObject;
+            if (_lastGridObject != null && _lastGridObject.Selected.gameObject.activeSelf == false)
             {
                 _lastGridObject.Show();
             }
@@ -55,18 +59,23 @@ namespace HexGrid
         
         public List<Vector3> FindPath(Vector3 start, Vector3 end)
         {
-            return _pathfinding.FindPath(start, end);
+            return Pathfinding.FindPath(start, end);
         }
         
         public void FindPath(Vector3 start, Vector3 end, out List<Vector3> path)
         {
-            path = _pathfinding.FindPath(start, end);
+            path = Pathfinding.FindPath(start, end);
+        }
+
+        public void FindPath(Vector3 start, Vector3 end, out List<PathNodeHex> path)
+        {
+            Pathfinding.FindPath(start, end, out path);
         }
         
         private void DrawPathToMouse()
         {
             Vector3 mouseWorldPosition = Utils.GetMouseWorldPosition();
-            List<Vector3> path = _pathfinding.FindPath(Vector3.zero, mouseWorldPosition);
+            List<Vector3> path = Pathfinding.FindPath(Vector3.zero, mouseWorldPosition);
 
             if (path != null)
             {
@@ -84,8 +93,8 @@ namespace HexGrid
         private void SetTerrainTypeAtMousePosition()
         {
             Vector3 mouseWorldPosition = Utils.GetMouseWorldPosition();
-            _pathfinding.grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
-            _pathfinding.GetNode(x, y).SetTerrainType(TerrainType.Forest);
+            Pathfinding.grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
+            Pathfinding.GetNode(x, y).SetTerrainType(TerrainType.Forest);
         }
     }
 }

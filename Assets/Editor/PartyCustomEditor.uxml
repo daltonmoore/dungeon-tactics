@@ -1,0 +1,22 @@
+<UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xmlns:ui="UnityEngine.UIElements" 
+      xmlns:uie="UnityEditor.UIElements" 
+      noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+      editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/PartyCustomEditor.uss?fileID=7433441132597879392&amp;guid=15e00c3c4b1b5564fab78dd00e7c5262&amp;type=3#PartyCustomEditor" />
+    <ui:Label text="Hello World! From UXML" />
+    <ui:Label text="Hello World! With Style" class="custom-label" />
+    <ui:VisualElement style="flex-grow: 1; flex-direction: row; flex-shrink: 1; align-items: stretch; justify-content: flex-start; align-self: auto; align-content: flex-start; flex-wrap: wrap;">
+        <ui:VisualElement name="BackColumn" style="flex-grow: 1;">
+            <ui:Button text="+" name="BackTopPartySlotButton" />
+            <ui:Button text="+" name="BackCenterPartySlotButton" />
+            <ui:Button text="+" name="BackBottomPartySlotButton" />
+        </ui:VisualElement>
+        <ui:VisualElement name="FrontColumn" style="flex-grow: 1;">
+            <ui:Button text="+" name="FrontTopPartySlotButton" />
+            <ui:Button text="+" name="FrontCenterPartySlotButton" />
+            <ui:Button text="+" name="FrontBottomPartySlotButton" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <uie:ObjectField label="UXML Field" name="the-uxml-field" />
+</UXML>

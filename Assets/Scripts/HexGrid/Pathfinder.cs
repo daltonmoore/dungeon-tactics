@@ -28,7 +28,8 @@ namespace HexGrid
 
         private void OnValidate()
         {
-            Pathfinding.UpdateDebugVisuals(debug);
+            if (Pathfinding != null)
+                Pathfinding.UpdateDebugVisuals(debug);
         }
 
         private void Update()

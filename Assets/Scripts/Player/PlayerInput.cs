@@ -5,6 +5,8 @@ using Commands;
 using Drawing;
 using EventBus;
 using Events;
+using HexGrid;
+using NUnit.Framework;
 using UI;
 using Units;
 using Unity.Mathematics;
@@ -32,7 +34,7 @@ namespace Player
 
         private void Awake()
         {
-            Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleGridCellHighlighted; 
+            Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleHexHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
         }
 
@@ -276,14 +278,20 @@ namespace Player
         {
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             AbstractUnit abstractUnit = _selectedUnit as AbstractUnit;
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, float.MaxValue, 
+            RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
                 interactableLayers | floorLayers);
+
+            if (hits.Length == 0) { return; }
+            
+            var hitsOrderedByLayer = hits.OrderBy(hit => hit.transform.gameObject.layer);
+            RaycastHit2D hit = hitsOrderedByLayer.First();
             
             if (Mouse.current.rightButton.wasReleasedThisFrame
                 && hit.collider != null
                 && abstractUnit != null)
             {
-                CommandContext context = new(_selectedUnit as AbstractCommandable, hit, MouseButton.Right);
+                Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.collider.transform.position, out List<PathNodeHex> path);
+                CommandContext context = new(_selectedUnit as AbstractCommandable, hit, path, MouseButton.Right);
                 foreach (ICommand command in GetAvailableCommands(abstractUnit))
                 {
                     if (command.CanHandle(context))
@@ -296,7 +304,7 @@ namespace Player
             }
         }
         
-        private void HandleGridCellHighlighted(HexHighlighted args)
+        private void HandleHexHighlighted(HexHighlighted args)
         {
             cursor.transform.position = args.PathNodeHex.worldPosition;
         }

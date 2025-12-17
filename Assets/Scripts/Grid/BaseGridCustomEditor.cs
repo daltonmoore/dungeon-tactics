@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Grid
 {
-    [CustomEditor(typeof(BaseGrid))]
+    [CustomEditor(typeof(BattleGrid))]
     public class BaseGridCustomEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
             
-            BaseGrid grid = (BaseGrid) target;
+            BattleGrid grid = (BattleGrid) target;
             
             if(GUILayout.Button("Generate Grid")) 
             {

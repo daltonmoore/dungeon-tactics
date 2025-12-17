@@ -295,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: a34598a7377c75d448cdebdce08cea76, type: 2}
   - {fileID: 11400000, guid: 2e68cfc150bd9e14a96bf209aac09b9f, type: 2}
   <Transform>k__BackingField: {fileID: 0}
   <IsSelected>k__BackingField: 0
@@ -304,6 +305,7 @@ MonoBehaviour:
   debug: 0
   flagPrefab: {fileID: 8678833910985855508, guid: 2507468262cd99f43af120aa93219dd5, type: 3}
   moveSpeed: 10
+  <Party>k__BackingField: []
 --- !u!61 &7343889933313293715
 BoxCollider2D:
   m_ObjectHideFlags: 0

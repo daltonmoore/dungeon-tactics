@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Battle;
 using Drawing;
 using HexGrid;
 using UnityEngine;
 
 namespace Units
 {
-    public abstract class AbstractUnit : AbstractCommandable
+    public abstract class AbstractUnit : AbstractCommandable, IAttacker, IAttackable
     {
         [SerializeField] private Transform flagPrefab;
         [SerializeField] protected float moveSpeed = 10f;
+        [field: SerializeField] public List<BattleUnitData> Party { get; private set; }
         
         private int _movePointsLeft;
-        
-        // stored path to compare when we click on a hex to show the path, then click again to move.
-        public List<PathNodeHex> Path { get; private set; }
-        
         protected UnitSO unitSO;
         
         private Transform _flagParent;
@@ -34,13 +32,13 @@ namespace Units
             Pathfinder.Instance.Pathfinding.grid.GetGridObject(transform.position).IsOccupied = true;
         }
 
-        public void MoveTo(List<PathNodeHex> path)
+        public void MoveTo(List<PathNodeHex> path, Action<bool> callback = null)
         {
             StopAllCoroutines();
-            StartCoroutine(TravelPath(path));
+            StartCoroutine(TravelPath(path, callback));
         }
         
-        private IEnumerator TravelPath(List<PathNodeHex> path)
+        private IEnumerator TravelPath(List<PathNodeHex> path, Action<bool> callback)
         {
             if (path.Count == 0) yield break;
             
@@ -57,6 +55,28 @@ namespace Units
                 }
                 _movePointsLeft -= node.gCost;
             }
+
+            if (callback != null)
+            {
+                float distance = Vector3.Distance(transform.position, path[^1].worldPosition);
+                bool isAtDestination = distance < 0.1f;
+                callback(isAtDestination);
+            }
+        }
+
+        public List<PathNodeHex> Path { get; set; }
+
+        public void Attack(IAttackable attackable)
+        {
+            MoveTo(Path, arrivedAtDestination =>
+            {
+                Debug.Log(arrivedAtDestination ? "Arrived at destination" : "Failed to reach destination");
+                if (arrivedAtDestination)
+                {
+                    BattleManager.Instance.StartBattle(new BattleStartArgs
+                        { Party = Party, EnemyParty = attackable.Party });
+                }
+            });
         }
 
         public void ShowPath(List<PathNodeHex> path)
@@ -97,5 +117,15 @@ namespace Units
             
             Path = null;
         }
+    }
+    
+    public enum BattleUnitPosition
+    {
+        BackBottom = 0,     // mod 3 is back to 0
+        BackCenter = 1,     // mod 3 is 1
+        BackTop = 2,         // mod 3 is 2
+        FrontBottom = 3,    // mod 3 is 0
+        FrontCenter = 4,    // mod 3 is 1
+        FrontTop = 5,       // mod 3 is 2
     }
 }

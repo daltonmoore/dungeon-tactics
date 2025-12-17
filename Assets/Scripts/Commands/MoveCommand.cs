@@ -7,24 +7,16 @@ using UnityEngine.AI;
 
 namespace Commands
 {
-    [CreateAssetMenu(fileName = "Move Action", menuName = "Units/Commands/Move", order = 100)]
+    [CreateAssetMenu(fileName = "Move Action", menuName = "Units/Commands/Move")]
     public class MoveCommand : BaseCommand
     {
-        private List<PathNodeHex> _path;
         
         public override bool CanHandle(CommandContext context)
         {
             return context.commandable is AbstractUnit
                 && context.hit.collider != null
-                && HasPath(context.commandable.Transform.position, context.hit.collider.transform.position)
-                && !_path[^1].IsOccupied;
-        }
-
-        private bool HasPath(Vector3 startPos, Vector3 endPos)
-        {
-            Pathfinder.Instance.FindPath(startPos, endPos, out _path);
-            
-            return _path != null;
+                && context.Path != null
+                && !context.Path[^1].IsOccupied;
         }
 
         public override void Handle(CommandContext context)
@@ -32,13 +24,13 @@ namespace Commands
             Debug.Log("Move Command");
             AbstractUnit unit = (AbstractUnit)context.commandable;
 
-            if (unit.Path != null && unit.Path.Count > 0 && unit.Path[^1] == _path[^1])
+            if (unit.Path is not null && unit.Path.Count > 0 && unit.Path[^1] == context.Path[^1])
             {
-                unit.MoveTo(_path);
+                unit.MoveTo(context.Path);
             }
             else
             {
-                unit.ShowPath(_path);
+                unit.ShowPath(context.Path);
             }
         }
 

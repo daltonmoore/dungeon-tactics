@@ -1,3 +1,6 @@
+using Battle;
+using Editor.UnitList;
+using Units;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -9,8 +12,10 @@ namespace Editor
     {
         [SerializeField]
         private VisualTreeAsset m_VisualTreeAsset = default;
+        
+        private UnitWindow _unitWindow;
 
-        [MenuItem("Window/UI Toolkit/PartyCustomEditor")]
+        [MenuItem("Window/PartyCustomEditor")]
         public static void ShowExample()
         {
             PartyCustomEditorUIToolkit wnd = GetWindow<PartyCustomEditorUIToolkit>();
@@ -22,45 +27,26 @@ namespace Editor
             // Each editor window contains a root VisualElement object
             VisualElement root = rootVisualElement;
 
-            // VisualElements objects can contain other VisualElement following a tree hierarchy.
-            VisualElement label = new Label("Hello World! From C#");
-            root.Add(label);
-
             // Instantiate UXML
             VisualElement uxml = m_VisualTreeAsset.Instantiate();
             root.Add(uxml);
         
-            // Add functionality to UI elements, e.g., a button
-            Button myButton = rootVisualElement.Q<Button>("Button"); // Use Query (Q) to find elements by name
-            if (myButton != null)
-            {
-                myButton.clicked += () => Debug.Log("Button clicked!");
-            }
-        
             // Reference the UI elements by the names you set in UI Builder
-            var objectField = root.Q<ObjectField>();
+            var objectField = root.Q<ObjectField>("PartyBeingEdited");
 
+            // Create a new field, disable it, and give it a style class.
             var csharpField = new ObjectField("C# Field");
             csharpField.SetEnabled(false);
             csharpField.AddToClassList("some-styled-field");
             root.Add(csharpField);
-        
+            csharpField.value = objectField.value;
+            
             // Set the object field to accept GameObjects specifically
-            if (objectField != null)
-            {
-                // Create a new field, disable it, and give it a style class.
-            
-                csharpField.value = objectField.value;
-            
-                // objectField.objectType = typeof(GameObject);
+            objectField.objectType = typeof(GameObject);
 
-                // Mirror the value of the UXML field into the C# field.
-                objectField.RegisterCallback<ChangeEvent<Object>>((evt) => { csharpField.value = evt.newValue; });
-            }
-            else
-            {
-                Debug.Log("Object field not found.");
-            }
+            // Mirror the value of the UXML field into the C# field.
+            objectField.RegisterCallback<ChangeEvent<Object>>((evt) => { csharpField.value = evt.newValue; });
+           
             
             
             VisualElement backColumn = root.Q<VisualElement>("BackColumn");
@@ -69,13 +55,20 @@ namespace Editor
                 Button button = child as Button;
                 button.clicked += () =>
                 {
+                    if (_unitWindow != null) { _unitWindow.Close(); }
+                    _unitWindow = EditorWindow.CreateWindow<UnitsListView>();
+                    _unitWindow.Show();
+                    
+                    if (objectField.value == null) { return; }
+                    
+                    GameObject gameObject = (GameObject)objectField.value;
+                    AbstractUnit unit = gameObject.GetComponent<AbstractUnit>();
+                    unit.Party.Add(new BattleUnitData());
+                    
                     Debug.Log($"Button {button.name} clicked!");
-                    Button btn = root.Q<Button>(button.name);
-                    GameObject party = (GameObject)objectField.value;
-                    party.SetActive(!party.activeSelf);
-                    Debug.Log($"GameObject activity toggled: {party.activeSelf}");
-                    btn.text = party.activeSelf ? "Object is Active" : "Object is Inactive";
                 };
+
+                
             }
         }
     }

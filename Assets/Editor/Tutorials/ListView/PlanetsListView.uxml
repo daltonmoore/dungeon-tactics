@@ -1,0 +1,4 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/Tutorials/ListView/PlanetsListView.uss?fileID=7433441132597879392&amp;guid=49dc265402de32b42b76e01405a81b3c&amp;type=3#PlanetsListView" />
+    <ui:ListView fixed-item-height="20" />
+</ui:UXML>

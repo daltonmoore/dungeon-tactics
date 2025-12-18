@@ -18,5 +18,5 @@
             <ui:Button text="+" name="FrontBottomPartySlotButton" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <uie:ObjectField label="UXML Field" name="the-uxml-field" />
+    <uie:ObjectField label="UXML Field" name="PartyBeingEdited" />
 </UXML>

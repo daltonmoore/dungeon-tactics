@@ -12,7 +12,8 @@ namespace Units
     {
         [SerializeField] private Transform flagPrefab;
         [SerializeField] protected float moveSpeed = 10f;
-        [field: SerializeField] public List<BattleUnitData> Party { get; private set; }
+        
+        [field: SerializeField] public List<BattleUnitData> Party { get; set; }
         
         private int _movePointsLeft;
         protected UnitSO unitSO;

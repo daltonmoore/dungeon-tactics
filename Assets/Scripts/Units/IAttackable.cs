@@ -5,6 +5,6 @@ namespace Units
 {
     public interface IAttackable
     {
-        public List<BattleUnitData> Party { get; }
+        List<BattleUnitData> Party { get; }
     }
 }

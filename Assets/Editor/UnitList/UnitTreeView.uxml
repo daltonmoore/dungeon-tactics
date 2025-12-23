@@ -5,6 +5,13 @@
     xmlns:uie="UnityEditor.UIElements"
     xsi:noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd"
 >
-    <ui:TreeView fixed-item-height="20" />
+    <ui:Label name="battleUnitPosition"/>
+    <ui:MultiColumnTreeView fixed-item-height="20" >
+        <ui:Columns>
+            <ui:Column name="name" title="Name" width="120" />
+            <ui:Column name="icon" title="Icon" width="80" />
+            <ui:Column name="select" title="Select" width="80" />
+        </ui:Columns>
+    </ui:MultiColumnTreeView>
 
 </ui:UXML>

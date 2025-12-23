@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Reflection;
+using TMPro;
 using UnityEngine;
 
 namespace Dalton.Utils
@@ -69,6 +70,14 @@ namespace Dalton.Utils
                     return false;
                 }
             }, "WorldTextPopup");
+        }
+        
+        public static void ClearEditorLog()
+        {
+            var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
+            var type = assembly.GetType("UnityEditor.LogEntries");
+            var method = type.GetMethod("Clear");
+            method.Invoke(new object(), null);
         }
     }
 }

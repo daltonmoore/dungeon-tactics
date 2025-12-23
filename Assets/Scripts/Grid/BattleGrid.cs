@@ -71,6 +71,8 @@ namespace Grid
         {
             foreach (BattleUnitData battleUnitData in party)
             {
+                if (battleUnitData.unitPrefab is null) continue;
+                
                 var unit = Instantiate(battleUnitData.unitPrefab, transform);
                 unit.transform.position = GetGridSlot(isPlayerUnit, battleUnitData.battleUnitPosition);
             }

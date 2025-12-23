@@ -2821,13 +2821,77 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: battleUnitData.icon
+      value: 
+      objectReference: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: battleUnitData.name
+      value: Soldier
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: battleUnitData.level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: battleUnitData.isLeader
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: battleUnitData.battleUnitPosition
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[0].icon
+      value: 
+      objectReference: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[0].name
+      value: Soldier
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].icon
+      value: 
+      objectReference: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].name
+      value: Soldier
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[0].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[0].isLeader
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].isLeader
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[0].battleUnitPosition
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].battleUnitPosition
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8735539727599892369, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: m_Name
       value: Soldier
       objectReference: {fileID: 0}
     - target: {fileID: 8735539727599892369, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3977,14 +4041,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Soldier Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].icon
+      value: 
+      objectReference: {fileID: -669833923724927676, guid: bd748c5b15bc86b49baf682ef53607c2, type: 3}
+    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[2].icon
+      value: 
+      objectReference: {fileID: 7413703293777451987, guid: 7ef7620dfb0224845910aa469e914491, type: 3}
+    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[0].sprite
       value: 
       objectReference: {fileID: -669833923724927676, guid: bd748c5b15bc86b49baf682ef53607c2, type: 3}
+    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: <Party>k__BackingField.Array.data[1].isLeader
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[0].unitPrefab
       value: 

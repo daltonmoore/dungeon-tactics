@@ -1,22 +1,24 @@
-<UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-      xmlns:ui="UnityEngine.UIElements" 
-      xmlns:uie="UnityEditor.UIElements" 
-      noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
-      editor-extension-mode="True">
+<UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Editor/PartyCustomEditor.uss?fileID=7433441132597879392&amp;guid=15e00c3c4b1b5564fab78dd00e7c5262&amp;type=3#PartyCustomEditor" />
-    <ui:Label text="Hello World! From UXML" />
-    <ui:Label text="Hello World! With Style" class="custom-label" />
-    <ui:VisualElement style="flex-grow: 1; flex-direction: row; flex-shrink: 1; align-items: stretch; justify-content: flex-start; align-self: auto; align-content: flex-start; flex-wrap: wrap;">
-        <ui:VisualElement name="BackColumn" style="flex-grow: 1;">
-            <ui:Button text="+" name="BackTopPartySlotButton" />
-            <ui:Button text="+" name="BackCenterPartySlotButton" />
-            <ui:Button text="+" name="BackBottomPartySlotButton" />
+    <ui:VisualElement name="slots" style="border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; flex-direction: row;">
+        <ui:VisualElement name="BackColumn">
+            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
+                       name="BackTop" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
+            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
+                       name="BackCenter" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
+            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
+                       name="BackBottom" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
         </ui:VisualElement>
-        <ui:VisualElement name="FrontColumn" style="flex-grow: 1;">
-            <ui:Button text="+" name="FrontTopPartySlotButton" />
-            <ui:Button text="+" name="FrontCenterPartySlotButton" />
-            <ui:Button text="+" name="FrontBottomPartySlotButton" />
+        <ui:VisualElement name="FrontColumn">
+            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
+                       name="FrontTop" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
+            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
+                       name="FrontCenter" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
+            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
+                       name="FrontBottom" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <uie:ObjectField label="UXML Field" name="PartyBeingEdited" />
+    <ui:Button text="Clear&#10;" name="Clear" />
+    <uie:ObjectField label="Party" name="PartyBeingEdited" />
+    <ui:VisualElement name="object" class="object" />
 </UXML>

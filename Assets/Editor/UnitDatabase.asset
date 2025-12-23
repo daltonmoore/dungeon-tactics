@@ -15,5 +15,13 @@ MonoBehaviour:
   unitGroups:
   - <name>k__BackingField: Undead
     units:
-    - <name>k__BackingField: Fighter
-    - <name>k__BackingField: Shade
+    - <name>k__BackingField: Vanguard
+      <icon>k__BackingField: {fileID: 2316059101902278166, guid: bb050ba2f9bb1544ba3453c212a4920c, type: 3}
+    - <name>k__BackingField: Acolyte
+      <icon>k__BackingField: {fileID: -2181144277630526561, guid: f45420af2b3846c43aca2c7b69b8156d, type: 3}
+  - <name>k__BackingField: Human
+    units:
+    - <name>k__BackingField: Squire
+      <icon>k__BackingField: {fileID: 7413703293777451987, guid: 7ef7620dfb0224845910aa469e914491, type: 3}
+    - <name>k__BackingField: Archer
+      <icon>k__BackingField: {fileID: 3985435414107005403, guid: 94b6e0e352edf594abbf2400c395f73d, type: 3}

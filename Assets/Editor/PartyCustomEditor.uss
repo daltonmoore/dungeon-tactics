@@ -16,8 +16,8 @@
     border-bottom-right-radius: 10px;
 }
 
-.slot_row {
-    flex-direction: row;
+.slot_col {
+    flex-direction: column;
 }
 
 .object {
@@ -28,4 +28,13 @@
     top: 20px;
     border-radius: 30px;
     background-color: rgb(0, 0, 0);
+}
+
+.button-icon {
+    /* Set the actual image source and appearance */
+    background-image: resource("Assets/Resources/ICON_Input_Switch_Button_Plus_Clean.png"); /* Use resource path */
+    -unity-background-image-tint-color: white; /* Optional: tint the image */
+    width: 100%;
+    height: 100%;
+    scale-mode: scale-to-fit; /* Adjust scaling as needed */
 }

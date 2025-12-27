@@ -12,8 +12,11 @@ namespace Units
     {
         [SerializeField] private Transform flagPrefab;
         [SerializeField] protected float moveSpeed = 10f;
-        
-        [field: SerializeField] public List<BattleUnitData> Party { get; set; }
+
+        [field:SerializeField]
+        List<BattleUnitData> PartyList { get; set; }
+
+        public Dictionary<BattleUnitPosition, BattleUnitData> Party { get; set; } = new();
         
         private int _movePointsLeft;
         protected UnitSO unitSO;
@@ -31,6 +34,40 @@ namespace Units
         private void Start()
         {
             Pathfinder.Instance.Pathfinding.grid.GetGridObject(transform.position).IsOccupied = true;
+        }
+
+        private void OnValidate()
+        {
+            Party.Clear();
+            foreach (BattleUnitData battleUnitData in PartyList)
+            {
+                Party.Add(battleUnitData.battleUnitPosition, battleUnitData);
+            } 
+        }
+
+        public void SwapUnits(BattleUnitPosition from, BattleUnitPosition to)
+        {
+            Debug.Log("Before Swap");
+            foreach (KeyValuePair<BattleUnitPosition, BattleUnitData> pair in Party)
+            {
+                Debug.Log(pair.Key + " " + pair.Value);
+            }
+
+            if (Party.ContainsKey(to))
+            {
+                (Party[to], Party[from]) = (Party[from], Party[to]);
+            }
+            else
+            {
+                Party.Add(to, Party[from]);
+                Party.Remove(from);
+            }
+            
+            Debug.Log("After Swap");
+            foreach (KeyValuePair<BattleUnitPosition, BattleUnitData> pair in Party)
+            {
+                Debug.Log(pair.Key + " " + pair.Value);
+            }
         }
 
         public void MoveTo(List<PathNodeHex> path, Action<bool> callback = null)
@@ -74,8 +111,8 @@ namespace Units
                 Debug.Log(arrivedAtDestination ? "Arrived at destination" : "Failed to reach destination");
                 if (arrivedAtDestination)
                 {
-                    BattleManager.Instance.StartBattle(new BattleStartArgs
-                        { Party = Party, EnemyParty = attackable.Party });
+                    // BattleManager.Instance.StartBattle(new BattleStartArgs
+                    //     { Party = COOLPARTY, EnemyParty = attackable.Party });
                 }
             });
         }
@@ -118,6 +155,7 @@ namespace Units
             
             Path = null;
         }
+
     }
     
     public enum BattleUnitPosition

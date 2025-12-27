@@ -27,7 +27,8 @@ namespace Battle
 
         public override string ToString()
         {
-            if (unitPrefab == null) return "No Unit";
+            if (unitPrefab == null) 
+                return "BattleUnitPosition " + battleUnitPosition + " Name "+ name + " Lv. " + level + " Icon " + icon.name + " Prefab " + "NO PREFAB" + " Leader " + isLeader;;
             return "BattleUnitPosition " + battleUnitPosition + " Name "+ name + " Lv. " + level + " Icon " + icon.name + " Prefab " + unitPrefab.name + " Leader " + isLeader;
         }
 

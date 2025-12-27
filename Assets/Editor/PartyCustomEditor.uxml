@@ -1,24 +1,23 @@
 <UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Editor/PartyCustomEditor.uss?fileID=7433441132597879392&amp;guid=15e00c3c4b1b5564fab78dd00e7c5262&amp;type=3#PartyCustomEditor" />
-    <ui:VisualElement name="slots" style="border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; flex-direction: row;">
-        <ui:VisualElement name="BackColumn">
-            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
-                       name="BackTop" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
-            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
-                       name="BackCenter" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
-            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
-                       name="BackBottom" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
+    <ui:VisualElement name="slots" style="flex-direction: row;">
+        <ui:VisualElement name="slot_col" class="slot_col">
+            <ui:VisualElement name="BackTop" class="slot" />
+            <ui:VisualElement name="BackCenter" class="slot" />
+            <ui:VisualElement name="BackBottom" class="slot" />
         </ui:VisualElement>
-        <ui:VisualElement name="FrontColumn">
-            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
-                       name="FrontTop" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
-            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
-                       name="FrontCenter" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
-            <ui:Button icon-image="project://database/Assets/Asset%20Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png?fileID=2800000&amp;guid=90c82e27fe60a4240be3ca65d8d24f6d&amp;type=3#ICON_Input_Switch_Button_Plus_Clean" 
-                       name="FrontBottom" class="slot" style="flex-basis: 50px; flex-grow: 1; flex-shrink: 1;" />
+        <ui:VisualElement name="slot_col2" class="slot_col">
+            <ui:VisualElement name="FrontTop" class="slot" />
+            <ui:VisualElement name="FrontCenter" class="slot" />
+            <ui:VisualElement name="FrontBottom" class="slot" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:Button text="Clear&#10;" name="Clear" />
     <uie:ObjectField label="Party" name="PartyBeingEdited" />
-    <ui:VisualElement name="object" class="object" />
+    <ui:Image name="FrontTop" class="party-unit-button object" />
+    <ui:Image name="BackTop" class="party-unit-button object" />
+    <ui:Image name="BackCenter" class="party-unit-button object" />
+    <ui:Image name="FrontCenter" class="party-unit-button object" />
+    <ui:Image name="FrontBottom" class="party-unit-button object" />
+    <ui:Image name="BackBottom" class="party-unit-button object" />
 </UXML>

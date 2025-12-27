@@ -12,6 +12,8 @@ namespace Editor
 {
     public class PartyCustomEditor : EditorWindow
     {
+        private static AbstractUnit _unit;
+        
         private Texture2D _addUnitToPartyIcon;
         private const string AddUnitToPartyTexturePath =
             "Assets/Asset Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png";
@@ -46,111 +48,100 @@ namespace Editor
             // Instantiate UXML
             VisualElement uxml = m_VisualTreeAsset.Instantiate();
             root.Add(uxml);
-        
+
             // Reference the UI elements by the names you set in UI Builder
             var objectField = root.Q<ObjectField>("PartyBeingEdited");
-            
-            
+
             // Set the object field to accept GameObjects specifically
             objectField.objectType = typeof(AbstractUnit);
-            objectField.value = FindObjectsByType<AbstractUnit>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID)[0]; 
+            objectField.value =
+                FindObjectsByType<AbstractUnit>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID)[0];
+
+            _unit = (AbstractUnit)objectField.value;
+
+            var partyUnitButtons = root.Query<Image>(className: "party-unit-button").ToList();
             
-           
-            VisualElement backColumn = root.Q<VisualElement>("BackColumn");
-            foreach (VisualElement child in backColumn.Children())
-            {
-                CreateUnitButtonHandler(child, objectField);
+            foreach (var image in partyUnitButtons)
+            { 
+                DragAndDropManipulator manipulator = new(image, root);
+                UpdateImageWithPartyIcon(image);
+                manipulator.SetPositionOfTargetToSpecificSlot(Enum.Parse<BattleUnitPosition>(image.name));
+                CreateUnitButtonHandler(image, objectField, manipulator);
             }
-            
-            VisualElement frontColumn = root.Q<VisualElement>("FrontColumn");
-            foreach (VisualElement child in frontColumn.Children())
-            {
-                CreateUnitButtonHandler(child, objectField);
-            }
-            
+
             var clearButton = root.Q<Button>("Clear");
             clearButton.RegisterCallback<ClickEvent>(_ =>
             {
-                AbstractUnit unit = (AbstractUnit)objectField.value;
-                unit.Party.RemoveAll(u => !u.isLeader);
-                var leaderBattleUnitPosition = unit.Party[0].battleUnitPosition;
+                // _unit.Party.RemoveAll(u => !u.isLeader);
+                var leaderBattleUnitPosition = _unit.Party[0].battleUnitPosition;
                 
-                foreach (Button unitButton in backColumn.Children())
+                foreach (Image unitButton in partyUnitButtons)
                 {
                     ClearUnitButtonIcon(unitButton, leaderBattleUnitPosition);
                 }
-                foreach (Button unitButton in frontColumn.Children())
-                {
-                    ClearUnitButtonIcon(unitButton, leaderBattleUnitPosition);
-                }
-
-            });
             
-            DragAndDropManipulator manipulator =
-                new(rootVisualElement.Q<VisualElement>("object"));
+            });
         }
 
-        private void ClearUnitButtonIcon(Button unitButton, BattleUnitPosition leaderBattleUnitPosition)
+        private static void UpdateImageWithPartyIcon(VisualElement child)
+        { 
+            Image image = child as Image;
+            bool success = Enum.TryParse(image.name, out BattleUnitPosition battleUnitPosition);
+            var unitInParty = _unit.Party.ContainsKey(battleUnitPosition) && _unit.Party[battleUnitPosition].icon != null;
+            if (unitInParty)
+            {
+                image.sprite = _unit.Party[battleUnitPosition].icon;
+            }
+            else
+            {
+                image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(
+                    "Assets/Asset Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png");
+            }
+        }
+
+        private void ClearUnitButtonIcon(Image unitButton, BattleUnitPosition leaderBattleUnitPosition)
         {
             Enum.TryParse(unitButton.name, out BattleUnitPosition buttonPosition);
                     
             if (buttonPosition == leaderBattleUnitPosition)
                 return;
             Debug.Log("Clearing" + unitButton.name);
-            unitButton.iconImage = _addUnitToPartyIcon;
+            unitButton.image = _addUnitToPartyIcon;
         }
 
-        private void CreateUnitButtonHandler(VisualElement child, ObjectField objectField)
+        private void CreateUnitButtonHandler(VisualElement child, ObjectField objectField,
+            DragAndDropManipulator manipulator)
         {
-            Button button = child as Button;
-            AbstractUnit unit = (AbstractUnit)objectField.value;
-            bool success = Enum.TryParse(button.name, out BattleUnitPosition battleUnitPosition);
-            var unitInParty = unit.Party.Exists(u => u.battleUnitPosition == battleUnitPosition && u.icon != null);
-            if (unitInParty)
+            Image image = child as Image;
+            bool _ = Enum.TryParse(image.name, out BattleUnitPosition battleUnitPosition);
+            if (_unit.Party.ContainsKey(battleUnitPosition) && _unit.Party[battleUnitPosition].icon != null)
             {
-                var item = unit.Party.Where(u => u.battleUnitPosition == battleUnitPosition).ToArray()[0];
-                var image = button.iconImage;
-                image.sprite = item.icon;
-                button.iconImage = image;
+                image.sprite = _unit.Party[battleUnitPosition].icon;
             }
 
             void ClickCallback(ClickEvent _)
             {
+                if (manipulator.beganDrag)
+                    return;
+                
                 if (_unitWindow != null)
                 {
                     _unitWindow.Close();
                 }
 
                 _unitWindow = EditorWindow.CreateWindow<UnitTreeView>();
-                _unitWindow.BattleUnitPositionLabel = new Label($"{button.name}");
+                _unitWindow.BattleUnitPositionLabel = new Label($"{image.name}");
 
                 void OnSelectedUnitForPartyCallback(IUnitOrGroup item)
                 {
-                    if (objectField.value == null)
+                    if (_unit == null)
                     {
                         return;
                     }
 
-                    Debug.Log("Success? " + success);
+                    UpdatePartyWithNewUnit(battleUnitPosition, item);
 
-                    
-
-                    if (unitInParty) unit.Party.Remove(unit.Party.Where(u => u.battleUnitPosition == battleUnitPosition).ToArray()[0]);
-
-                    unit.Party.Add(new BattleUnitData(null, item.name, 1, item.icon, battleUnitPosition, false));
-
-
-                    string currentParty = "";
-                    foreach (var battleUnitData in unit.Party)
-                    {
-                        currentParty += $"{battleUnitData.battleUnitPosition} = {battleUnitData.name}, \n ";
-                    }
-
-                    Debug.Log(currentParty);
-
-                    var image = button.iconImage;
                     image.sprite = item.icon;
-                    button.iconImage = image;
                 }
 
                 _unitWindow.OnSelectedUnitForPartyCallback = OnSelectedUnitForPartyCallback;
@@ -158,8 +149,18 @@ namespace Editor
                 _unitWindow.Show();
             }
 
-            button.UnregisterCallback<ClickEvent>(ClickCallback);
-            button.RegisterCallback<ClickEvent>(ClickCallback);
+            image.UnregisterCallback<ClickEvent>(ClickCallback);
+            image.RegisterCallback<ClickEvent>(ClickCallback);
+        }
+
+        private static void UpdatePartyWithNewUnit(BattleUnitPosition battleUnitPosition, IUnitOrGroup item)
+        {
+            _unit.Party[battleUnitPosition] = new BattleUnitData(null, item.name, 1, item.icon, battleUnitPosition, false);
+        }
+
+        public static void SwapUnit(BattleUnitPosition fromPosition, BattleUnitPosition toPosition)
+        {
+           _unit.SwapUnits(fromPosition, toPosition);
         }
     }
 }

@@ -27,8 +27,8 @@ public class DragAndDropWindow : EditorWindow
         // The style will be applied to the VisualElement and all of its children.
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/Tutorials/DragAndDropWindow.uss");
         
-        DragAndDropManipulator manipulator =
-            new(rootVisualElement.Q<VisualElement>("object"));
+        // DragAndDropManipulator manipulator =
+            // new(rootVisualElement.Q<VisualElement>("object"));
 
     }
 }

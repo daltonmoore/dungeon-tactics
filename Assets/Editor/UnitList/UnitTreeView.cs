@@ -53,10 +53,9 @@ namespace Editor.UnitList
                 var item = treeView.GetItemDataForIndex<IUnitOrGroup>(index);
                 
                 selectUnitBtn.visible = item.icon != null;
-                selectUnitBtn.RegisterCallback<ClickEvent>((_) =>
+                selectUnitBtn.RegisterCallback<ClickEvent>(_ =>
                 {
                     ConsoleProDebug.Clear();
-                    Debug.Log("Selected: " + item.name);
                     OnSelectedUnitForPartyCallback(item);
                 });
             };

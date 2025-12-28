@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using AYellowpaper.SerializedCollections;
 using Battle;
 using Drawing;
 using HexGrid;
@@ -8,19 +10,16 @@ using UnityEngine;
 
 namespace Units
 {
+    [ExecuteInEditMode]
     public abstract class AbstractUnit : AbstractCommandable, IAttacker, IAttackable
     {
         [SerializeField] private Transform flagPrefab;
         [SerializeField] protected float moveSpeed = 10f;
+        [field: SerializeField] public List<BattleUnitData> PartyList { get; set; } = new();
 
-        [field:SerializeField]
-        List<BattleUnitData> PartyList { get; set; }
-
-        public Dictionary<BattleUnitPosition, BattleUnitData> Party { get; set; } = new();
-        
         private int _movePointsLeft;
         protected UnitSO unitSO;
-        
+
         private Transform _flagParent;
 
         protected override void Awake()
@@ -33,40 +32,25 @@ namespace Units
 
         private void Start()
         {
+            if (Application.isEditor) return;
             Pathfinder.Instance.Pathfinding.grid.GetGridObject(transform.position).IsOccupied = true;
-        }
-
-        private void OnValidate()
-        {
-            Party.Clear();
-            foreach (BattleUnitData battleUnitData in PartyList)
-            {
-                Party.Add(battleUnitData.battleUnitPosition, battleUnitData);
-            } 
         }
 
         public void SwapUnits(BattleUnitPosition from, BattleUnitPosition to)
         {
-            Debug.Log("Before Swap");
-            foreach (KeyValuePair<BattleUnitPosition, BattleUnitData> pair in Party)
-            {
-                Debug.Log(pair.Key + " " + pair.Value);
-            }
+            BattleUnitData fromUnit = PartyList.Find(u => u.battleUnitPosition == from);
+            BattleUnitData toUnit = PartyList.Find(u => u.battleUnitPosition == to);
 
-            if (Party.ContainsKey(to))
+            if (fromUnit != null)
             {
-                (Party[to], Party[from]) = (Party[from], Party[to]);
-            }
-            else
-            {
-                Party.Add(to, Party[from]);
-                Party.Remove(from);
+                Debug.Log($"Swapping {fromUnit.name} to position {to}");
+                fromUnit.battleUnitPosition = to;
             }
             
-            Debug.Log("After Swap");
-            foreach (KeyValuePair<BattleUnitPosition, BattleUnitData> pair in Party)
+            if (toUnit != null)
             {
-                Debug.Log(pair.Key + " " + pair.Value);
+                Debug.Log($"Swapping {toUnit.name} to position {from}");
+                toUnit.battleUnitPosition = from;
             }
         }
 

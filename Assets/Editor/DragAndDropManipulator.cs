@@ -109,7 +109,7 @@ namespace Editor
                     // [ ]    [ ]                           [ ]    [ ]
                     // [x] -> [o] moving x to o's slot      [o]    [x] x would be the target and o would be the occupant
                     // [ ]    [ ]                           [ ]    [ ]
-                    
+                    Debug.Log($"Swapping targetUnitPos {targetUnitPosition} with OccupantPos {occupantUnitPosition}");
                     PartyCustomEditor.SwapUnit(targetUnitPosition, occupantUnitPosition);
                     slotOccupant.name = target.name;
 

@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace Battle
 {
     [Serializable]
-    public struct BattleUnitData : IEquatable<BattleUnitData>
+    public class BattleUnitData
     {
         [SerializeField] public AbstractBattleUnit unitPrefab;
         [SerializeField] public BattleUnitPosition battleUnitPosition;
@@ -24,37 +24,26 @@ namespace Battle
             this.battleUnitPosition = battleUnitPosition;
             this.isLeader = isLeader;
         }
+        
+        public BattleUnitData(BattleUnitPosition battleUnitPosition, BattleUnitData oldData)
+        {
+            this.battleUnitPosition = battleUnitPosition;
+            this.name = oldData.name;
+            this.level = oldData.level;
+            this.icon = oldData.icon;
+            this.unitPrefab = oldData.unitPrefab;
+            this.isLeader = oldData.isLeader;
+        }
 
         public override string ToString()
         {
-            if (unitPrefab == null) 
-                return "BattleUnitPosition " + battleUnitPosition + " Name "+ name + " Lv. " + level + " Icon " + icon.name + " Prefab " + "NO PREFAB" + " Leader " + isLeader;;
-            return "BattleUnitPosition " + battleUnitPosition + " Name "+ name + " Lv. " + level + " Icon " + icon.name + " Prefab " + unitPrefab.name + " Leader " + isLeader;
-        }
-
-        public bool Equals(BattleUnitData other)
-        {
-            return Equals(unitPrefab, other.unitPrefab) && battleUnitPosition == other.battleUnitPosition && name == other.name && level == other.level && Equals(icon, other.icon) && isLeader == other.isLeader;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is BattleUnitData other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(unitPrefab, (int)battleUnitPosition, name, level, icon, isLeader);
-        }
-
-        public static bool operator ==(BattleUnitData left, BattleUnitData right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(BattleUnitData left, BattleUnitData right)
-        {
-            return !left.Equals(right);
+            return 
+                $"BattleUnitPosition {battleUnitPosition} "
+                + $" Name {name}" 
+                + $" Lv. {level}"
+                + $" Icon {(icon ? icon.name : " none ")}"
+                + $" Prefab {(unitPrefab ? unitPrefab.name : " none ")}"
+                + " Leader " + isLeader;
         }
     }
 }

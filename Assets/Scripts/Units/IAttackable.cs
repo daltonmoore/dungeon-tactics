@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using Battle;
 using UnityEngine;
 
@@ -6,6 +7,6 @@ namespace Units
 {
     public interface IAttackable
     {
-        public Dictionary<BattleUnitPosition, BattleUnitData> Party { get; }
+        public List<BattleUnitData> PartyList { get; }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using Battle;
 using Editor.UnitList;
 using Units;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -56,67 +57,70 @@ namespace Editor
             objectField.objectType = typeof(AbstractUnit);
             objectField.value =
                 FindObjectsByType<AbstractUnit>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID)[0];
-
+            
             _unit = (AbstractUnit)objectField.value;
-
+            
             var partyUnitButtons = root.Query<Image>(className: "party-unit-button").ToList();
+            
+            
+            objectField.RegisterCallback<ChangeEvent<AbstractUnit>>(evt =>
+            {
+                _unit = evt.newValue;
+                foreach (var image in partyUnitButtons)
+                {
+                    UpdateImageWithPartyIcon(image);
+                }
+            });
             
             foreach (var image in partyUnitButtons)
             { 
                 DragAndDropManipulator manipulator = new(image, root);
                 UpdateImageWithPartyIcon(image);
                 manipulator.SetPositionOfTargetToSpecificSlot(Enum.Parse<BattleUnitPosition>(image.name));
-                CreateUnitButtonHandler(image, objectField, manipulator);
+                CreateUnitButtonHandler(image, manipulator);
             }
 
             var clearButton = root.Q<Button>("Clear");
             clearButton.RegisterCallback<ClickEvent>(_ =>
             {
-                // _unit.Party.RemoveAll(u => !u.isLeader);
-                var leaderBattleUnitPosition = _unit.Party[0].battleUnitPosition;
+                
+                var leader = _unit.PartyList.Where(u => u.isLeader).ToList().First();
+                _unit.PartyList.Clear();
+                _unit.PartyList.Add(leader);
+                
+                _unit.PartyList.RemoveAll(u => !u.isLeader);
                 
                 foreach (Image unitButton in partyUnitButtons)
                 {
-                    ClearUnitButtonIcon(unitButton, leaderBattleUnitPosition);
+                    UpdateImageWithPartyIcon(unitButton);
                 }
             
             });
         }
 
-        private static void UpdateImageWithPartyIcon(VisualElement child)
+        private void UpdateImageWithPartyIcon(Image child)
         { 
-            Image image = child as Image;
-            bool success = Enum.TryParse(image.name, out BattleUnitPosition battleUnitPosition);
-            var unitInParty = _unit.Party.ContainsKey(battleUnitPosition) && _unit.Party[battleUnitPosition].icon != null;
+            bool success = Enum.TryParse(child.name, out BattleUnitPosition battleUnitPosition);
+            BattleUnitData battleUnitData = _unit.PartyList.Find(u => u.battleUnitPosition == battleUnitPosition);
+            var unitInParty = battleUnitData != null;
             if (unitInParty)
             {
-                image.sprite = _unit.Party[battleUnitPosition].icon;
+                child.sprite = battleUnitData.icon;
             }
             else
             {
-                image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(
-                    "Assets/Asset Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png");
+                child.image = _addUnitToPartyIcon;
             }
         }
 
-        private void ClearUnitButtonIcon(Image unitButton, BattleUnitPosition leaderBattleUnitPosition)
-        {
-            Enum.TryParse(unitButton.name, out BattleUnitPosition buttonPosition);
-                    
-            if (buttonPosition == leaderBattleUnitPosition)
-                return;
-            Debug.Log("Clearing" + unitButton.name);
-            unitButton.image = _addUnitToPartyIcon;
-        }
-
-        private void CreateUnitButtonHandler(VisualElement child, ObjectField objectField,
-            DragAndDropManipulator manipulator)
+        private void CreateUnitButtonHandler(VisualElement child, DragAndDropManipulator manipulator)
         {
             Image image = child as Image;
             bool _ = Enum.TryParse(image.name, out BattleUnitPosition battleUnitPosition);
-            if (_unit.Party.ContainsKey(battleUnitPosition) && _unit.Party[battleUnitPosition].icon != null)
+            var battleUnitData = _unit.PartyList.Find(u => u.battleUnitPosition == battleUnitPosition);
+            if (battleUnitData != null)
             {
-                image.sprite = _unit.Party[battleUnitPosition].icon;
+                image.sprite = battleUnitData.icon;
             }
 
             void ClickCallback(ClickEvent _)
@@ -130,7 +134,6 @@ namespace Editor
                 }
 
                 _unitWindow = EditorWindow.CreateWindow<UnitTreeView>();
-                _unitWindow.BattleUnitPositionLabel = new Label($"{image.name}");
 
                 void OnSelectedUnitForPartyCallback(IUnitOrGroup item)
                 {
@@ -139,7 +142,8 @@ namespace Editor
                         return;
                     }
 
-                    UpdatePartyWithNewUnit(battleUnitPosition, item);
+                    Debug.Log($"Selected unit {item.name} for position: {image.name}");
+                    UpdatePartyWithNewUnit(Enum.Parse<BattleUnitPosition>(image.name), item);
 
                     image.sprite = item.icon;
                 }
@@ -155,7 +159,15 @@ namespace Editor
 
         private static void UpdatePartyWithNewUnit(BattleUnitPosition battleUnitPosition, IUnitOrGroup item)
         {
-            _unit.Party[battleUnitPosition] = new BattleUnitData(null, item.name, 1, item.icon, battleUnitPosition, false);
+            var battleUnitData = _unit.PartyList.Find(u => u.battleUnitPosition == battleUnitPosition);
+            bool isLeader = false;
+            if (battleUnitData != null)
+            {
+                isLeader = battleUnitData.isLeader;
+                _unit.PartyList.Remove(battleUnitData);
+            }
+            
+            _unit.PartyList.Add(new BattleUnitData(null, item.name, 1, item.icon, battleUnitPosition, isLeader));
         }
 
         public static void SwapUnit(BattleUnitPosition fromPosition, BattleUnitPosition toPosition)

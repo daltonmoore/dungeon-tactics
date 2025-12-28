@@ -14,7 +14,6 @@ namespace Editor
         [SerializeField] protected UnitDatabase unitDatabase; 
         
         public Action<IUnitOrGroup> OnSelectedUnitForPartyCallback;
-        public Label BattleUnitPositionLabel;
 
         // Expresses unit data as a list of the units themselves. Needed for ListView and MultiColumnView.
         protected List<Unit> Units

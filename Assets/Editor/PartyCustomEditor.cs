@@ -18,6 +18,8 @@ namespace Editor
         private Texture2D _addUnitToPartyIcon;
         private const string AddUnitToPartyTexturePath =
             "Assets/Asset Store/Synty/InterfaceCore/Sprites/Icons_Input/Switch/ICON_Input_Switch_Button_Plus_Clean.png";
+        private Texture2D _crownIcon;
+        private const string CrownTexturePath = "Assets/Asset Store/Synty/InterfaceSciFiSoldierHUD/Sprites/HUD/SPR_HUD_SciFiSoldier_Triangle_02.png";
         
         [SerializeField]
         private VisualTreeAsset m_VisualTreeAsset = default;
@@ -27,10 +29,15 @@ namespace Editor
         private void OnEnable()
         {
             _addUnitToPartyIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(AddUnitToPartyTexturePath);
+            _crownIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(CrownTexturePath);
             
             if (_addUnitToPartyIcon == null)
             {
                 Debug.LogError($"Failed to load {AddUnitToPartyTexturePath}");
+            }
+            if (_crownIcon == null)
+            {
+                Debug.LogError($"Failed to load {CrownTexturePath}");
             }
         }
 
@@ -121,6 +128,21 @@ namespace Editor
             if (battleUnitData != null)
             {
                 image.sprite = battleUnitData.icon;
+                if (battleUnitData.isLeader)
+                {
+                    var crownImage = new Image
+                    {
+                        style =
+                        {
+                            width = 20,
+                            height = 20,
+                            position = Position.Relative,
+                            backgroundImage = new StyleBackground(_crownIcon),
+                            left = 10
+                        }
+                    };
+                    image.Add(crownImage);
+                }
             }
 
             void ClickCallback(ClickEvent _)

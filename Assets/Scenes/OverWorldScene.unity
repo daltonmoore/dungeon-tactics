@@ -2843,7 +2843,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <PartyList>k__BackingField.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <Party>k__BackingField.m_Keys.Array.size
@@ -2862,6 +2862,46 @@ PrefabInstance:
       value: Han
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[1].icon
+      value: 
+      objectReference: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[1].name
+      value: Archer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[2].icon
+      value: 
+      objectReference: {fileID: -8730740043472954769, guid: 5522c3193656ea54981b49c0e4be4848, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[2].name
+      value: Vanguard
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[3].icon
+      value: 
+      objectReference: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[3].name
+      value: Archer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[0].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[1].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[2].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[3].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <PartyList>k__BackingField.Array.data[0].isLeader
       value: 1
       objectReference: {fileID: 0}
@@ -2870,12 +2910,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -2181144277630526561, guid: f45420af2b3846c43aca2c7b69b8156d, type: 3}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[0].unitPrefab
+      value: 
+      objectReference: {fileID: 1019610734755394180, guid: 3db65db18d4ce1c4bb5b4c0a0a7c0a85, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <Party>k__BackingField.m_Values.Array.data[0].isLeader
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <PartyList>k__BackingField.Array.data[0].battleUnitPosition
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[1].battleUnitPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[2].battleUnitPosition
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <BattleUnitPositions>k__BackingField.m_Values.Array.data[0].icon

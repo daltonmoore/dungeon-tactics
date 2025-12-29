@@ -6,6 +6,7 @@ using AYellowpaper.SerializedCollections;
 using Battle;
 using Drawing;
 using HexGrid;
+using UnityEditor;
 using UnityEngine;
 
 namespace Units
@@ -32,7 +33,6 @@ namespace Units
 
         private void Start()
         {
-            if (Application.isEditor) return;
             Pathfinder.Instance.Pathfinding.grid.GetGridObject(transform.position).IsOccupied = true;
         }
 

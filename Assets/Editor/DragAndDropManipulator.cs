@@ -153,7 +153,7 @@ namespace Editor
 
         public void SetPositionOfTargetToSpecificSlot(BattleUnitPosition battleUnitPosition)
         {
-            target.transform.position = RootSpaceOfSlot(FindSlot(battleUnitPosition));
+            target.transform.position = RootSpaceOfSlot(FindSlot(battleUnitPosition)) + new Vector3(-5, -5);
         }
 
         private Vector3 RootSpaceOfSlot(VisualElement slot)

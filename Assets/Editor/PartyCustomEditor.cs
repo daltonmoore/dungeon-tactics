@@ -23,13 +23,25 @@ namespace Editor
         
         [SerializeField]
         private VisualTreeAsset m_VisualTreeAsset = default;
-        
+
+        private Image _crownImage;
         private UnitWindow _unitWindow;
 
         private void OnEnable()
         {
             _addUnitToPartyIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(AddUnitToPartyTexturePath);
             _crownIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(CrownTexturePath);
+            _crownImage = new()
+            {
+                style =
+                {
+                    width = 20,
+                    height = 20,
+                    position = Position.Relative,
+                    backgroundImage = new StyleBackground(_crownIcon),
+                    left = 10
+                }
+            };
             
             if (_addUnitToPartyIcon == null)
             {
@@ -70,9 +82,9 @@ namespace Editor
             var partyUnitButtons = root.Query<Image>(className: "party-unit-button").ToList();
             
             
-            objectField.RegisterCallback<ChangeEvent<AbstractUnit>>(evt =>
+            objectField.RegisterValueChangedCallback(evt =>
             {
-                _unit = evt.newValue;
+                _unit = evt.newValue as AbstractUnit;
                 foreach (var image in partyUnitButtons)
                 {
                     UpdateImageWithPartyIcon(image);
@@ -113,6 +125,10 @@ namespace Editor
             if (unitInParty)
             {
                 child.sprite = battleUnitData.icon;
+                if (battleUnitData.isLeader)
+                {
+                    child.Add(_crownImage);
+                }
             }
             else
             {
@@ -128,21 +144,6 @@ namespace Editor
             if (battleUnitData != null)
             {
                 image.sprite = battleUnitData.icon;
-                if (battleUnitData.isLeader)
-                {
-                    var crownImage = new Image
-                    {
-                        style =
-                        {
-                            width = 20,
-                            height = 20,
-                            position = Position.Relative,
-                            backgroundImage = new StyleBackground(_crownIcon),
-                            left = 10
-                        }
-                    };
-                    image.Add(crownImage);
-                }
             }
 
             void ClickCallback(ClickEvent _)

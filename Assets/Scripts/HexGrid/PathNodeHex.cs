@@ -22,6 +22,7 @@ public class PathNodeHex
     public Transform VisualTransform;
     public Transform Selected;
     public bool IsOccupied;
+    public AbstractUnit Occupant;
     
     public PathNodeHex(GridHex<PathNodeHex> grid, int x, int y)
     {

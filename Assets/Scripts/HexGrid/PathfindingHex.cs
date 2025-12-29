@@ -16,6 +16,8 @@ namespace HexGrid
         private const string SORTING_LAYER = "Player";
         private const float INNER_HEX_CIRCLE_RADIUS_DIVISOR = 2.5f;
 
+        public static float CellSize;
+        
         public GridHex<PathNodeHex> grid { get; }
 
         private SpriteRenderer[,] _debugWalkableArray;
@@ -30,7 +32,7 @@ namespace HexGrid
         public PathfindingHex(int width, int height, float cellSize, Transform pfHex)
         {
             grid = new GridHex<PathNodeHex>(width, height, cellSize, Vector3.zero, (g, x, y) => new PathNodeHex(g, x, y));
-        
+            CellSize = cellSize;
             
             // ------------------------------ DEBUG VISUALS ------------------------------
             _debugWalkableArray = new SpriteRenderer[width, height];
@@ -233,7 +235,7 @@ namespace HexGrid
             return grid.GetGridObject(x, y);
         }
     
-        private List<PathNodeHex> GetNeighborList(PathNodeHex node)
+        public List<PathNodeHex> GetNeighborList(PathNodeHex node)
         {
             List<PathNodeHex> neighborList = new List<PathNodeHex>();
             bool nodeXPlusOneIsValid = node.x + 1 < grid.width;

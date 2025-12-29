@@ -19,22 +19,28 @@ namespace Commands
                        }, 
                        Path: not null
                    }
-                   && context.Path[^1].IsOccupied
                    && context.hit.collider.TryGetComponent(out IAttackable _);
         }
 
         public override void Handle(CommandContext context)
         {
+            Debug.Log("Attack Command: Collider Name " 
+                      + context.hit.collider.name 
+                      + " Path Final Node World Pos " 
+                      + context.Path[^1].worldPosition 
+                      + " Hit point " + context.hit.point);
             AbstractUnit unit = (AbstractUnit)context.commandable;
             IAttacker attacker = context.commandable as IAttacker;
+            IAttackable attackable = context.hit.collider.GetComponent<IAttackable>();
 
             if (unit.Path is not null && unit.Path.Count > 0 && unit.Path[^1] == context.Path[^1])
             {
-                attacker.Attack(context.hit.collider.GetComponent<IAttackable>());
+                attacker.Attack(attackable);
             }
             else
             {
-                attacker.ShowPath(context.Path);
+                attacker.ShowPath(context.Path, attackable, out PathNodeHex battleNode);
+                unit.BattleNode = battleNode;
             }
         }
 

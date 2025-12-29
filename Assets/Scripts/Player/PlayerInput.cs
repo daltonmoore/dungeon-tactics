@@ -290,7 +290,7 @@ namespace Player
                 && hit.collider != null
                 && abstractUnit != null)
             {
-                Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.collider.transform.position, out List<PathNodeHex> path);
+                Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.point, out List<PathNodeHex> path);
                 CommandContext context = new(_selectedUnit as AbstractCommandable, hit, path, MouseButton.Right);
                 foreach (ICommand command in GetAvailableCommands(abstractUnit))
                 {

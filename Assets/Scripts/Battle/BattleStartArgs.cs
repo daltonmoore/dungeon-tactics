@@ -5,7 +5,7 @@ namespace Battle
 {
     public struct BattleStartArgs
     {
-        public Dictionary<BattleUnitPosition, BattleUnitData> Party;
-        public Dictionary<BattleUnitPosition, BattleUnitData> EnemyParty;
+        public List<BattleUnitData> Party;
+        public List<BattleUnitData> EnemyParty;
     }
 }

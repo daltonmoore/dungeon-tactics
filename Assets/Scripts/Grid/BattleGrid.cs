@@ -67,14 +67,14 @@ namespace Grid
             InstantiateBattleUnits(false, args.EnemyParty);
         }
 
-        private void InstantiateBattleUnits(bool isPlayerUnit, Dictionary<BattleUnitPosition, BattleUnitData> party)
+        private void InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
         {
-            foreach (var pair in party)
+            foreach (var unit in party)
             {
-                if (pair.Value.unitPrefab is null) continue;
+                if (unit.unitPrefab is null) continue;
                 
-                var unit = Instantiate(pair.Value.unitPrefab, transform);
-                unit.transform.position = GetGridSlot(isPlayerUnit, pair.Value.battleUnitPosition);
+                var unitInstance = Instantiate(unit.unitPrefab, transform);
+                unitInstance.transform.position = GetGridSlot(isPlayerUnit, unit.battleUnitPosition);
             }
         }
 

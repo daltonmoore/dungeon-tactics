@@ -7,6 +7,7 @@ namespace Units
 {
     public interface IAttackable
     {
+        public Transform Transform { get; }
         public List<BattleUnitData> PartyList { get; }
     }
 }

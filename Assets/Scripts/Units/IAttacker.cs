@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Units
 {
@@ -8,6 +9,6 @@ namespace Units
         public List<PathNodeHex> Path { get; set; }
         
         public void Attack(IAttackable attackable);
-        void ShowPath(List<PathNodeHex> contextPath);
+        void ShowPath(List<PathNodeHex> contextPath, IAttackable attackable, out PathNodeHex battleNode);
     }
 }

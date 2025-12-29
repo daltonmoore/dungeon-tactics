@@ -15,8 +15,7 @@ namespace Commands
         {
             return context.commandable is AbstractUnit
                 && context.hit.collider != null
-                && context.Path != null
-                && !context.Path[^1].IsOccupied;
+                && context.Path != null;
         }
 
         public override void Handle(CommandContext context)
@@ -26,11 +25,20 @@ namespace Commands
 
             if (unit.Path is not null && unit.Path.Count > 0 && unit.Path[^1] == context.Path[^1])
             {
-                unit.MoveTo(context.Path);
+                if (unit.BattleNode != null)
+                {
+                    Debug.Log("ATTACK");
+                    unit.Attack(unit.BattleNode.Occupant.GetComponent<IAttackable>());
+                }
+                else
+                {
+                    unit.MoveTo(context.Path);
+                }
             }
             else
             {
-                unit.ShowPath(context.Path);
+                unit.ShowPath(context.Path, null, out PathNodeHex battleNode);
+                unit.BattleNode = battleNode;
             }
         }
 

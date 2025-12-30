@@ -71,10 +71,10 @@ namespace Grid
         {
             foreach (var unit in party)
             {
-                if (unit.unitPrefab is null) continue;
-                
-                var unitInstance = Instantiate(unit.unitPrefab, transform);
-                unitInstance.transform.position = GetGridSlot(isPlayerUnit, unit.battleUnitPosition);
+                // if (unit.unitPrefab is null) continue;
+                //
+                // var unitInstance = Instantiate(unit.unitPrefab, transform);
+                // unitInstance.transform.position = GetGridSlot(isPlayerUnit, unit.battleUnitPosition);
             }
         }
 

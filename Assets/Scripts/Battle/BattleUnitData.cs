@@ -5,44 +5,51 @@ using UnityEngine.UIElements;
 
 namespace Battle
 {
-    [Serializable]
-    public class BattleUnitData
+    [CreateAssetMenu(fileName = "Battle Unit Data", menuName = "Battle/Battle Unit Data")]
+    public class BattleUnitData : ScriptableObject
     {
-        [SerializeField] public AbstractBattleUnit unitPrefab;
         [SerializeField] public BattleUnitPosition battleUnitPosition;
-        [SerializeField] public string name;
+        [SerializeField] public string characterName;
         [SerializeField] public int level;
         [SerializeField] public Sprite icon;
         [SerializeField] public bool isLeader;
 
-        public BattleUnitData(AbstractBattleUnit unitPrefab, string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition, bool isLeader)
-        {
-            this.unitPrefab = unitPrefab;
-            this.name = name;
-            this.level = level;
-            this.icon = icon;
-            this.battleUnitPosition = battleUnitPosition;
-            this.isLeader = isLeader;
-        }
+        // Scriptable objects do not use constructors.
+        // public BattleUnitData(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition, bool isLeader)
+        // {
+        //     this.name = name;
+        //     this.level = level;
+        //     this.icon = icon;
+        //     this.battleUnitPosition = battleUnitPosition;
+        //     this.isLeader = isLeader;
+        // }
         
         public BattleUnitData(BattleUnitPosition battleUnitPosition, BattleUnitData oldData)
         {
             this.battleUnitPosition = battleUnitPosition;
-            this.name = oldData.name;
+            this.characterName = oldData.characterName;
             this.level = oldData.level;
             this.icon = oldData.icon;
-            this.unitPrefab = oldData.unitPrefab;
             this.isLeader = oldData.isLeader;
+        }
+
+        public void Initialize(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition,
+            bool isLeader)
+        {
+            this.characterName = name;
+            this.level = level;
+            this.icon = icon;
+            this.battleUnitPosition = battleUnitPosition;
+            this.isLeader = isLeader;
         }
 
         public override string ToString()
         {
             return 
                 $"BattleUnitPosition {battleUnitPosition} "
-                + $" Name {name}" 
+                + $" Name {characterName}" 
                 + $" Lv. {level}"
                 + $" Icon {(icon ? icon.name : " none ")}"
-                + $" Prefab {(unitPrefab ? unitPrefab.name : " none ")}"
                 + " Leader " + isLeader;
         }
     }

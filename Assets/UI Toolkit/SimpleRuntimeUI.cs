@@ -10,8 +10,8 @@ namespace UI_Toolkit
 
         private void OnEnable()
         {
-            var characterListController = new CharacterListController();
-            characterListController.InitializeCharacterList(turnOrderDoc.rootVisualElement, listEntryTemplate);
+            var turnQueueController = new TurnQueueController();
+            turnQueueController.InitializeBattleUnitList(turnOrderDoc.rootVisualElement, listEntryTemplate);
         }
     }
 }

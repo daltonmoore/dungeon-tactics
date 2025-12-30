@@ -12,6 +12,7 @@
             <ui:VisualElement name="FrontBottom" class="slot" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:Button text="Save" name="Save" />
     <ui:Button text="Clear&#10;" name="Clear" />
     <uie:ObjectField label="Party" name="PartyBeingEdited" />
     <ui:Image name="FrontTop" class="party-unit-button object" />

@@ -47,13 +47,13 @@ namespace Battle
             var allUnits = new List<BattleUnitData>();
             allUnits.AddRange(args.Party);
             allUnits.AddRange(args.EnemyParty);
-            var turnOrder = allUnits.OrderByDescending(u => u.unitPrefab.battleUnitSO.initiative).ToList();
-            for (int index = 0; index < turnOrder.Count; index++)
-            {
-                BattleUnitData battleUnitData = turnOrder[index];
-                Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.unitPrefab.battleUnitSO.initiative}");
-                
-            }
+            // var turnOrder = allUnits.OrderByDescending(u => u.unitPrefab.battleUnitSO.initiative).ToList();
+            // for (int index = 0; index < turnOrder.Count; index++)
+            // {
+            //     BattleUnitData battleUnitData = turnOrder[index];
+            //     Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.unitPrefab.battleUnitSO.initiative}");
+            //     
+            // }
         }
     }
 }

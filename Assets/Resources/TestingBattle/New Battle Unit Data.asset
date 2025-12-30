@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
+  m_Name: New Battle Unit Data
+  m_EditorClassIdentifier: 
+  battleUnitPosition: 4
+  name: 
+  level: 1
+  icon: {fileID: -2181144277630526561, guid: f45420af2b3846c43aca2c7b69b8156d, type: 3}
+  isLeader: 1

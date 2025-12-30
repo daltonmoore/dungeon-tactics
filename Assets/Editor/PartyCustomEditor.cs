@@ -21,6 +21,8 @@ namespace Editor
         private Texture2D _crownIcon;
         private const string CrownTexturePath = "Assets/Asset Store/Synty/InterfaceSciFiSoldierHUD/Sprites/HUD/SPR_HUD_SciFiSoldier_Triangle_02.png";
         
+        private static string _folderPath;
+        
         [SerializeField]
         private VisualTreeAsset m_VisualTreeAsset = default;
 
@@ -71,6 +73,9 @@ namespace Editor
 
             // Reference the UI elements by the names you set in UI Builder
             var objectField = root.Q<ObjectField>("PartyBeingEdited");
+            
+            var saveButton = root.Q<Button>("Save");
+            saveButton.RegisterCallback<ClickEvent>(_ => SaveParty());
 
             // Set the object field to accept GameObjects specifically
             objectField.objectType = typeof(AbstractUnit);
@@ -78,6 +83,7 @@ namespace Editor
                 FindObjectsByType<AbstractUnit>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID)[0];
             
             _unit = (AbstractUnit)objectField.value;
+            _folderPath = $"Assets/Parties/{_unit.name}/";
             
             var partyUnitButtons = root.Query<Image>(className: "party-unit-button").ToList();
             
@@ -85,6 +91,7 @@ namespace Editor
             objectField.RegisterValueChangedCallback(evt =>
             {
                 _unit = evt.newValue as AbstractUnit;
+                _folderPath = $"Assets/Parties/{_unit.name}/";
                 foreach (var image in partyUnitButtons)
                 {
                     UpdateImageWithPartyIcon(image);
@@ -104,8 +111,15 @@ namespace Editor
             {
                 
                 var leader = _unit.PartyList.Where(u => u.isLeader).ToList().First();
-                _unit.PartyList.Clear();
-                _unit.PartyList.Add(leader);
+                
+                foreach (BattleUnitData battleUnitData in _unit.PartyList)
+                {
+                    if (battleUnitData == leader) continue;
+                    
+                    AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(battleUnitData));
+                }
+
+                
                 
                 _unit.PartyList.RemoveAll(u => !u.isLeader);
                 
@@ -189,8 +203,31 @@ namespace Editor
                 isLeader = battleUnitData.isLeader;
                 _unit.PartyList.Remove(battleUnitData);
             }
+
+            BattleUnitData so = CreateInstance<BattleUnitData>();
+            so.Initialize(item.name, 1, item.icon, battleUnitPosition, isLeader);
+            _unit.PartyList.Add(so);
             
-            _unit.PartyList.Add(new BattleUnitData(null, item.name, 1, item.icon, battleUnitPosition, isLeader));
+            // Save it to disk
+            SaveParty();
+        }
+
+        private static void SaveParty()
+        {
+            System.IO.Directory.CreateDirectory(_folderPath); // Create the physical folder
+            AssetDatabase.Refresh(); // Register the new folder in the AssetDatabase
+
+            BattleUnitData lastSO = null;
+            foreach (BattleUnitData battleUnitData in _unit.PartyList)
+            {
+                string path = _folderPath + $"{battleUnitData.battleUnitPosition}.asset";
+                if (!System.IO.File.Exists(path))
+                    AssetDatabase.CreateAsset(battleUnitData, path);
+                AssetDatabase.SaveAssets();
+                lastSO = battleUnitData;
+            }
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = lastSO;
         }
 
         public static void SwapUnit(BattleUnitPosition fromPosition, BattleUnitPosition toPosition)

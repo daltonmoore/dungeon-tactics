@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/TurnQueue.uss?fileID=7433441132597879392&amp;guid=79ead2b9282c7e0408bb61bc8aee84df&amp;type=3#TurnQueue" />
+    <ui:VisualElement name="background">
+        <ui:VisualElement name="main-container" style="align-self: flex-end;">
+            <ui:ListView focusable="true" name="character-list" />
+            <ui:VisualElement name="right-container">
+                <ui:VisualElement name="details-container">
+                    <ui:VisualElement name="details">
+                        <ui:VisualElement name="character-portrait" />
+                    </ui:VisualElement>
+                    <ui:Label text="Label" name="character-name" />
+                    <ui:Label text="Label" display-tooltip-when-elided="true" name="character-class" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

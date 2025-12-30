@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3643eb340afe4defa1df7d31dbb4411d, type: 3}
-  m_Name: Battle Soldier Unit
+  m_Script: {fileID: 11500000, guid: fda7b82b843ac274a826dd44687eb709, type: 3}
+  m_Name: Ranger
   m_EditorClassIdentifier: 
-  unitPrefab: {fileID: 8735539727599892369, guid: 3db65db18d4ce1c4bb5b4c0a0a7c0a85, type: 3}
-  sprite: {fileID: -2181144277630526561, guid: f45420af2b3846c43aca2c7b69b8156d, type: 3}
+  CharacterName: Han
+  Class: 1
+  PortraitImage: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}

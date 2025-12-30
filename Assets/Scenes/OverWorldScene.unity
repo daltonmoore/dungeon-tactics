@@ -2922,6 +2922,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1019610734755394180, guid: 3db65db18d4ce1c4bb5b4c0a0a7c0a85, type: 3}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[1].unitPrefab
+      value: 
+      objectReference: {fileID: 1019610734755394180, guid: 8678c5e8951a1a140b012fbf40e6ec83, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.data[2].unitPrefab
+      value: 
+      objectReference: {fileID: 1019610734755394180, guid: 3db65db18d4ce1c4bb5b4c0a0a7c0a85, type: 3}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <Party>k__BackingField.m_Values.Array.data[0].isLeader
       value: 1
       objectReference: {fileID: 0}

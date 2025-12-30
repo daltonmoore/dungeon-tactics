@@ -1,11 +1,11 @@
 ﻿using System;
-using Battle;
+using Units;
+using UnityEngine;
 
-namespace Units
+namespace Battle
 {
     [Serializable]
     public class BattleUnit : AbstractBattleUnit
     {
-
     }
 }

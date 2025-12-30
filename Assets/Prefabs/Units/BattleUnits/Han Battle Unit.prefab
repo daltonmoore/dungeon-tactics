@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 5078529357215803878}
   - component: {fileID: 1019610734755394180}
   m_Layer: 8
-  m_Name: Battle Soldier Unit
+  m_Name: Han Battle Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,5 +401,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3222252887594ddaa3c44577ff2d8779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: 0
-  unit: {fileID: 11400000, guid: 65006b5f2bb8d8e4a9b29501b0f4bb55, type: 2}
+  battleUnitSO: {fileID: 11400000, guid: 65006b5f2bb8d8e4a9b29501b0f4bb55, type: 2}

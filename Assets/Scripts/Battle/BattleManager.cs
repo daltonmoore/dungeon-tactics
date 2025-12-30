@@ -1,8 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Grid;
-using Units;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +10,7 @@ namespace Battle
     public class BattleManager : MonoBehaviour
     {
         public static BattleManager Instance { get; private set; }
+        public Queue<AbstractBattleUnit> TurnOrder { get; set; } = new();
 
         private void Awake()
         {
@@ -43,6 +43,17 @@ namespace Battle
             grid.ClearGrid();
             grid.SetupGrid();
             grid.SetupParties(args);
+
+            var allUnits = new List<BattleUnitData>();
+            allUnits.AddRange(args.Party);
+            allUnits.AddRange(args.EnemyParty);
+            var turnOrder = allUnits.OrderByDescending(u => u.unitPrefab.battleUnitSO.initiative).ToList();
+            for (int index = 0; index < turnOrder.Count; index++)
+            {
+                BattleUnitData battleUnitData = turnOrder[index];
+                Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.unitPrefab.battleUnitSO.initiative}");
+                
+            }
         }
     }
 }

@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 5078529357215803878}
   - component: {fileID: 1019610734755394180}
   m_Layer: 8
-  m_Name: Battle Soldier Enemy Unit Red
+  m_Name: Archer Battle Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,7 +271,7 @@ SpriteRenderer:
   m_SortingLayerID: -667805259
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -669833923724927676, guid: bd748c5b15bc86b49baf682ef53607c2, type: 3}
+  m_Sprite: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -320,7 +320,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.43, y: 0.47}
+    oldSize: {x: 0.47, y: 0.46}
     newSize: {x: 0.48, y: 0.48}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -401,3 +401,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3222252887594ddaa3c44577ff2d8779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleUnitSO: {fileID: 11400000, guid: ef717e26f5622394ab9ef4f4fbe23911, type: 2}

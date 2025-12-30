@@ -4,6 +4,6 @@ namespace Units
 {
     public class AbstractBattleUnitSO : ScriptableObject
     {
-        public GameObject unitPrefab;
+        public int initiative;
     }
 }

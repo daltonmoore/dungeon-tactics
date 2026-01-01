@@ -35,10 +35,10 @@ namespace Units
         
         public enum Direction
         {
-            Down,
-            Left,
-            Right,
-            Up
+            Down = 1,
+            Left = 2,
+            Right = 3,
+            Up = 4
         }
     }
 }

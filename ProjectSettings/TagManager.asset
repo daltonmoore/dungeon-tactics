@@ -44,14 +44,14 @@ TagManager:
   - name: Floor
     uniqueID: 2544402465
     locked: 0
+  - name: Decor
+    uniqueID: 242798113
+    locked: 0
   - name: Unit
     uniqueID: 3627162037
     locked: 0
   - name: Player
     uniqueID: 970275483
-    locked: 0
-  - name: Decor
-    uniqueID: 242798113
     locked: 0
   m_RenderingLayers:
   - Default

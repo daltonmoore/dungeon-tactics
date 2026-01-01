@@ -834,6 +834,14 @@ PrefabInstance:
       value: 65535
       objectReference: {fileID: 0}
     - target: {fileID: 583034711403914808, guid: 11536d6c5d8c2044fab59b9f30726ae4, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 583034711403914808, guid: 11536d6c5d8c2044fab59b9f30726ae4, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1750564831
+      objectReference: {fileID: 0}
+    - target: {fileID: 583034711403914808, guid: 11536d6c5d8c2044fab59b9f30726ae4, type: 3}
       propertyPath: m_ChunkCullingBounds.x
       value: 0
       objectReference: {fileID: 0}
@@ -3090,6 +3098,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: moveSpeed
+      value: 3.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: animationConfig
       value: 
       objectReference: {fileID: 11400000, guid: 60fdc75fa2b7a71469795ff6123e7ee1, type: 2}
@@ -3200,7 +3212,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8735539727599892369, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 999682476}
   m_SourcePrefab: {fileID: 100100000, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
 --- !u!1 &650227225
 GameObject:
@@ -3421,6 +3436,24 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 57.08, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &999682468 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8735539727599892369, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+  m_PrefabInstance: {fileID: 647646665}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &999682476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999682468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec3bfcf2d5aaf6c4eaa2d53b2bc761f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <currentMoveDirection>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!1 &1047072439
 GameObject:
   m_ObjectHideFlags: 0
@@ -3481,7 +3514,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 970275483
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 100
   m_Sprite: {fileID: 146363722, guid: 44c1149f87d132248a4d64b22a2765f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3807,7 +3840,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.size
@@ -4528,7 +4561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.size

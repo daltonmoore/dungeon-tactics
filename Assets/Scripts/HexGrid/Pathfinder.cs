@@ -71,11 +71,7 @@ namespace HexGrid
         public void FindPath(Vector3 start, Vector3 end, out List<PathNodeHex> path)
         {
             Pathfinding.FindPath(start, end, out path);
-            Debug.Log($"Pathfinding found path " );
-            path.ForEach(node => Debug.Log($"Node: {node.x},{node.y}"));
             path.RemoveAt(0);
-            Debug.Log($"Removed start node of path. Path is now this ");
-            path.ForEach(node => Debug.Log($"Node: {node.x},{node.y}"));
         }
         
         private void DrawPathToMouse()

@@ -13,6 +13,8 @@ namespace Units
 {
     public abstract class AbstractUnit : AbstractCommandable, IAttacker, IAttackable
     {
+        private static readonly int AnimatorDirectionHash = Animator.StringToHash("Direction");
+        private static readonly int AnimatorSpeedHash = Animator.StringToHash("Speed");
         private const float STOPPINGDISTANCE = 0.1f;
         
         [SerializeField] private Transform flagPrefab;
@@ -26,6 +28,7 @@ namespace Units
 
         private int _movePointsLeft;
         private Transform _flagParent;
+        private PositionDirectionTracker _directionTracker;
 
         protected override void Awake()
         {
@@ -33,6 +36,7 @@ namespace Units
             unitSO = UnitSO as UnitSO;
             _movePointsLeft = unitSO.MovePoints;
             _flagParent = new GameObject("MoveFlags").transform;
+            _directionTracker = GetComponent<PositionDirectionTracker>();
         }
 
         private void OnDestroy()
@@ -64,16 +68,35 @@ namespace Units
             foreach (PathNodeHex node in path)
             {
                 Vector3 targetPosition = node.worldPosition;
-                // vector from A to B = B - A
-                Vector3 direction = targetPosition.normalized - transform.position.normalized;
                 
+                Animator.SetFloat(AnimatorSpeedHash, 1);
                 while (Vector3.Distance(transform.position, targetPosition) > STOPPINGDISTANCE && _movePointsLeft - node.gCost >= 0)
                 {
+                    var direction = _directionTracker.currentMoveDirection;
+                    switch (direction)
+                    {
+                        case { x: > 0.7f, y: < 0.7f and > -0.7f }:
+                            Animator.SetInteger(AnimatorDirectionHash, (int)SpriteAnimation.Direction.Right);
+                            break;
+                        case { x: < -0.7f, y: < 0.7f and > -0.7f }:
+                            Animator.SetInteger(AnimatorDirectionHash, (int)SpriteAnimation.Direction.Left);
+                            break;
+                        case {y: > 0.7f}:
+                            Animator.SetInteger(AnimatorDirectionHash, (int)SpriteAnimation.Direction.Up);
+                            break;
+                        default:
+                            Animator.SetInteger(AnimatorDirectionHash, (int)SpriteAnimation.Direction.Down);
+                            break;
+                    }
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
                     yield return null;
                 }
-                _movePointsLeft -= node.gCost;
+                // TODO: decrease move points as they move.
+                // _movePointsLeft -= node.gCost;
             }
+            
+            Animator.SetFloat(AnimatorSpeedHash, 0);
+            Animator.SetInteger(AnimatorDirectionHash, 0);
 
             if (callback != null)
             {

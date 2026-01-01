@@ -18,11 +18,14 @@ namespace Units
         [SerializeField] protected GameObject decal;
         [SerializeField] protected bool debug;
         
+        protected Animator Animator;
+
         private BaseCommand[] _initialCommands;
 
         protected virtual void Awake()
         {
             Transform = GetComponent<Transform>();
+            Animator = GetComponent<Animator>();
         }
 
 

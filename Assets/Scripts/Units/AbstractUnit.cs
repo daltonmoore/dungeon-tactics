@@ -17,13 +17,14 @@ namespace Units
         
         [SerializeField] private Transform flagPrefab;
         [SerializeField] protected float moveSpeed = 10f;
+        [SerializeField] private AnimationConfigSO animationConfig;
         [field: SerializeField] public List<BattleUnitData> PartyList { get; set; } = new();
         public PathNodeHex BattleNode { get; set; }
         public List<PathNodeHex> Path { get; set; }
 
-        private int _movePointsLeft;
         protected UnitSO unitSO;
 
+        private int _movePointsLeft;
         private Transform _flagParent;
 
         protected override void Awake()
@@ -63,6 +64,9 @@ namespace Units
             foreach (PathNodeHex node in path)
             {
                 Vector3 targetPosition = node.worldPosition;
+                // vector from A to B = B - A
+                Vector3 direction = targetPosition.normalized - transform.position.normalized;
+                
                 while (Vector3.Distance(transform.position, targetPosition) > STOPPINGDISTANCE && _movePointsLeft - node.gCost >= 0)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);

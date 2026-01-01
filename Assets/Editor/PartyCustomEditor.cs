@@ -92,9 +92,6 @@ namespace Editor
 
             // Reference the UI elements by the names you set in UI Builder
             _objectField = root.Q<ObjectField>("PartyBeingEdited");
-            
-            var saveButton = root.Q<Button>("Save");
-            saveButton.RegisterCallback<ClickEvent>(_ => SaveParty());
 
             // Set the object field to accept GameObjects specifically
             _objectField.objectType = typeof(AbstractUnit);
@@ -236,12 +233,15 @@ namespace Editor
             }
 
             BattleUnitData so = CreateInstance<BattleUnitData>();
+            so.name = battleUnitPosition.ToString();
             so.Initialize(item.name, 1, item.icon, battleUnitPosition, isLeader, item.stats.Find(s => s.type == StatType.Initiative).value);
             _unit.PartyList.Add(so);
             CreateOrUpdateAsset(so, $"{_folderPath}{battleUnitPosition}.asset");
-            
-            // Save it to disk
-            SaveParty();
+
+            if (isLeader)
+            {
+                _unit.GetComponent<SpriteRenderer>().sprite = item.icon;
+            }
         }
         
         private static void CreateOrUpdateAsset(Object asset, string path)
@@ -272,24 +272,6 @@ namespace Editor
             AssetDatabase.SaveAssets();
             // Refresh the AssetDatabase if files were created via System.IO or other external methods.
             // AssetDatabase.Refresh(); // Only needed if using System.IO to create files/folders
-        }
-
-        private static void SaveParty()
-        {
-            return;
-            System.IO.Directory.CreateDirectory(_folderPath); // Create the physical folder
-            AssetDatabase.Refresh(); // Register the new folder in the AssetDatabase
-
-            BattleUnitData lastSO = null;
-            foreach (BattleUnitData battleUnitData in _unit.PartyList)
-            {
-                string path = _folderPath + $"{battleUnitData.battleUnitPosition}.asset";
-                AssetDatabase.CreateAsset(battleUnitData, path);
-                AssetDatabase.SaveAssets();
-                lastSO = battleUnitData;
-            }
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = lastSO;
         }
         
         public static void SwapUnit(BattleUnitPosition fromPosition, BattleUnitPosition toPosition) 

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: FrontCenter
   m_EditorClassIdentifier: 
   battleUnitPosition: 4
-  characterName: Squire
+  characterName: Apprentice
   level: 1
-  icon: {fileID: -5323916713427273819, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
+  icon: {fileID: 2986327879511965546, guid: c8e52d63718e6fe418860eaf0c2ca2db, type: 3}
   isLeader: 1
+  initiative: 10

@@ -276,7 +276,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.48, y: 0.48}
+  m_Size: {x: 0.49, y: 1.9}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -305,7 +305,8 @@ MonoBehaviour:
   debug: 0
   flagPrefab: {fileID: 8678833910985855508, guid: 2507468262cd99f43af120aa93219dd5, type: 3}
   moveSpeed: 10
-  <Party>k__BackingField: []
+  animationConfig: {fileID: 0}
+  <PartyList>k__BackingField: []
 --- !u!61 &7343889933313293715
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -345,7 +346,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.48, y: 0.48}
-    newSize: {x: 0.48, y: 0.48}
+    newSize: {x: 0.49, y: 1.9}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

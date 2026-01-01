@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: FrontCenter
   m_EditorClassIdentifier: 
   battleUnitPosition: 4
-  characterName: Squire
+  characterName: Archer
   level: 1
-  icon: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
-  isLeader: 1
+  icon: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
+  isLeader: 0
+  initiative: 0

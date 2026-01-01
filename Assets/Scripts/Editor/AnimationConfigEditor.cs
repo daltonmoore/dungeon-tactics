@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using Units;
 using UnityEditor;
@@ -21,6 +23,8 @@ namespace Editor
             DrawDefaultInspector();
             
             AnimationConfigSO config = (AnimationConfigSO) target;
+
+            string rootFolder = "Assets/Animations/" + config.characterName;
 
             if (GUILayout.Button("Load Animations"))
             {
@@ -60,6 +64,57 @@ namespace Editor
                 _spriteFolder = EditorUtility.OpenFolderPanel("Select Sprite Folder", _spriteFolder, "SpriteFolder");
                 _spriteFolder = _spriteFolder.Substring(_spriteFolder.IndexOf("Assets", System.StringComparison.Ordinal));
                 Debug.Log(_spriteFolder);
+            }
+
+            if (GUILayout.Button("Make Animation"))
+            {
+                foreach (SpriteAnimationParent animationParent in config.spriteAnimationParents)
+                {
+                    foreach (SpriteAnimation spriteAnim in animationParent.spriteAnimations)
+                    {
+                        EditorCurveBinding binding = new();
+                        binding.type = typeof(SpriteRenderer);
+                        binding.path = "";
+                        binding.propertyName = "m_Sprite";
+                        AnimationClip clip = new();
+                        clip.frameRate = 4;
+
+                        ObjectReferenceKeyframe[] keyframes = new ObjectReferenceKeyframe[spriteAnim.sprites.Count];
+                        for (int i = 0; i < spriteAnim.sprites.Count; i++)
+                        {
+                            keyframes[i] = new ObjectReferenceKeyframe();
+                            keyframes[i].time = i / clip.frameRate;
+                            keyframes[i].value = spriteAnim.sprites[i];
+                        }
+                        
+                        AnimationUtility.SetObjectReferenceCurve(clip, binding, keyframes);
+                        string path = rootFolder + "/" + animationParent.animationType + "_" + spriteAnim.direction + ".anim";
+                        string directory = Path.GetDirectoryName(path);
+                        if (!AssetDatabase.IsValidFolder(directory))
+                        {
+                            if (!AssetDatabase.IsValidFolder("Assets/Animations"))
+                                AssetDatabase.CreateFolder("Assets", "Animations");
+                            AssetDatabase.CreateFolder("Assets/Animations", config.characterName);
+                        }
+                        AssetDatabase.CreateAsset(clip, path);
+                        EditorUtility.FocusProjectWindow();
+                        Selection.activeObject = clip;
+                    }
+                }
+            }
+            
+            if (GUILayout.Button("Clear Animations"))
+            {
+                if (EditorUtility.DisplayDialog("Clear Animations", "Are you sure you want to clear all animations?",
+                        "Yes", "No"))
+                {
+                    if (Directory.Exists(rootFolder)) Directory.Delete(rootFolder, true);
+                    AssetDatabase.Refresh();
+                    foreach (SpriteAnimationParent spriteAnimationParent in config.spriteAnimationParents)
+                    {
+                        spriteAnimationParent.spriteAnimations.Clear();
+                    }
+                }
             }
         }
     }

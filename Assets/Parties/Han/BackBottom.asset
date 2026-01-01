@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BackBottom
   m_EditorClassIdentifier: 
   battleUnitPosition: 0
-  name: Acolyte
+  characterName: Acolyte
   level: 1
   icon: {fileID: -3050702870277809060, guid: aecb201471240464e99c4fcbfeaf73db, type: 3}
   isLeader: 0

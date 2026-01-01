@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BackTop
   m_EditorClassIdentifier: 
   battleUnitPosition: 2
-  name: Vanguard
+  characterName: Archer
   level: 1
-  icon: {fileID: -8730740043472954769, guid: 5522c3193656ea54981b49c0e4be4848, type: 3}
+  icon: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
   isLeader: 0

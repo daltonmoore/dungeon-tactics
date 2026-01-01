@@ -4,6 +4,7 @@
         <ui:Columns>
             <ui:Column name="name" title="Name" width="120" />
             <ui:Column name="icon" title="Icon" width="71.1px" stretchable="true" min-width="33.6px" />
+            <ui:Column name="stats" title="Stats" width="71.1px" stretchable="true" min-width="33.6px" />
             <ui:Column name="select" title="Select" width="80" />
         </ui:Columns>
     </ui:MultiColumnTreeView>

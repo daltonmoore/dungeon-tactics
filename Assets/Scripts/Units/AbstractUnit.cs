@@ -47,47 +47,6 @@ namespace Units
             gridObject.Occupant = this;
         }
 
-        #if UNITY_EDITOR
-        public void SwapUnits(BattleUnitPosition from, BattleUnitPosition to)
-        {
-            BattleUnitData fromUnit = PartyList.Find(u => u.battleUnitPosition == from);
-            BattleUnitData toUnit = PartyList.Find(u => u.battleUnitPosition == to);
-
-            if (fromUnit != null)
-            {
-                Debug.Log($"Swapping {fromUnit.characterName} to position {to}");
-                fromUnit.battleUnitPosition = to;
-                RenameAssetAndRefresh(to, fromUnit);
-            }
-            
-            if (toUnit != null)
-            {
-                Debug.Log($"Swapping {toUnit.characterName} to position {from}");
-                toUnit.battleUnitPosition = from;
-                RenameAssetAndRefresh(from, toUnit);
-            }
-        }
-
-        private static void RenameAssetAndRefresh(BattleUnitPosition to, BattleUnitData fromUnit)
-        {
-            string assetPath = AssetDatabase.GetAssetPath(fromUnit.GetInstanceID());
-            string result = AssetDatabase.RenameAsset(assetPath, $"{to}.asset");
-            if (string.IsNullOrEmpty(result))
-            {
-                Debug.Log($"Successfully renamed asset to: {to}.asset");
-                // Optional: update the internal object name property
-                fromUnit.name = $"{to}.asset"; 
-                EditorUtility.SetDirty(fromUnit); // Mark the object as dirty to ensure save
-                AssetDatabase.SaveAssets(); // Save the changes
-                AssetDatabase.Refresh(); // Refresh the Asset Database
-            }
-            else
-            {
-                Debug.LogError($"Failed to rename asset: {result}");
-            }
-        }
-#endif
-
         public void MoveTo(List<PathNodeHex> path, Action<bool> callback = null)
         {
             StopAllCoroutines();

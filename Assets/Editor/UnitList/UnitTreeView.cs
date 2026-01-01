@@ -36,6 +36,7 @@ namespace Editor.UnitList
                 return btn;
             };
             treeView.columns["icon"].makeCell = () => new Image();
+            treeView.columns["stats"].makeCell = () => new Label();
 
 
             // For each column, set Column.bindCell to bind an initialized node to a data item.
@@ -44,6 +45,19 @@ namespace Editor.UnitList
             treeView.columns["select"].bindCell = SetupSelectButton(treeView);
             treeView.columns["icon"].bindCell = (element, index) =>
                 (element as Image).sprite = treeView.GetItemDataForIndex<IUnitOrGroup>(index).icon;
+            treeView.columns["stats"].bindCell = (element, index) =>
+            {
+                string temp = "";
+                var item = treeView.GetItemDataForIndex<IUnitOrGroup>(index);
+                if (item == null || item.stats == null) return;
+                
+                foreach (Stat stat in item.stats)
+                {
+                    temp += $"{stat.type.ToString()}: {stat.value}\n";
+                }
+
+                (element as Label).text = temp;
+            };
         }
 
         private Action<VisualElement, int> SetupSelectButton(MultiColumnTreeView treeView)

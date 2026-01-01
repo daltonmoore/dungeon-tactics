@@ -75,6 +75,7 @@ namespace Editor
         }
 
         public Sprite icon { get; }
+        public List<Stat> stats { get; }
 
         [SerializeField]
         public List<Unit> units;
@@ -94,7 +95,22 @@ namespace Editor
         public bool populated { get; }
         
         public Sprite icon { get; }
-        
+
+        public List<Stat> stats { get; }
+
+    }
+
+    [Serializable]
+    public class Stat
+    {
+        [SerializeField] public StatType type;
+        [SerializeField] public int value;
+    }
+
+    [Serializable]
+    public enum StatType
+    {
+        Initiative
     }
 
     [System.Serializable]
@@ -105,9 +121,11 @@ namespace Editor
         
         [field: SerializeField]
         public Sprite icon { get; set; }
-        
-        [field: SerializeField]
 
+        [field: SerializeField]
+        public List<Stat> stats { get; set; }
+
+        [field: SerializeField]
         public bool populated { get; }
 
         public Unit(string name, bool populated, Sprite icon, BattleUnitPosition battleUnitPosition)

@@ -13,15 +13,91 @@ MonoBehaviour:
   m_Name: UnitDatabase
   m_EditorClassIdentifier: 
   unitGroups:
-  - <name>k__BackingField: Undead
-    units:
-    - <name>k__BackingField: Vanguard
-      <icon>k__BackingField: {fileID: -8730740043472954769, guid: 5522c3193656ea54981b49c0e4be4848, type: 3}
-    - <name>k__BackingField: Acolyte
-      <icon>k__BackingField: {fileID: -3050702870277809060, guid: aecb201471240464e99c4fcbfeaf73db, type: 3}
   - <name>k__BackingField: Human
     units:
     - <name>k__BackingField: Squire
       <icon>k__BackingField: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 20
     - <name>k__BackingField: Archer
       <icon>k__BackingField: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 70
+    - <name>k__BackingField: Acolyte
+      <icon>k__BackingField: {fileID: -3050702870277809060, guid: aecb201471240464e99c4fcbfeaf73db, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 1
+    - <name>k__BackingField: Apprentice
+      <icon>k__BackingField: {fileID: 3641027047500068485, guid: 0b64c4f3bcf80b0499f2e89e41621952, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 10
+  - <name>k__BackingField: Demon
+    units:
+    - <name>k__BackingField: Possessed
+      <icon>k__BackingField: {fileID: -5323916713427273819, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 20
+    - <name>k__BackingField: Archer
+      <icon>k__BackingField: {fileID: 8012177053804024785, guid: 18464a621460fa84498d2e4fa37af756, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 70
+    - <name>k__BackingField: Acolyte
+      <icon>k__BackingField: {fileID: -1573906884554247561, guid: d59cbea3f6811f446b15162bfec6d23b, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 1
+    - <name>k__BackingField: Apprentice
+      <icon>k__BackingField: {fileID: 2986327879511965546, guid: c8e52d63718e6fe418860eaf0c2ca2db, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 10
+  - <name>k__BackingField: Dwarves
+    units:
+    - <name>k__BackingField: Squire
+      <icon>k__BackingField: {fileID: 7413703293777451987, guid: 7ef7620dfb0224845910aa469e914491, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 0
+    - <name>k__BackingField: Archer
+      <icon>k__BackingField: {fileID: 3985435414107005403, guid: 94b6e0e352edf594abbf2400c395f73d, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 63
+    - <name>k__BackingField: Acolyte
+      <icon>k__BackingField: {fileID: -2181144277630526561, guid: f45420af2b3846c43aca2c7b69b8156d, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 0
+    - <name>k__BackingField: Apprentice
+      <icon>k__BackingField: {fileID: -5260774460346677099, guid: ada4a7974ba5149448ba82d04d87dd84, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 0
+  - <name>k__BackingField: Undead
+    units:
+    - <name>k__BackingField: Squire
+      <icon>k__BackingField: {fileID: -5698354290234442959, guid: 0c9c3964e0b05ed46ac42bebbea03a0a, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 0
+    - <name>k__BackingField: Archer
+      <icon>k__BackingField: {fileID: 4863085485380902199, guid: 653a0bff82b41df44a44515fe4835b7f, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 63
+    - <name>k__BackingField: Acolyte
+      <icon>k__BackingField: {fileID: 5169053619596151306, guid: 508d6e430dcbee74c8d93c7823332a70, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 0
+    - <name>k__BackingField: Apprentice
+      <icon>k__BackingField: {fileID: -2906533571606768937, guid: 019ef31aaa59bdb4dbda4b64a6bf7f3e, type: 3}
+      <stats>k__BackingField:
+      - type: 0
+        value: 0

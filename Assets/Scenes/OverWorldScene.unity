@@ -3106,9 +3106,41 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: <PartyList>k__BackingField.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <Party>k__BackingField.m_Keys.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b71c4283e31f1e44a4100fb4669ef0d, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 4b726c1b1a9a4bf4bba4bbf20a788a17, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6730fee163b21de4ba45ad23b829c908, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6b2ff3435b3c7e74589df18a88029901, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 341aaac65f1423649adf4a82fac158e5, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: ee4286ebb18d2d442a43ba76e7f8ae58, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: ee4286ebb18d2d442a43ba76e7f8ae58, type: 2}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <Party>k__BackingField.m_Values.Array.size
       value: 1
@@ -3737,23 +3769,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1802459489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  battleUnitPosition: 2
-  characterName: 
-  level: 1
-  icon: {fileID: -3050702870277809060, guid: aecb201471240464e99c4fcbfeaf73db, type: 3}
-  isLeader: 0
 --- !u!1001 &1821395106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3768,7 +3783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.size
@@ -3778,6 +3793,10 @@ PrefabInstance:
       propertyPath: <PartyList>k__BackingField.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2999ed2c3e501dd4283ee9eaf7c782b1, type: 2}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[1].icon
       value: 
@@ -3795,18 +3814,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].icon
-      value: 
-      objectReference: {fileID: -669833923724927676, guid: bd748c5b15bc86b49baf682ef53607c2, type: 3}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].name
-      value: Kang
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].level
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[0].unitPrefab
       value: 
       objectReference: {fileID: 1019610734755394180, guid: 4490d90f2596f864db8719726b85d0a2, type: 3}
@@ -3819,14 +3826,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1019610734755394180, guid: 5e26b432df2cd8848bdd95a2030f5f96, type: 3}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].isLeader
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].unitPrefab
-      value: 
-      objectReference: {fileID: 1019610734755394180, guid: abf865846ba38964b817d857970651dc, type: 3}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[0].battleUnitPosition
       value: 5
       objectReference: {fileID: 0}
@@ -3837,10 +3836,6 @@ PrefabInstance:
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[2].battleUnitPosition
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].battleUnitPosition
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <BattleUnitPositions>k__BackingField.m_Values.Array.data[3].icon
@@ -3918,6 +3913,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9184092058724454878, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5323916713427273819, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4483,13 +4482,17 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4311150814436140457, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.44
+      objectReference: {fileID: 0}
     - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_Name
       value: Soldier Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.size
@@ -4499,6 +4502,10 @@ PrefabInstance:
       propertyPath: <PartyList>k__BackingField.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: aaa08670652a5f24ba87dc8f49cbe132, type: 2}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[1].icon
       value: 
@@ -4516,18 +4523,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].icon
-      value: 
-      objectReference: {fileID: -669833923724927676, guid: bd748c5b15bc86b49baf682ef53607c2, type: 3}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].name
-      value: Kang
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].level
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[0].unitPrefab
       value: 
       objectReference: {fileID: 1019610734755394180, guid: 4490d90f2596f864db8719726b85d0a2, type: 3}
@@ -4540,14 +4535,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1019610734755394180, guid: 5e26b432df2cd8848bdd95a2030f5f96, type: 3}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].isLeader
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].unitPrefab
-      value: 
-      objectReference: {fileID: 1019610734755394180, guid: abf865846ba38964b817d857970651dc, type: 3}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[0].battleUnitPosition
       value: 5
       objectReference: {fileID: 0}
@@ -4558,10 +4545,6 @@ PrefabInstance:
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[2].battleUnitPosition
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
-      propertyPath: <PartyList>k__BackingField.Array.data[0].battleUnitPosition
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <BattleUnitPositions>k__BackingField.m_Values.Array.data[3].icon
@@ -4598,6 +4581,10 @@ PrefabInstance:
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <BattleUnitPositions>k__BackingField.m_Values.Array.data[5].battleUnitPosition
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6917211446988623947, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.44
       objectReference: {fileID: 0}
     - target: {fileID: 7855153373912016195, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4639,6 +4626,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9184092058724454878, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5323916713427273819, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

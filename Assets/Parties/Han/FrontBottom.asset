@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
-  m_Name: FrontCenter
+  m_Name: FrontBottom
   m_EditorClassIdentifier: 
-  battleUnitPosition: 4
-  characterName: Squire
+  battleUnitPosition: 3
+  characterName: Vanguard
   level: 1
-  icon: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
-  isLeader: 1
+  icon: {fileID: -8730740043472954769, guid: 5522c3193656ea54981b49c0e4be4848, type: 3}
+  isLeader: 0

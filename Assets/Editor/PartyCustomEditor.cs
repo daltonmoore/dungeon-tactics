@@ -1,13 +1,14 @@
 using System;
+using System.IO;
 using System.Linq;
 using Battle;
 using Editor.UnitList;
 using Units;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Editor
 {
@@ -28,11 +29,14 @@ namespace Editor
 
         private Image _crownImage;
         private UnitWindow _unitWindow;
+        private ObjectField _objectField;
 
         private void OnEnable()
         {
             _addUnitToPartyIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(AddUnitToPartyTexturePath);
             _crownIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(CrownTexturePath);
+            
+            Selection.selectionChanged += SelectionChanged;
             _crownImage = new()
             {
                 style =
@@ -55,6 +59,21 @@ namespace Editor
             }
         }
 
+        private void OnDisable()
+        {
+            Selection.selectionChanged -= SelectionChanged;
+        }
+
+        private void SelectionChanged()
+        {
+            var temp = Selection.activeObject as GameObject;
+            var abstractUnit = temp?.GetComponent<AbstractUnit>();
+            if (abstractUnit != null)
+            {
+                _objectField.value = temp;
+            }
+        }
+
         [MenuItem("Party/PartyCustomEditor")]
         public static void Summon()
         {
@@ -72,23 +91,22 @@ namespace Editor
             root.Add(uxml);
 
             // Reference the UI elements by the names you set in UI Builder
-            var objectField = root.Q<ObjectField>("PartyBeingEdited");
+            _objectField = root.Q<ObjectField>("PartyBeingEdited");
             
             var saveButton = root.Q<Button>("Save");
             saveButton.RegisterCallback<ClickEvent>(_ => SaveParty());
 
             // Set the object field to accept GameObjects specifically
-            objectField.objectType = typeof(AbstractUnit);
-            objectField.value =
-                FindObjectsByType<AbstractUnit>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID)[0];
+            _objectField.objectType = typeof(AbstractUnit);
             
-            _unit = (AbstractUnit)objectField.value;
+            SetObjectFieldValueFromSelection();
+
+            _unit = (AbstractUnit)_objectField.value;
             _folderPath = $"Assets/Parties/{_unit.name}/";
             
             var partyUnitButtons = root.Query<Image>(className: "party-unit-button").ToList();
             
-            
-            objectField.RegisterValueChangedCallback(evt =>
+            _objectField.RegisterValueChangedCallback(evt =>
             {
                 _unit = evt.newValue as AbstractUnit;
                 _folderPath = $"Assets/Parties/{_unit.name}/";
@@ -129,6 +147,19 @@ namespace Editor
                 }
             
             });
+        }
+
+        private void SetObjectFieldValueFromSelection()
+        {
+            var selectedGameObject = Selection.activeObject as GameObject;
+            if (selectedGameObject != null && selectedGameObject.TryGetComponent(out AbstractUnit unit))
+            {
+                _objectField.value = unit;
+            }
+            else
+            {
+                _objectField.value = FindObjectsByType<AbstractUnit>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID)[0];
+            }
         }
 
         private void UpdateImageWithPartyIcon(Image child)
@@ -205,15 +236,47 @@ namespace Editor
             }
 
             BattleUnitData so = CreateInstance<BattleUnitData>();
-            so.Initialize(item.name, 1, item.icon, battleUnitPosition, isLeader);
+            so.Initialize(item.name, 1, item.icon, battleUnitPosition, isLeader, item.stats.Find(s => s.type == StatType.Initiative).value);
             _unit.PartyList.Add(so);
+            CreateOrUpdateAsset(so, $"{_folderPath}{battleUnitPosition}.asset");
             
             // Save it to disk
             SaveParty();
         }
+        
+        private static void CreateOrUpdateAsset(Object asset, string path)
+        {
+            // Check if an asset already exists at the specified path
+            Object existingAsset = AssetDatabase.LoadAssetAtPath(path, typeof(Object));
+
+            if (!Directory.Exists(_folderPath))
+            {
+                Directory.CreateDirectory(_folderPath);
+            }
+            
+            if (existingAsset == null)
+            {
+                // If it doesn't exist, create a new asset
+                AssetDatabase.CreateAsset(asset, path);
+                Debug.Log("Created new asset at: " + path);
+            }
+            else
+            {
+                // If it exists, update the existing asset's contents
+                // This is useful if you are regenerating data but want to keep existing references intact in scenes/other assets.
+                EditorUtility.CopySerialized(asset, existingAsset);
+                Debug.Log("Updated existing asset at: " + path);
+            }
+
+            // Save assets to ensure changes are written to disk
+            AssetDatabase.SaveAssets();
+            // Refresh the AssetDatabase if files were created via System.IO or other external methods.
+            // AssetDatabase.Refresh(); // Only needed if using System.IO to create files/folders
+        }
 
         private static void SaveParty()
         {
+            return;
             System.IO.Directory.CreateDirectory(_folderPath); // Create the physical folder
             AssetDatabase.Refresh(); // Register the new folder in the AssetDatabase
 
@@ -221,18 +284,34 @@ namespace Editor
             foreach (BattleUnitData battleUnitData in _unit.PartyList)
             {
                 string path = _folderPath + $"{battleUnitData.battleUnitPosition}.asset";
-                if (!System.IO.File.Exists(path))
-                    AssetDatabase.CreateAsset(battleUnitData, path);
+                AssetDatabase.CreateAsset(battleUnitData, path);
                 AssetDatabase.SaveAssets();
                 lastSO = battleUnitData;
             }
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = lastSO;
         }
-
-        public static void SwapUnit(BattleUnitPosition fromPosition, BattleUnitPosition toPosition)
+        
+        public static void SwapUnit(BattleUnitPosition fromPosition, BattleUnitPosition toPosition) 
         {
-           _unit.SwapUnits(fromPosition, toPosition);
+            if (fromPosition == toPosition) return; 
+            var fromUnit = _unit.PartyList.Find(u => u.battleUnitPosition == fromPosition); 
+            var toUnit = _unit.PartyList.Find(u => u.battleUnitPosition == toPosition);
+            if (fromUnit != null) 
+            { 
+                fromUnit.battleUnitPosition = toPosition;
+                CreateOrUpdateAsset(fromUnit, $"{_folderPath}{fromPosition}.asset");
+                AssetDatabase.RenameAsset($"{_folderPath}{fromPosition}.asset", $"_temp_{toPosition}.asset"); 
+            }
+
+            if (toUnit != null)
+            {
+               toUnit.battleUnitPosition = fromPosition;
+               CreateOrUpdateAsset(toUnit, $"{_folderPath}{toPosition}.asset");
+               AssetDatabase.RenameAsset($"{_folderPath}{toPosition}.asset", $"{fromPosition}.asset");
+            }
+            AssetDatabase.RenameAsset($"{_folderPath}_temp_{toPosition}.asset", $"{toPosition}.asset");
+            AssetDatabase.SaveAssets();
         }
     }
 }

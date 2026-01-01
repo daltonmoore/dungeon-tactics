@@ -13,34 +13,17 @@ namespace Battle
         [SerializeField] public int level;
         [SerializeField] public Sprite icon;
         [SerializeField] public bool isLeader;
-
-        // Scriptable objects do not use constructors.
-        // public BattleUnitData(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition, bool isLeader)
-        // {
-        //     this.name = name;
-        //     this.level = level;
-        //     this.icon = icon;
-        //     this.battleUnitPosition = battleUnitPosition;
-        //     this.isLeader = isLeader;
-        // }
-        
-        public BattleUnitData(BattleUnitPosition battleUnitPosition, BattleUnitData oldData)
-        {
-            this.battleUnitPosition = battleUnitPosition;
-            this.characterName = oldData.characterName;
-            this.level = oldData.level;
-            this.icon = oldData.icon;
-            this.isLeader = oldData.isLeader;
-        }
+        [SerializeField] public int initiative;
 
         public void Initialize(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition,
-            bool isLeader)
+            bool isLeader, int initiative)
         {
             this.characterName = name;
             this.level = level;
             this.icon = icon;
             this.battleUnitPosition = battleUnitPosition;
             this.isLeader = isLeader;
+            this.initiative = initiative;
         }
 
         public override string ToString()
@@ -50,6 +33,7 @@ namespace Battle
                 + $" Name {characterName}" 
                 + $" Lv. {level}"
                 + $" Icon {(icon ? icon.name : " none ")}"
+                + $" Initiative {initiative}"
                 + " Leader " + isLeader;
         }
     }

@@ -4561,7 +4561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4841014234203953737, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.size

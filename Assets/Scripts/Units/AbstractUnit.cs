@@ -109,7 +109,8 @@ namespace Units
 
         public void Attack(IAttackable attackable)
         {
-            MoveTo(Path, arrivedAtDestination =>
+            // trim last node from path, since it is the node where the occupant is and we don't want to be on top of them
+            MoveTo(Path.SkipLast(1).ToList(), arrivedAtDestination =>
             {
                 Debug.Log(arrivedAtDestination ? "Arrived at destination" : "Failed to reach destination");
                 bool arrivedAtBattleNode = BattleNode != null &&

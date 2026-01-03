@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using TMPro;
 using UnityEngine;
+using Util;
 
 namespace Dalton.Utils
 {
@@ -15,14 +16,15 @@ namespace Dalton.Utils
             int fontSize = 40,
             Color? color = null,
             TextAlignmentOptions textAlignmentOptions = TextAlignmentOptions.TopLeft,
-            int sortingOrder = SortingOrderDefault)
+            int sortingOrder = SortingOrderDefault,
+            string sortingLayerName = Constants.DefaultSortingLayer)
         {
             if (color == null) color = Color.white;
-            return CreateWorldText(parent, text, localPosition, fontSize, (Color)color, textAlignmentOptions, sortingOrder);
+            return CreateWorldText(parent, text, localPosition, fontSize, (Color)color, textAlignmentOptions, sortingOrder, sortingLayerName);
         }
 
         private static TextMeshPro CreateWorldText(Transform parent, string text, Vector3 localPosition, int fontSize,
-            Color color, TextAlignmentOptions textAlignmentOptions, int sortingOrder)
+            Color color, TextAlignmentOptions textAlignmentOptions, int sortingOrder, string sortingLayerName)
         {
             GameObject gameObject = new GameObject("World_Text", typeof(TextMeshPro));
             Transform transform = gameObject.transform;
@@ -33,7 +35,9 @@ namespace Dalton.Utils
             textMesh.text = text;
             textMesh.fontSize = fontSize;
             textMesh.color = color;
-            textMesh.GetComponent<MeshRenderer>().sortingOrder = sortingOrder;
+            MeshRenderer meshRenderer = textMesh.GetComponent<MeshRenderer>();
+            meshRenderer.sortingOrder = sortingOrder;
+            meshRenderer.sortingLayerName = sortingLayerName;
             return textMesh;
         }
 
@@ -56,8 +60,10 @@ namespace Dalton.Utils
         }
         
         // Create a Text Popup in the World
-        private static void CreateWorldTextPopup(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, Vector3 finalPopupPosition, float popupTime) {
-            TextMeshPro textMesh = CreateWorldText(parent, text, localPosition, fontSize, color, TextAlignmentOptions.BottomLeft, SortingOrderDefault);
+        private static void CreateWorldTextPopup(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, Vector3 finalPopupPosition, float popupTime)
+        {
+            TextMeshPro textMesh = CreateWorldText(parent, text, localPosition, fontSize, color,
+                TextAlignmentOptions.BottomLeft, SortingOrderDefault, Constants.DefaultSortingLayer);
             Transform transform = textMesh.transform;
             Vector3 moveAmount = (finalPopupPosition - localPosition) / popupTime;
             FunctionUpdater.Create(delegate () {

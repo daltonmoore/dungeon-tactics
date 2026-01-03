@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 5078529357215803878}
   - component: {fileID: 1019610734755394180}
   m_Layer: 8
-  m_Name: Han Battle Unit
+  m_Name: Battle Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

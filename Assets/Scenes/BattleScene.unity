@@ -621,6 +621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <gridConfig>k__BackingField: {fileID: 11400000, guid: 76f9235b6fe64bf4da17127ebccd0905, type: 2}
   gridCellPrefab: {fileID: 3921543690943436298, guid: 5fa071072dd1a03499a321f0a03aa99d, type: 3}
+  battleUnitPrefab: {fileID: 8735539727599892369, guid: 3db65db18d4ce1c4bb5b4c0a0a7c0a85, type: 3}
   gridOffset: {x: -0.5, y: -0.5, z: 0}
 --- !u!1 &147930936
 GameObject:
@@ -2404,7 +2405,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 970275483
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 146363722, guid: 44c1149f87d132248a4d64b22a2765f1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

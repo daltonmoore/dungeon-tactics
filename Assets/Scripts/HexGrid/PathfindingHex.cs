@@ -4,6 +4,7 @@ using Dalton.Utils;
 using Drawing;
 using TMPro;
 using UnityEngine;
+using Util;
 using Random = UnityEngine.Random;
 
 namespace HexGrid
@@ -13,7 +14,6 @@ namespace HexGrid
         public const int MOVE_STRAIGHT_COST = 10;
         public const int MOVE_DIAGONAL_COST = 10;
         private const int DEBUG_VISUAL_SCALE_MULTIPLIER = 4;
-        private const string SORTING_LAYER = "Player";
         private const float INNER_HEX_CIRCLE_RADIUS_DIVISOR = 2.5f;
 
         public static float CellSize;
@@ -31,7 +31,13 @@ namespace HexGrid
     
         public PathfindingHex(int width, int height, float cellSize, Transform pfHex)
         {
-            grid = new GridHex<PathNodeHex>(width, height, cellSize, Vector3.zero, (g, x, y) => new PathNodeHex(g, x, y));
+            grid = new GridHex<PathNodeHex>(
+                width,
+                height,
+                cellSize,
+                Vector3.zero,
+                (g, x, y) => new PathNodeHex(g, x, y)
+                );
             CellSize = cellSize;
             
             // ------------------------------ DEBUG VISUALS ------------------------------
@@ -45,6 +51,7 @@ namespace HexGrid
             Transform debugTerrainSquares = new GameObject("DebugTerrainSquares").transform;
             debugTerrainSquares.SetParent(_debugRoot);
             Transform hexVisuals = new GameObject("HexVisuals").transform;
+            hexVisuals.SetParent(_debugRoot);
             
             for (int x = 0; x < grid.width; x++)
             {
@@ -112,31 +119,26 @@ namespace HexGrid
                     Color.black);
             }
             
-            CreateDebugWorldText(cellSize, parentNode, squareName, pos);
-
-            SpriteRenderer spriteRenderer = new GameObject($"({x}, {y})").AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = squareSprite;
-            spriteRenderer.transform.position = pos;
-            spriteRenderer.transform.localScale *= cellSize * DEBUG_VISUAL_SCALE_MULTIPLIER;
-            spriteRenderer.transform.SetParent(parentNode);
-            spriteRenderer.sortingLayerName = SORTING_LAYER;
-            
-            return spriteRenderer;
-        }
-
-        private static TextMeshPro CreateDebugWorldText(float cellSize, Transform parentNode, string squareName, Vector3 pos)
-        {
             TextMeshPro text = Utils.CreateWorldText(
                 $"{squareName}",
                 null,
                 pos,
                 Mathf.RoundToInt(cellSize),
                 Color.black,
-                TextAlignmentOptions.Center);
-            text.sortingLayerID = SortingLayer.NameToID(SORTING_LAYER);
+                TextAlignmentOptions.Center,
+                0,
+                Constants.PlayerSortingLayer);
+
             text.transform.SetParent(parentNode);
+
+            SpriteRenderer spriteRenderer = new GameObject($"({x}, {y})").AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = squareSprite;
+            spriteRenderer.transform.position = pos;
+            spriteRenderer.transform.localScale *= cellSize * DEBUG_VISUAL_SCALE_MULTIPLIER;
+            spriteRenderer.transform.SetParent(parentNode);
+            spriteRenderer.sortingLayerName = Constants.PlayerSortingLayer;
             
-            return text;
+            return spriteRenderer;
         }
 
         private Vector3 GetRandomPointInHex(Vector3 center, float radius)
@@ -314,6 +316,7 @@ namespace HexGrid
         public void UpdateDebugVisuals(bool debug)
         {
             _debugRoot.gameObject.SetActive(debug);
+            grid.SetDebugVisible(debug);
         }
     }
 

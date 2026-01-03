@@ -5,9 +5,11 @@ using System.Linq;
 using AYellowpaper.SerializedCollections;
 using Battle;
 using Drawing;
+using Events;
 using HexGrid;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Units
 {
@@ -29,6 +31,9 @@ namespace Units
         private int _movePointsLeft;
         private Transform _flagParent;
         private PositionDirectionTracker _directionTracker;
+        private Rigidbody2D _rigidbody2D; 
+        private Vector3 _targetPosition;
+        private bool _moving;
 
         protected override void Awake()
         {
@@ -37,6 +42,7 @@ namespace Units
             _movePointsLeft = unitSO.MovePoints;
             _flagParent = new GameObject("MoveFlags").transform;
             _directionTracker = GetComponent<PositionDirectionTracker>();
+            _rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
         private void OnDestroy()
@@ -52,8 +58,35 @@ namespace Units
             gridObject.Occupant = this;
         }
 
+        private void FixedUpdate()
+        {
+            if (_moving)
+            {
+                _rigidbody2D.MovePosition(Vector2.MoveTowards(_rigidbody2D.position, _targetPosition, moveSpeed * Time.deltaTime));
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            Debug.Log($"{name} collided with {other.gameObject.name} which is on layer {other.gameObject.layer}");
+            if (other.gameObject.layer == LayerMask.NameToLayer("FogOfWar"))
+            {
+                Tilemap tilemap = other.collider.GetComponent<Tilemap>();
+                var cellPos = tilemap.WorldToCell(other.contacts[0].point);
+                var tile = tilemap.GetTile(cellPos);
+                Debug.Log($"Tile is {tile} at tile position {cellPos}");
+                tilemap.SetTile(cellPos, null);
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            
+        }
+
         public void MoveTo(List<PathNodeHex> path, Action<bool> callback = null)
         {
+            _moving = true;
             StopAllCoroutines();
             StartCoroutine(TravelPath(path, callback));
         }
@@ -67,10 +100,10 @@ namespace Units
 
             foreach (PathNodeHex node in path)
             {
-                Vector3 targetPosition = node.worldPosition;
+                _targetPosition = node.worldPosition;
                 
                 Animator.SetFloat(AnimatorSpeedHash, 1);
-                while (Vector3.Distance(transform.position, targetPosition) > STOPPINGDISTANCE && _movePointsLeft - node.gCost >= 0)
+                while (Vector3.Distance(transform.position, _targetPosition) > STOPPINGDISTANCE && _movePointsLeft - node.gCost >= 0)
                 {
                     var direction = _directionTracker.currentMoveDirection;
                     switch (direction)
@@ -88,7 +121,7 @@ namespace Units
                             Animator.SetInteger(AnimatorDirectionHash, (int)SpriteAnimation.Direction.Down);
                             break;
                     }
-                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    // transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
                     yield return null;
                 }
                 // TODO: decrease move points as they move.
@@ -102,6 +135,7 @@ namespace Units
             {
                 float distance = Vector3.Distance(transform.position, path[^1].worldPosition);
                 bool isAtDestination = distance < STOPPINGDISTANCE;
+                _moving = false;
                 callback(isAtDestination);
             }
         }
@@ -109,8 +143,13 @@ namespace Units
 
         public void Attack(IAttackable attackable)
         {
-            // trim last node from path, since it is the node where the occupant is and we don't want to be on top of them
-            MoveTo(Path.SkipLast(1).ToList(), arrivedAtDestination =>
+            // we clicked directly on the hex where the occupant is, so we need to move to the hex just before it.
+            var tempPath = new List<PathNodeHex>(Path);
+            if (Path[^1].Occupant != null)
+            {
+                tempPath = Path.SkipLast(1).ToList();
+            }
+            MoveTo(tempPath, arrivedAtDestination =>
             {
                 Debug.Log(arrivedAtDestination ? "Arrived at destination" : "Failed to reach destination");
                 bool arrivedAtBattleNode = BattleNode != null &&
@@ -118,8 +157,11 @@ namespace Units
                                            PathfindingHex.CellSize + STOPPINGDISTANCE;
                 if (arrivedAtDestination || arrivedAtBattleNode)
                 {
-                    BattleManager.Instance.StartBattle(new BattleStartArgs
-                        { Party = PartyList, EnemyParty = attackable.PartyList });
+                    EventBus.Bus<StartBattleEvent>.Raise(Owner.Player1,
+                        new StartBattleEvent(
+                            PartyList, 
+                            attackable.PartyList
+                            ));
                 }
             });
         }

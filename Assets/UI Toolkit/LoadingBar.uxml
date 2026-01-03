@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; align-content: center; align-self: auto; justify-content: center; background-color: rgb(96, 96, 96); align-items: center;">
+        <ui:Label text="Label" name="progressLabel" />
+        <ui:ProgressBar value="22" title="my-progress" name="progressBar" />
+    </ui:VisualElement>
+</ui:UXML>

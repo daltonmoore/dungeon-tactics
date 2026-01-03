@@ -276,19 +276,24 @@ namespace Player
 
         private void HandleRightClick()
         {
+            if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
+            
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
             AbstractUnit abstractUnit = _selectedUnit as AbstractUnit;
+            
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
                 interactableLayers | floorLayers);
+            Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 5f);
 
             if (hits.Length == 0) { return; }
             
-            var hitsOrderedByLayer = hits.OrderBy(hit => hit.transform.gameObject.layer);
+            var hitsOrderedByLayer = hits.OrderByDescending(hit => hit.transform.gameObject.layer);
             RaycastHit2D hit = hitsOrderedByLayer.First();
+            Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
-            if (Mouse.current.rightButton.wasReleasedThisFrame
-                && hit.collider != null
-                && abstractUnit != null)
+            if (hit.collider != null
+                && abstractUnit != null
+                && hit.collider.gameObject.layer != LayerMask.NameToLayer("FogOfWar"))
             {
                 Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.point, out List<PathNodeHex> path);
                 CommandContext context = new(_selectedUnit as AbstractCommandable, hit, path, MouseButton.Right);

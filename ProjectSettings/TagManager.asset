@@ -16,7 +16,7 @@ TagManager:
   - Units
   - Buildings
   - Floor
-  - 
+  - FogOfWar
   - 
   - 
   - 
@@ -52,6 +52,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 970275483
+    locked: 0
+  - name: FogOfWar
+    uniqueID: 705956443
     locked: 0
   m_RenderingLayers:
   - Default

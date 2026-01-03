@@ -4,6 +4,7 @@ using System.Linq;
 using Grid;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Util;
 
 namespace Battle
 {
@@ -22,37 +23,6 @@ namespace Battle
             { 
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-            }
-        }
-
-        public void StartBattle(BattleStartArgs args)
-        {
-            StartCoroutine(LoadIntoBattleScene(args));
-        }
-
-        private IEnumerator LoadIntoBattleScene(BattleStartArgs args)
-        {
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("BattleScene");
-
-            while (!asyncOperation.isDone)
-            {
-                yield return null;
-            }
-            
-            BattleGrid grid = FindFirstObjectByType<BattleGrid>();
-            grid.ClearGrid();
-            grid.SetupGrid();
-            grid.SetupParties(args);
-
-            var allUnits = new List<BattleUnitData>();
-            allUnits.AddRange(args.Party);
-            allUnits.AddRange(args.EnemyParty);
-            var turnOrder = allUnits.OrderByDescending(u => u.initiative).ToList();
-            for (int index = 0; index < turnOrder.Count; index++)
-            {
-                BattleUnitData battleUnitData = turnOrder[index];
-                Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.initiative}");
-                
             }
         }
     }

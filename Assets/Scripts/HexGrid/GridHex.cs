@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dalton.Utils;
 using TMPro;
 using UnityEngine;
+using Util;
 
 /// <summary>
 /// This hex grid class uses offset coordinates.
@@ -27,8 +28,8 @@ public class GridHex<TGridObject>
     private float _cellSize;
     private Vector3 _originPosition;
     private TGridObject[,] _gridArray;
-    private TextMeshPro[,] debugTextArray;
-    private bool _showDebug = true;
+    private Transform _debugObjects;
+    private TextMeshPro[,] _debugTextArray;
 
     public GridHex(int width, int height, float  cellSize, Vector3 originPosition, Func<GridHex<TGridObject>, int, int, TGridObject> createGridObject)
     {
@@ -46,24 +47,24 @@ public class GridHex<TGridObject>
                 _gridArray[x, y] = createGridObject(this, x, y);
             }
         }
-
-        if (!_showDebug) return;
         
-        debugTextArray = new TextMeshPro[width, height];
-        Transform debugTextSquares = new GameObject("DebugTextSquares").transform;
+        _debugTextArray = new TextMeshPro[width, height];
+        _debugObjects = new GameObject("DebugObjects").transform;
         for (int x = 0; x < _gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < _gridArray.GetLength(1); y++)
             {
-                debugTextArray[x, y] = Utils.CreateWorldText(
+                _debugTextArray[x, y] = Utils.CreateWorldText(
                     _gridArray[x, y]?.ToString(),
                     null,
                     GetWorldPosition(x, y),
                     Mathf.RoundToInt(cellSize),
                     Color.white,
-                    TextAlignmentOptions.Center);
+                    TextAlignmentOptions.Center,
+                    0,
+                    Constants.PlayerSortingLayer);
                 
-                debugTextArray[x, y].transform.SetParent(debugTextSquares);
+                _debugTextArray[x, y].transform.SetParent(_debugObjects);
                 
                 // Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 // Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
@@ -74,8 +75,13 @@ public class GridHex<TGridObject>
         // Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
         
         OnGridObjectChanged += (_, eventArgs) => {
-            debugTextArray[eventArgs.x, eventArgs.y].text = _gridArray[eventArgs.x, eventArgs.y].ToString();
+            _debugTextArray[eventArgs.x, eventArgs.y].text = _gridArray[eventArgs.x, eventArgs.y].ToString();
         };
+    }
+
+    public void SetDebugVisible(bool visible)
+    {
+        _debugObjects.gameObject.SetActive(visible);
     }
     
     public Vector3 GetWorldPosition(int x, int y)

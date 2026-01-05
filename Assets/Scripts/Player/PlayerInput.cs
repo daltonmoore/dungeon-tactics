@@ -9,6 +9,7 @@ using HexGrid;
 using NUnit.Framework;
 using UI;
 using Units;
+using Unity.Cinemachine;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Player
         [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private new Camera camera;
         [SerializeField] private GameObject cursor;
+        [SerializeField] private GameObject fakeCursor;
         [SerializeField] private LayerMask selectableUnitsLayers;
         [SerializeField] private LayerMask interactableLayers;
         [SerializeField] private LayerMask floorLayers;
@@ -31,11 +33,20 @@ namespace Player
         private BaseCommand _activeCommand;
         private ISelectable _selectedUnit;
         private GameObject _visualPrefabInstance;
+        private CinemachineBrain _cinemachineBrain;
+        private CinemachineCamera _cinemachineCamera;
+        private BoxCollider2D _cameraTargetCollider;
+        private bool _isDragging;
+        private Vector2 _dragOrigin;
+        private Vector3 _lastMousePos;
 
         private void Awake()
         {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
             Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleHexHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
+            _cinemachineBrain = GetComponent<CinemachineBrain>();
         }
 
         private void Start()
@@ -44,6 +55,9 @@ namespace Player
             {
                 boxCollider2D.size = new Vector2(camera.orthographicSize * 2 * camera.aspect, camera.orthographicSize * 2);
             }
+            
+            _cinemachineCamera = _cinemachineBrain.ActiveVirtualCamera as CinemachineCamera;
+            _cameraTargetCollider = cameraTarget.GetComponent<BoxCollider2D>();
         }
 
         private void OnDestroy()
@@ -53,10 +67,60 @@ namespace Player
 
         private void Update()
         {
-            HandlePanning();
+            // Start dragging
+            if (Input.GetMouseButtonDown(0)) // Use 0 for left click, 1 for right, 2 for middle
+            {
+                _isDragging = true;
+                // Capture the starting position in world space
+                _dragOrigin = camera.ScreenToWorldPoint(Input.mousePosition);
+                Debug.Log($"Drag Origin: {_dragOrigin}");
+
+                using (Draw.ingame.WithDuration(4f))
+                {
+                    Draw.ingame.Circle(new Vector3(_dragOrigin.x, _dragOrigin.y, 0), Vector3.forward, 0.5f, Color.red);
+                }
+            }
+
+            // Stop dragging
+            if (Input.GetMouseButtonUp(0))
+            {
+                _isDragging = false;
+            }
+
+            if (!_isDragging)
+            {
+                var cursorWorldPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+                cursorWorldPoint.z = 0;
+                fakeCursor.transform.position = cursorWorldPoint;
+                HandlePanning();
+            }
+            
+            HandleScroll();
             HandleSelect();
             HandleRightClick();
             HandleCommandVisualPrefab();
+        }
+
+        private void FixedUpdate()
+        {
+            if (_isDragging)
+            {
+                fakeCursor.transform.position = _dragOrigin;
+                Vector2 delta = Mouse.current.delta.ReadValue();
+                if (delta.sqrMagnitude > 0)
+                {
+                    Vector2 awayFromDragOrigin = -delta - _dragOrigin;
+                    Vector2 force = awayFromDragOrigin * cameraConfig.MousePanSpeed -
+                                    cameraTarget.linearVelocity * cameraConfig.PanDamping;
+
+                    cameraTarget.AddForce(force, ForceMode2D.Force);
+                    cameraTarget.linearVelocity = Vector2.ClampMagnitude(cameraTarget.linearVelocity, 1f);
+                }
+                else
+                {
+                    cameraTarget.linearVelocity = Vector2.zero;
+                }
+            }
         }
 
         private void HandleCommandVisualPrefab()
@@ -136,6 +200,20 @@ namespace Player
             Debug.DrawLine(unitPos, visualPos, Color.green, 0); // Draw direction to visual
         }
 
+        private void HandleScroll()
+        {
+            var scroll = Mouse.current.scroll.ReadValue().y;
+            if (scroll != 0)
+            {
+                float newOrthographicSize = _cinemachineCamera.Lens.OrthographicSize - scroll * cameraConfig.ZoomSpeed;
+
+                _cinemachineCamera.Lens.OrthographicSize =
+                    Mathf.Clamp(newOrthographicSize, cameraConfig.MinZoomDistance, cameraConfig.MaxZoomDistance);
+                
+                _cameraTargetCollider.size = new Vector2(camera.orthographicSize * 2 * camera.aspect, camera.orthographicSize * 2);
+            }
+        }
+
         private void HandleSelect()
         {
             if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -152,13 +230,13 @@ namespace Player
         {
             
         }
-        
+
         private void HandleMouseUp()
         {
             HandleLeftClick();
             _selectedUnit?.Select();
         }
-        
+
         private void HandleCommandSelected(CommandSelectedEvent evt)
         {
             _activeCommand = evt.Command;
@@ -180,7 +258,7 @@ namespace Player
             moveAmount += GetMouseMoveAmount();
             cameraTarget.linearVelocity = new Vector2(moveAmount.x, moveAmount.y);
         }
-        
+
         private Vector2 GetKeyboardMoveAmount()
         {
             Vector2 moveAmount = Vector2.zero;
@@ -207,7 +285,7 @@ namespace Player
 
             return moveAmount;
         }
-        
+
         private Vector2 GetMouseMoveAmount()
         {
             Vector2 moveAmount = Vector2.zero;
@@ -311,7 +389,10 @@ namespace Player
         
         private void HandleHexHighlighted(HexHighlighted args)
         {
-            cursor.transform.position = args.PathNodeHex.worldPosition;
+            if (!_isDragging)
+            {
+                cursor.transform.position = args.PathNodeHex.worldPosition;
+            }
         }
         
         private void ActivateCommand(RaycastHit2D hit)

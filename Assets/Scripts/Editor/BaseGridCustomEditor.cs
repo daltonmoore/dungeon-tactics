@@ -1,10 +1,11 @@
-﻿using UnityEditor;
+﻿using Grid;
+using UnityEditor;
 using UnityEngine;
 
-namespace Grid
+namespace Editor
 {
     [CustomEditor(typeof(BattleGrid))]
-    public class BaseGridCustomEditor : Editor
+    public class BaseGridCustomEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

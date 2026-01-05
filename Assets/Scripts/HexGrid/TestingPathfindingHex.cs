@@ -16,7 +16,7 @@ public class TestingPathfindingHex : MonoBehaviour
     
     private void Start()
     { 
-        Pathfinding = new PathfindingHex(width, height, cellSize, pfHex);
+        Pathfinding = new PathfindingHex(width, height, cellSize, pfHex, null);
     }
 
     private void Update()
@@ -37,7 +37,7 @@ public class TestingPathfindingHex : MonoBehaviour
             _lastGridObject.Hide();
         }
         
-        _lastGridObject = Pathfinding.grid.GetGridObject(Utils.GetMouseWorldPosition());
+        _lastGridObject = Pathfinding.Grid.GetGridObject(Utils.GetMouseWorldPosition());
         if (_lastGridObject != null)
         {
             _lastGridObject.Show();
@@ -47,14 +47,14 @@ public class TestingPathfindingHex : MonoBehaviour
     private void SetTerrainTypeAtMousePosition()
     {
         Vector3 mouseWorldPosition = Utils.GetMouseWorldPosition();
-        Pathfinding.grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
+        Pathfinding.Grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
         Pathfinding.GetNode(x, y).SetTerrainType(TerrainType.Forest);
     }
 
     private void ToggleNodeWalkability()
     {
         Vector3 mouseWorldPosition = Utils.GetMouseWorldPosition();
-        Pathfinding.grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
+        Pathfinding.Grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
         Pathfinding.GetNode(x, y).SetWalkable(!Pathfinding.GetNode(x, y).walkable);
     }
 

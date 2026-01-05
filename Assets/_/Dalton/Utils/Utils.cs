@@ -78,6 +78,7 @@ namespace Dalton.Utils
             }, "WorldTextPopup");
         }
         
+        #if UNITY_EDITOR
         public static void ClearEditorLog()
         {
             var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
@@ -85,5 +86,6 @@ namespace Dalton.Utils
             var method = type.GetMethod("Clear");
             method.Invoke(new object(), null);
         }
+        #endif
     }
 }

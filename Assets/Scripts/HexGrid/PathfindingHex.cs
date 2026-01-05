@@ -18,20 +18,19 @@ namespace HexGrid
 
         public static float CellSize;
         
-        public GridHex<PathNodeHex> grid { get; }
+        public GridHex<PathNodeHex> Grid { get; }
 
         private SpriteRenderer[,] _debugWalkableArray;
         private SpriteRenderer[,] _debugTerrainArray;
         private DebugNodeCost[,] _debugNodeCostArray;
         private List<PathNodeHex> _openList;
         private List<PathNodeHex> _closedList;
-
-        readonly Transform _debugRoot;
+        private Transform _debugRoot;
         
     
-        public PathfindingHex(int width, int height, float cellSize, Transform pfHex)
+        public PathfindingHex(int width, int height, float cellSize, Transform pfHex, Transform pfFogOfWarHex)
         {
-            grid = new GridHex<PathNodeHex>(
+            Grid = new GridHex<PathNodeHex>(
                 width,
                 height,
                 cellSize,
@@ -40,46 +39,10 @@ namespace HexGrid
                 );
             CellSize = cellSize;
             
-            // ------------------------------ DEBUG VISUALS ------------------------------
-            _debugWalkableArray = new SpriteRenderer[width, height];
-            _debugTerrainArray = new SpriteRenderer[width, height];
-            _debugNodeCostArray = new DebugNodeCost[width, height];
-            
-            _debugRoot = new GameObject("DebugRoot").transform;
-            Transform debugWalkableSquares = new GameObject("DebugWalkableSquares").transform;
-            debugWalkableSquares.SetParent(_debugRoot);
-            Transform debugTerrainSquares = new GameObject("DebugTerrainSquares").transform;
-            debugTerrainSquares.SetParent(_debugRoot);
-            Transform hexVisuals = new GameObject("HexVisuals").transform;
-            hexVisuals.SetParent(_debugRoot);
-            
-            for (int x = 0; x < grid.width; x++)
-            {
-                for (int y = 0; y < grid.height; y++)
-                {
-                    SpriteRenderer spriteRenderer = CreateDebugSquare(cellSize, x, y, debugWalkableSquares, "W");
-                    _debugWalkableArray[x, y] = spriteRenderer;
-                    
-                    spriteRenderer = CreateDebugSquare(cellSize, x, y, debugTerrainSquares,"T");
-                    _debugTerrainArray[x, y] = spriteRenderer;
+            InitializeFog(width, height, cellSize, pfFogOfWarHex);
+            InitializeDebugVisuals(width, height, cellSize, pfHex);
 
-                    // _debugNodeCostArray[x, y].gCost = CreateDebugWorldText(cellSize, hexVisuals, "g: 0",
-                    //     GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR));
-                    // _debugNodeCostArray[x, y].hCost = CreateDebugWorldText(cellSize, hexVisuals, "h: 0",
-                    //     GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR));
-                    // _debugNodeCostArray[x, y].fCost = CreateDebugWorldText(cellSize, hexVisuals, "f: 0",
-                    //     GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR));
-                    
-                    Transform visualTransform =  GameObject.Instantiate(pfHex, grid.GetWorldPosition(x, y), Quaternion.identity);
-                    visualTransform.SetParent(hexVisuals);
-                    visualTransform.localScale *= cellSize;
-                    grid.GetGridObject(x, y).VisualTransform = visualTransform;
-                    grid.GetGridObject(x, y).Selected = visualTransform.Find("Selected");
-                    grid.GetGridObject(x, y).Hide();
-                }
-            }
-        
-            grid.OnGridObjectChanged += (sender, args) =>
+            Grid.OnGridObjectChanged += (sender, args) =>
             {
                 _debugWalkableArray[args.x, args.y].color = args.gridObject.walkable ? Color.green : Color.red;
 
@@ -104,11 +67,89 @@ namespace HexGrid
             };
         }
 
+        private void InitializeFog(int width, int height, float cellSize, Transform pfFogOfWarHex)
+        {
+            Transform fogOfWarRoot = new GameObject("FogOfWar").transform;
+
+            for (int x = 0; x < Grid.width; x++)
+            {
+                for (int y = 0; y < Grid.height; y++)
+                {
+                    Transform visualTransform =  GameObject.Instantiate(pfFogOfWarHex, Grid.GetWorldPosition(x, y), Quaternion.identity);
+                    visualTransform.SetParent(fogOfWarRoot);
+                    // Grid.GetGridObject(x, y).VisualTransform = visualTransform;
+                    // Grid.GetGridObject(x, y).Selected = visualTransform.Find("Selected");
+                    // Grid.GetGridObject(x, y).Hide();
+                }
+            }
+        }
+
+        private void InitializeDebugVisuals(int width, int height, float cellSize, Transform pfHex)
+        {
+            _debugWalkableArray = new SpriteRenderer[width, height];
+            _debugTerrainArray = new SpriteRenderer[width, height];
+            _debugNodeCostArray = new DebugNodeCost[width, height];
+            
+            _debugRoot = new GameObject("DebugRoot").transform;
+            
+            Transform debugWalkableSquares = new GameObject("DebugWalkableSquares").transform;
+            Transform debugTerrainSquares = new GameObject("DebugTerrainSquares").transform;
+            Transform debugHexVisuals = new GameObject("HexVisuals").transform;
+            
+            debugWalkableSquares.SetParent(_debugRoot);
+            debugTerrainSquares.SetParent(_debugRoot);
+            debugHexVisuals.SetParent(_debugRoot);
+            
+            for (int x = 0; x < Grid.width; x++)
+            {
+                for (int y = 0; y < Grid.height; y++)
+                {
+                    SpriteRenderer spriteRenderer = CreateDebugSquare(cellSize, x, y, debugWalkableSquares, "W");
+                    _debugWalkableArray[x, y] = spriteRenderer;
+                    
+                    spriteRenderer = CreateDebugSquare(cellSize, x, y, debugTerrainSquares,"T");
+                    _debugTerrainArray[x, y] = spriteRenderer;
+
+                    _debugNodeCostArray[x, y].gCost = 
+                        Utils.CreateWorldText(
+                            "g: 0",
+                            debugHexVisuals, 
+                            GetRandomPointInHex(
+                                Grid.GetWorldPosition(x, y),
+                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR)
+                        );
+                    _debugNodeCostArray[x, y].hCost = 
+                        Utils.CreateWorldText(
+                            "h: 0",
+                            debugHexVisuals, 
+                            GetRandomPointInHex(
+                                Grid.GetWorldPosition(x, y),
+                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR)
+                        );
+                    _debugNodeCostArray[x, y].fCost = 
+                        Utils.CreateWorldText(
+                            "f: 0", 
+                            debugHexVisuals, 
+                            GetRandomPointInHex(
+                                Grid.GetWorldPosition(x, y),
+                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR)
+                        );
+                    
+                    Transform visualTransform =  GameObject.Instantiate(pfHex, Grid.GetWorldPosition(x, y), Quaternion.identity);
+                    visualTransform.SetParent(debugHexVisuals);
+                    visualTransform.localScale *= cellSize;
+                    Grid.GetGridObject(x, y).VisualTransform = visualTransform;
+                    Grid.GetGridObject(x, y).Selected = visualTransform.Find("Selected");
+                    Grid.GetGridObject(x, y).Hide();
+                }
+            }
+        }
+
         private SpriteRenderer CreateDebugSquare(float cellSize, int x, int y, Transform parentNode, string squareName)
         {
             float squareSize = 4f;
             Sprite squareSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, squareSize, squareSize), new Vector2(0f, 0f), 100);
-            Vector3 pos = GetRandomPointInHex(grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR);
+            Vector3 pos = GetRandomPointInHex(Grid.GetWorldPosition(x, y), cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR);
             
             using (Draw.WithDuration(4))
             {
@@ -149,35 +190,35 @@ namespace HexGrid
 
         public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition)
         {
-            grid.GetGridPosition(startWorldPosition, out int startX, out int startY);
-            grid.GetGridPosition(endWorldPosition, out int endX, out int endY);
+            Grid.GetGridPosition(startWorldPosition, out int startX, out int startY);
+            Grid.GetGridPosition(endWorldPosition, out int endX, out int endY);
         
-            return FindPath(startX, startY, endX, endY)?.ConvertAll(node => grid.GetWorldPosition(node.x, node.y));
+            return FindPath(startX, startY, endX, endY)?.ConvertAll(node => Grid.GetWorldPosition(node.x, node.y));
         }
 
         public void FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition, out List<PathNodeHex> path)
         {
-            grid.GetGridPosition(startWorldPosition, out int startX, out int startY);
-            grid.GetGridPosition(endWorldPosition, out int endX, out int endY);
+            Grid.GetGridPosition(startWorldPosition, out int startX, out int startY);
+            Grid.GetGridPosition(endWorldPosition, out int endX, out int endY);
             
             path = FindPath(startX, startY, endX, endY);
         }
 
         public List<PathNodeHex> FindPath(int startX, int startY, int endX, int endY)
         {
-            PathNodeHex startNode = grid.GetGridObject(startX, startY);
-            PathNodeHex endNode = grid.GetGridObject(endX, endY);
+            PathNodeHex startNode = Grid.GetGridObject(startX, startY);
+            PathNodeHex endNode = Grid.GetGridObject(endX, endY);
         
             if (startNode == null || endNode == null) return null;
         
             _openList = new List<PathNodeHex> { startNode };
             _closedList = new List<PathNodeHex>();
 
-            for (int x = 0; x < grid.width; x++)
+            for (int x = 0; x < Grid.width; x++)
             {
-                for (int y = 0; y < grid.height; y++)
+                for (int y = 0; y < Grid.height; y++)
                 {
-                    PathNodeHex pathNode = grid.GetGridObject(x, y);
+                    PathNodeHex pathNode = Grid.GetGridObject(x, y);
                     pathNode.gCost = int.MaxValue;
                     pathNode.CalculateFCost();
                     pathNode.parent = null;
@@ -234,43 +275,43 @@ namespace HexGrid
 
         public PathNodeHex GetNode(int x, int y)
         {
-            return grid.GetGridObject(x, y);
+            return Grid.GetGridObject(x, y);
         }
     
         public List<PathNodeHex> GetNeighborList(PathNodeHex node)
         {
             List<PathNodeHex> neighborList = new List<PathNodeHex>();
-            bool nodeXPlusOneIsValid = node.x + 1 < grid.width;
-            bool nodeYPlusOneIsValid = node.y + 1 < grid.height;
+            bool nodeXPlusOneIsValid = node.x + 1 < Grid.width;
+            bool nodeYPlusOneIsValid = node.y + 1 < Grid.height;
             bool nodeXMinusOneIsValid = node.x - 1 >= 0;
             bool nodeYMinusOneIsValid = node.y - 1 >= 0;
         
             // left
-            if (nodeXMinusOneIsValid) neighborList.Add(grid.GetGridObject(node.x - 1, node.y));
+            if (nodeXMinusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x - 1, node.y));
             // right
-            if (nodeXPlusOneIsValid) neighborList.Add(grid.GetGridObject(node.x + 1, node.y));
+            if (nodeXPlusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x + 1, node.y));
         
             if (node.y % 2 == 1) // odd
             {
                 // upper left
-                if (nodeYPlusOneIsValid) neighborList.Add(grid.GetGridObject(node.x, node.y + 1));
+                if (nodeYPlusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x, node.y + 1));
                 // upper right
-                if (nodeXPlusOneIsValid && nodeYPlusOneIsValid) neighborList.Add(grid.GetGridObject(node.x + 1, node.y + 1));
+                if (nodeXPlusOneIsValid && nodeYPlusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x + 1, node.y + 1));
                 // down left
-                if (nodeYMinusOneIsValid) neighborList.Add(grid.GetGridObject(node.x, node.y - 1));
+                if (nodeYMinusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x, node.y - 1));
                 // down right
-                if (nodeXPlusOneIsValid && nodeYMinusOneIsValid) neighborList.Add(grid.GetGridObject(node.x + 1, node.y - 1));
+                if (nodeXPlusOneIsValid && nodeYMinusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x + 1, node.y - 1));
             }
             else // even
             {
                 // upper left
-                if (nodeXMinusOneIsValid && nodeYPlusOneIsValid) neighborList.Add(grid.GetGridObject(node.x - 1, node.y + 1));
+                if (nodeXMinusOneIsValid && nodeYPlusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x - 1, node.y + 1));
                 // upper right
-                if (nodeYPlusOneIsValid) neighborList.Add(grid.GetGridObject(node.x, node.y + 1));
+                if (nodeYPlusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x, node.y + 1));
                 // down left
-                if (nodeXMinusOneIsValid && nodeYMinusOneIsValid) neighborList.Add(grid.GetGridObject(node.x - 1, node.y - 1));
+                if (nodeXMinusOneIsValid && nodeYMinusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x - 1, node.y - 1));
                 // down right
-                if (nodeYMinusOneIsValid) neighborList.Add(grid.GetGridObject(node.x, node.y - 1));
+                if (nodeYMinusOneIsValid) neighborList.Add(Grid.GetGridObject(node.x, node.y - 1));
             }
         
             return neighborList;
@@ -316,7 +357,7 @@ namespace HexGrid
         public void UpdateDebugVisuals(bool debug)
         {
             _debugRoot.gameObject.SetActive(debug);
-            grid.SetDebugVisible(debug);
+            Grid.SetDebugVisible(debug);
         }
     }
 

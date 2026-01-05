@@ -7,6 +7,7 @@ using Battle;
 using Drawing;
 using Events;
 using HexGrid;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -34,7 +35,9 @@ namespace Units
         private Rigidbody2D _rigidbody2D; 
         private Vector3 _targetPosition;
         private bool _moving;
-
+        private Vector2 _previousPosition;
+        
+        
         protected override void Awake()
         {
             base.Awake();
@@ -53,7 +56,7 @@ namespace Units
 
         private void Start()
         {
-            var gridObject = Pathfinder.Instance.Pathfinding.grid.GetGridObject(transform.position);
+            var gridObject = Pathfinder.Instance.Pathfinding.Grid.GetGridObject(transform.position);
             gridObject.IsOccupied = true;
             gridObject.Occupant = this;
         }
@@ -62,27 +65,14 @@ namespace Units
         {
             if (_moving)
             {
-                _rigidbody2D.MovePosition(Vector2.MoveTowards(_rigidbody2D.position, _targetPosition, moveSpeed * Time.deltaTime));
+                // Vector3 direction =  new Vector2(_targetPosition.x, _targetPosition.y) - _rigidbody2D.position;
+                // _rigidbody2D.AddForce(direction.normalized * moveSpeed, ForceMode2D.Force);
+                _previousPosition = _rigidbody2D.position;
+                _rigidbody2D.MovePosition(Vector2.MoveTowards(_rigidbody2D.position, _targetPosition, moveSpeed * Time.deltaTime)); 
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            Debug.Log($"{name} collided with {other.gameObject.name} which is on layer {other.gameObject.layer}");
-            if (other.gameObject.layer == LayerMask.NameToLayer("FogOfWar"))
-            {
-                Tilemap tilemap = other.collider.GetComponent<Tilemap>();
-                var cellPos = tilemap.WorldToCell(other.contacts[0].point);
-                var tile = tilemap.GetTile(cellPos);
-                Debug.Log($"Tile is {tile} at tile position {cellPos}");
-                tilemap.SetTile(cellPos, null);
-            }
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            
-        }
+        
 
         public void MoveTo(List<PathNodeHex> path, Action<bool> callback = null)
         {
@@ -105,8 +95,10 @@ namespace Units
                 Animator.SetFloat(AnimatorSpeedHash, 1);
                 while (Vector3.Distance(transform.position, _targetPosition) > STOPPINGDISTANCE && _movePointsLeft - node.gCost >= 0)
                 {
-                    var direction = _directionTracker.currentMoveDirection;
-                    switch (direction)
+                    Vector2 currentVelocity = (_rigidbody2D.position - _previousPosition) / Time.fixedDeltaTime;
+                    
+                    Debug.Log($"Current Velocity is: {currentVelocity}");
+                    switch (currentVelocity)
                     {
                         case { x: > 0.7f, y: < 0.7f and > -0.7f }:
                             Animator.SetInteger(AnimatorDirectionHash, (int)SpriteAnimation.Direction.Right);

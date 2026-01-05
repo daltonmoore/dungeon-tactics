@@ -11,6 +11,7 @@ namespace HexGrid
 
         [SerializeField] private bool debug;
         [SerializeField] private Transform pfHex;
+        [SerializeField] private Transform pfFogOfWarHex;
         [SerializeField] private float cellSize = 10f;
         [SerializeField] private int width = 10;
         [SerializeField] private int height = 6;
@@ -22,7 +23,7 @@ namespace HexGrid
         private void Awake()
         {
             Instance = this;
-            Pathfinding = new PathfindingHex(width, height, cellSize, pfHex);
+            Pathfinding = new PathfindingHex(width, height, cellSize, pfHex, pfFogOfWarHex);
             Pathfinding.UpdateDebugVisuals(debug);
         }
 
@@ -44,7 +45,7 @@ namespace HexGrid
                 DrawPathToMouse();
             }
 
-            var newGridObject = Pathfinding.grid.GetGridObject(Utils.GetMouseWorldPosition());
+            var newGridObject = Pathfinding.Grid.GetGridObject(Utils.GetMouseWorldPosition());
             
             if (_lastGridObject != null && _lastGridObject != newGridObject)
             {
@@ -95,7 +96,7 @@ namespace HexGrid
         private void SetTerrainTypeAtMousePosition()
         {
             Vector3 mouseWorldPosition = Utils.GetMouseWorldPosition();
-            Pathfinding.grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
+            Pathfinding.Grid.GetGridPosition(mouseWorldPosition, out int x, out int y);
             Pathfinding.GetNode(x, y).SetTerrainType(TerrainType.Forest);
         }
     }

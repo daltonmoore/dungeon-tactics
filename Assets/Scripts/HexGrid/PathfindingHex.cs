@@ -28,7 +28,7 @@ namespace HexGrid
         private Transform _debugRoot;
         
     
-        public PathfindingHex(int width, int height, float cellSize, Transform pfHex, Transform pfFogOfWarHex)
+        public PathfindingHex(int width, int height, float cellSize, Transform pfHex, Transform pfFogOfWarHex, bool showFogOfWar)
         {
             Grid = new GridHex<PathNodeHex>(
                 width,
@@ -36,10 +36,10 @@ namespace HexGrid
                 cellSize,
                 Vector3.zero,
                 (g, x, y) => new PathNodeHex(g, x, y)
-                );
+            );
             CellSize = cellSize;
             
-            InitializeFog(width, height, cellSize, pfFogOfWarHex);
+            InitializeFog(width, height, cellSize, pfFogOfWarHex, showFogOfWar);
             InitializeDebugVisuals(width, height, cellSize, pfHex);
 
             Grid.OnGridObjectChanged += (sender, args) =>
@@ -67,7 +67,7 @@ namespace HexGrid
             };
         }
 
-        private void InitializeFog(int width, int height, float cellSize, Transform pfFogOfWarHex)
+        private void InitializeFog(int width, int height, float cellSize, Transform pfFogOfWarHex, bool showFogOfWar)
         {
             Transform fogOfWarRoot = new GameObject("FogOfWar").transform;
 
@@ -82,6 +82,8 @@ namespace HexGrid
                     // Grid.GetGridObject(x, y).Hide();
                 }
             }
+            
+            fogOfWarRoot.gameObject.SetActive(showFogOfWar);
         }
 
         private void InitializeDebugVisuals(int width, int height, float cellSize, Transform pfHex)
@@ -116,7 +118,12 @@ namespace HexGrid
                             debugHexVisuals, 
                             GetRandomPointInHex(
                                 Grid.GetWorldPosition(x, y),
-                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR)
+                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR),
+                            Mathf.RoundToInt(cellSize),
+                            Color.black,
+                            TextAlignmentOptions.Center,
+                            0,
+                            Constants.PlayerSortingLayer
                         );
                     _debugNodeCostArray[x, y].hCost = 
                         Utils.CreateWorldText(
@@ -124,7 +131,12 @@ namespace HexGrid
                             debugHexVisuals, 
                             GetRandomPointInHex(
                                 Grid.GetWorldPosition(x, y),
-                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR)
+                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR),
+                            Mathf.RoundToInt(cellSize),
+                            Color.black,
+                            TextAlignmentOptions.Center,
+                            0,
+                            Constants.PlayerSortingLayer
                         );
                     _debugNodeCostArray[x, y].fCost = 
                         Utils.CreateWorldText(
@@ -132,7 +144,12 @@ namespace HexGrid
                             debugHexVisuals, 
                             GetRandomPointInHex(
                                 Grid.GetWorldPosition(x, y),
-                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR)
+                                cellSize / INNER_HEX_CIRCLE_RADIUS_DIVISOR),
+                            Mathf.RoundToInt(cellSize),
+                            Color.black,
+                            TextAlignmentOptions.Center,
+                            0,
+                            Constants.PlayerSortingLayer
                         );
                     
                     Transform visualTransform =  GameObject.Instantiate(pfHex, Grid.GetWorldPosition(x, y), Quaternion.identity);

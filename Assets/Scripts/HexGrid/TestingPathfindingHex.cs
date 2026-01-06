@@ -16,7 +16,7 @@ public class TestingPathfindingHex : MonoBehaviour
     
     private void Start()
     { 
-        Pathfinding = new PathfindingHex(width, height, cellSize, pfHex, null);
+        Pathfinding = new PathfindingHex(width, height, cellSize, pfHex, null, true);
     }
 
     private void Update()

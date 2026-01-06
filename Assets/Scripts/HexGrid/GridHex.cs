@@ -31,7 +31,8 @@ public class GridHex<TGridObject>
     private Transform _debugObjects;
     private TextMeshPro[,] _debugTextArray;
 
-    public GridHex(int width, int height, float  cellSize, Vector3 originPosition, Func<GridHex<TGridObject>, int, int, TGridObject> createGridObject)
+    public GridHex(int width, int height, float  cellSize, Vector3 originPosition, 
+        Func<GridHex<TGridObject>, int, int, TGridObject> createGridObject)
     {
         this.width = width;
         this.height = height;

@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 namespace Grid
 {
     [RequireComponent(typeof(BoxCollider2D))]
-    public class GridCell : MonoBehaviour, IPointerEnterHandler
+    public class GridCell : MonoBehaviour
     {
         [SerializeField] private GridConfig gridConfig;
         
@@ -28,7 +28,7 @@ namespace Grid
             this.gridConfig = gridConfig;
         }
 
-        public void OnPointerEnter(PointerEventData _)
+        private void OnMouseEnter()
         {
             transform.DOScale(Vector3.one * gridConfig.HighlightScale, gridConfig.HighlightScaleLerpDuration)
                 .onComplete += () => transform.DOScale(Vector3.one * gridConfig.DefaultScale, gridConfig.HighlightScaleLerpDuration);

@@ -85,6 +85,8 @@ public class GridHex<TGridObject>
         _debugObjects.gameObject.SetActive(visible);
     }
     
+    public Vector3 GetWorldPosition (Vector2Int gridPosition) => GetWorldPosition(gridPosition.x, gridPosition.y);
+    
     public Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, 0, 0) * _cellSize +

@@ -11,10 +11,12 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
+using Slider = UnityEngine.UI.Slider;
 
 namespace Units
 {
-    public abstract class AbstractUnit : AbstractCommandable, IAttacker, IAttackable
+    public abstract class AbstractUnit : AbstractCommandable, IAttacker, IAttackable, IDamageable
     {
         private static readonly int AnimatorDirectionHash = Animator.StringToHash("Direction");
         private static readonly int AnimatorSpeedHash = Animator.StringToHash("Speed");
@@ -36,12 +38,16 @@ namespace Units
         private Vector3 _targetPosition;
         private bool _moving;
         private Vector2 _previousPosition;
+        private float _health;
+        private float _healthMax;
         
         
         protected override void Awake()
         {
             base.Awake();
             unitSO = UnitSO as UnitSO;
+            _healthMax = unitSO.Health;
+            _health = unitSO.Health;
             _movePointsLeft = unitSO.MovePoints;
             _flagParent = new GameObject("MoveFlags").transform;
             _directionTracker = GetComponent<PositionDirectionTracker>();
@@ -217,6 +223,14 @@ namespace Units
             Path = null;
         }
 
+        [field:SerializeField]
+        public Slider HealthBar { get; set; }
+
+        public void TakeDamage(int damage)
+        {
+            _health -= damage;
+            HealthBar.value = _health/_healthMax;
+        }
     }
     
     public enum BattleUnitPosition

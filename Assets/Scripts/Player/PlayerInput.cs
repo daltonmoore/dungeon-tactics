@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Commands;
@@ -42,8 +43,8 @@ namespace Player
 
         private void Awake()
         {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Confined;
+            // Cursor.visible = false;
+            // Cursor.lockState = CursorLockMode.Confined;
             Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleHexHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
             _cinemachineBrain = GetComponent<CinemachineBrain>();
@@ -56,7 +57,8 @@ namespace Player
                 boxCollider2D.size = new Vector2(camera.orthographicSize * 2 * camera.aspect, camera.orthographicSize * 2);
             }
             
-            _cinemachineCamera = _cinemachineBrain.ActiveVirtualCamera as CinemachineCamera;
+            
+            StartCoroutine(WaitUntilACameraIsActive());
             _cameraTargetCollider = cameraTarget.GetComponent<BoxCollider2D>();
         }
 
@@ -123,6 +125,15 @@ namespace Player
             }
         }
 
+        private IEnumerator WaitUntilACameraIsActive()
+        {
+            yield return new WaitUntil(() =>
+            {
+                _cinemachineCamera = _cinemachineBrain.ActiveVirtualCamera as CinemachineCamera;
+                return _cinemachineCamera != null;
+            });
+        }
+        
         private void HandleCommandVisualPrefab()
         {
             if (_visualPrefabInstance == null) return;
@@ -203,7 +214,7 @@ namespace Player
         private void HandleScroll()
         {
             var scroll = Mouse.current.scroll.ReadValue().y;
-            if (scroll != 0)
+            if (scroll != 0 && _cinemachineCamera != null)
             {
                 float newOrthographicSize = _cinemachineCamera.Lens.OrthographicSize - scroll * cameraConfig.ZoomSpeed;
 
@@ -360,13 +371,16 @@ namespace Player
             AbstractUnit abstractUnit = _selectedUnit as AbstractUnit;
             
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
-                interactableLayers | floorLayers);
+                interactableLayers | floorLayers | selectableUnitsLayers);
             Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 5f);
 
             if (hits.Length == 0) { return; }
+
+            var hitsOrderedByLayerThenByIsUnit = hits.OrderByDescending(hit =>
+                hit.transform.gameObject.TryGetComponent(out AbstractUnit _) ? 1 : 0);
+                
+            RaycastHit2D hit = hitsOrderedByLayerThenByIsUnit.First();
             
-            var hitsOrderedByLayer = hits.OrderByDescending(hit => hit.transform.gameObject.layer);
-            RaycastHit2D hit = hitsOrderedByLayer.First();
             Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
             if (hit.collider != null
@@ -389,7 +403,7 @@ namespace Player
         
         private void HandleHexHighlighted(HexHighlighted args)
         {
-            if (!_isDragging)
+            if (!_isDragging && cursor != null)
             {
                 cursor.transform.position = args.PathNodeHex.worldPosition;
             }

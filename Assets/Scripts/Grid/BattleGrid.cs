@@ -21,12 +21,7 @@ namespace Grid
         Dictionary<BattleUnitPosition, GridCell> enemyGridCells = new();
         private const string GridCellLayerName = "Floor";
 
-        private void Awake()
-        {
-            Bus<StartBattleEvent>.OnEvent[Owner.Player1] += OnStartBattle;
-    }
-
-        private void OnStartBattle(StartBattleEvent evt)
+        public void StartBattle(StartBattleEvent evt)
         {
             ClearGrid();
             SetupGrid();

@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections;
+using Battle;
+using EventBus;
+using Events;
+using Grid;
+using Units;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -10,6 +15,8 @@ namespace Util
     {
         public static SceneLoader Instance { get; private set; }
         
+        [SerializeField] private float artificialLoadingDuration = 3f;
+        
         private ProgressBar progressBar;
         private Label progressLabel;
         private VisualElement _root;
@@ -18,6 +25,8 @@ namespace Util
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            Bus<StartBattleEvent>.OnEvent[Owner.Player1] += OnStartBattle;
         }
 
         private void Start()
@@ -29,14 +38,22 @@ namespace Util
             progressBar = _root.Q<ProgressBar>("progressBar");
             progressLabel = _root.Q<Label>("progressLabel");
         }
-        
-        public void LoadScene(string sceneToLoad, params object[] args)
+
+        private void OnStartBattle(StartBattleEvent args)
         {
-            _root.visible = true;
-            StartCoroutine(LoadAsyncOperation(sceneToLoad));
+            LoadScene("BattleScene", () =>
+            {
+                BattleManager.Instance.StartBattle(args);
+            });
         }
 
-        private IEnumerator LoadAsyncOperation(string sceneName)
+        public void LoadScene(string sceneToLoad, Action onFinishedLoading)
+        {
+            _root.visible = true;
+            StartCoroutine(LoadAsyncOperation(sceneToLoad, onFinishedLoading));
+        }
+
+        private IEnumerator LoadAsyncOperation(string sceneName, Action onFinishedLoading)
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
             operation.allowSceneActivation = false;
@@ -44,7 +61,7 @@ namespace Util
             progressLabel.text = "Loading...0%";
             
             var startTimeStamp = Time.time;
-            var minLoadingDuration = 3f;
+            var minLoadingDuration = artificialLoadingDuration;
             while (!operation.isDone)
             {
                 // too fast to update the progress bar right now so we wait artificially for minLoadingDuration seconds
@@ -74,6 +91,7 @@ namespace Util
             }
             
             _root.visible = false;
+            onFinishedLoading();
         }
     }
 }

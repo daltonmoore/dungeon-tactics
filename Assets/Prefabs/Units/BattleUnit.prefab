@@ -775,11 +775,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6275625022917560475}
   - component: {fileID: 4999014020623154182}
-  - component: {fileID: 7131028529335719295}
   - component: {fileID: 7343889933313293715}
   - component: {fileID: 1638568630136211383}
   - component: {fileID: 6392562351066742350}
   - component: {fileID: 5078529357215803878}
+  - component: {fileID: 1174176350793745478}
   m_Layer: 8
   m_Name: BattleUnit
   m_TagString: Untagged
@@ -860,32 +860,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7131028529335719295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8735539727599892369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 917cef14a0d642619375cce42190eaa0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <AvailableCommands>k__BackingField:
-  - {fileID: 11400000, guid: cddf97634af6bcb41b6dbf4a8290636c, type: 2}
-  <Transform>k__BackingField: {fileID: 0}
-  <IsSelected>k__BackingField: 0
-  <Owner>k__BackingField: 1
-  <UnitSO>k__BackingField: {fileID: 11400000, guid: 2354da1c0028ac0428343cac8e35fd6f, type: 2}
-  <CurrentTurnHighlight>k__BackingField: {fileID: 2409991983262926210}
-  decal: {fileID: 7197680728652791222}
-  debug: 0
-  flagPrefab: {fileID: 8678833910985855508, guid: 2507468262cd99f43af120aa93219dd5, type: 3}
-  moveSpeed: 10
-  animationConfig: {fileID: 0}
-  <PartyList>k__BackingField: []
-  <HealthBar>k__BackingField: {fileID: 178970069896062319}
 --- !u!61 &7343889933313293715
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -993,3 +967,25 @@ SortingGroup:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_SortAtRoot: 0
+--- !u!114 &1174176350793745478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8735539727599892369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3222252887594ddaa3c44577ff2d8779, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AvailableCommands>k__BackingField:
+  - {fileID: 11400000, guid: cddf97634af6bcb41b6dbf4a8290636c, type: 2}
+  <Transform>k__BackingField: {fileID: 0}
+  <Owner>k__BackingField: 0
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: 2354da1c0028ac0428343cac8e35fd6f, type: 2}
+  decal: {fileID: 7197680728652791222}
+  debug: 0
+  animationConfig: {fileID: 0}
+  <HealthBar>k__BackingField: {fileID: 178970069896062319}
+  currentTurnHighlight: {fileID: 2409991983262926210}

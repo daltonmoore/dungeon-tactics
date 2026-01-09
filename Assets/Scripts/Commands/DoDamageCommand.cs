@@ -17,7 +17,7 @@ namespace Commands
                            collider: not null
                        }
                    }
-                   && context.commandable.TryGetComponent(out IBattler battler)
+                   && context.commandable.TryGetComponent(out BattleUnit battler)
                    && battler.IsMyTurn
                    && context.hit.collider.TryGetComponent(out IDamageable damageable)
                    && damageable.Owner != Owner.Player1;
@@ -27,7 +27,7 @@ namespace Commands
         {
             AbstractUnit unit = (AbstractUnit)context.commandable;
             IDamageable damageable = context.hit.collider.GetComponent<IDamageable>();
-            IBattler battler = unit.GetComponent<IBattler>();
+            BattleUnit battler = unit.GetComponent<BattleUnit>();
 
             damageable.TakeDamage(10);
 

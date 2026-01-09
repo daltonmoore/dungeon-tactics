@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Battle;
 using Commands;
 using Drawing;
 using EventBus;
@@ -367,11 +368,9 @@ namespace Player
             if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
             
             Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            AbstractUnit abstractUnit = _selectedUnit as AbstractUnit;
             
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
                 interactableLayers | floorLayers | selectableUnitsLayers);
-            Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 5f);
 
             if (hits.Length == 0) { return; }
 
@@ -383,12 +382,20 @@ namespace Player
             Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
             if (hit.collider != null
-                && abstractUnit != null
                 && hit.collider.gameObject.layer != LayerMask.NameToLayer("FogOfWar"))
             {
-                Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.point, out List<PathNodeHex> path);
-                CommandContext context = new(_selectedUnit as AbstractCommandable, hit, path, MouseButton.Right);
-                foreach (ICommand command in GetAvailableCommands(abstractUnit))
+                CommandContext context;
+                if (BattleManager.Instance.BattleInProgress)
+                {
+                    context = new CommandContext(BattleManager.Instance.CurrentBattler, hit);
+                }
+                else
+                {
+                    Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.point, out List<PathNodeHex> path);
+                    context = new CommandContext(_selectedUnit as AbstractCommandable, hit, path, MouseButton.Right);
+                }
+                
+                foreach (ICommand command in GetAvailableCommands(context.commandable))
                 {
                     if (command.CanHandle(context))
                     {
@@ -426,7 +433,7 @@ namespace Player
             _activeCommand = null;
         }
         
-        private List<BaseCommand> GetAvailableCommands(AbstractUnit unit)
+        private List<BaseCommand> GetAvailableCommands(AbstractCommandable unit)
         {
             OverrideCommandsCommand[] overrideCommands =
                 unit.AvailableCommands

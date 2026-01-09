@@ -17,10 +17,12 @@ namespace Battle
     {
         public static BattleManager Instance { get; private set; }
         
+        public BattleUnit CurrentBattler { get; private set; }
+        public bool BattleInProgress { get; private set; }
+        
         [SerializeField] private GameObject battleUnitPrefab;
         
-        private readonly Queue<IBattler> _turnOrder = new();
-        private bool _battleInProgress;
+        private readonly Queue<BattleUnit> _turnOrder = new();
 
         private void Awake()
         {
@@ -47,24 +49,17 @@ namespace Battle
             var allUnits = new List<BattleUnitData>();
             allUnits.AddRange(evt.Party);
             allUnits.AddRange(evt.EnemyParty);
-            var turnOrder = allUnits.OrderByDescending(u => u.initiative).ToList();
+            List<BattleUnitData> turnOrder = allUnits.OrderByDescending(u => u.initiative).ToList();
             
             for (int index = 0; index < turnOrder.Count; index++)
             {
                 BattleUnitData battleUnitData = turnOrder[index];
-                battleUnitData.inBattleInstance = battleUnitData.owner == Owner.Player1
-                    ? playerUnitDict[battleUnitData.battleUnitPosition].gameObject
-                    : enemyUnitDict[battleUnitData.battleUnitPosition].gameObject;
-                Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.initiative}");
-
-                if (battleUnitData.inBattleInstance.TryGetComponent(out IBattler battler))
-                {
-                    _turnOrder.Enqueue(battler);
-                }
-                else
-                {
-                    Debug.LogError($"{battleUnitData.name} does not have IBattler component");
-                }
+                BattleUnit battleUnit = battleUnitData.owner == Owner.Player1
+                    ? playerUnitDict[battleUnitData.battleUnitPosition]
+                    : enemyUnitDict[battleUnitData.battleUnitPosition];
+                
+                battleUnitData.inBattleInstance = battleUnit.gameObject;
+                _turnOrder.Enqueue(battleUnit);
             }
             SimpleRuntimeUI.Instance.InitializeTurnOrder(turnOrder);
 
@@ -73,36 +68,36 @@ namespace Battle
 
         private IEnumerator BattleLoop()
         {
-            _battleInProgress = true;
-            while (_battleInProgress)
+            BattleInProgress = true;
+            while (BattleInProgress)
             {
-                IBattler currentBattler = _turnOrder.Dequeue();
-                currentBattler.HighlightForCurrentTurn();
-                while (!currentBattler.EndedTurn)
+                CurrentBattler = _turnOrder.Dequeue();
+                CurrentBattler.HighlightForCurrentTurn();
+                while (!CurrentBattler.EndedTurn)
                 {
-                    currentBattler.IsMyTurn = true;
+                    CurrentBattler.IsMyTurn = true;
                     yield return null;
                 }
-                currentBattler.ResetHighlightForCurrentTurn();
+                CurrentBattler.ResetHighlightForCurrentTurn();
                 yield return null;
             }
         }
 
-        private Dictionary<BattleUnitPosition, LeaderUnit> InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
+        private Dictionary<BattleUnitPosition, BattleUnit> InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
         {
-            Dictionary<BattleUnitPosition, LeaderUnit> instantiatedUnits = new();
+            Dictionary<BattleUnitPosition, BattleUnit> instantiatedUnits = new();
             for (int index = 0; index < party.Count; index++)
             {
                 var unitInstance = Instantiate(battleUnitPrefab, transform);
                 var gridSlot = GetGridSlot(isPlayerUnit, party[index].battleUnitPosition);
-                var baseMilitaryUnit = unitInstance.GetComponent<LeaderUnit>();
+                var battleUnit = unitInstance.GetComponent<BattleUnit>();
                 
-                baseMilitaryUnit.Owner = isPlayerUnit ? Owner.Player1 : Owner.AI1;
-                baseMilitaryUnit.GetComponent<Animator>().enabled = false;
+                battleUnit.Owner = isPlayerUnit ? Owner.Player1 : Owner.AI1;
+                battleUnit.GetComponent<Animator>().enabled = false;
                 unitInstance.transform.position = Pathfinder.Instance.Pathfinding.Grid.GetWorldPosition(gridSlot);
                 unitInstance.GetComponent<SpriteRenderer>().sprite = party[index].icon;
                 
-                instantiatedUnits.Add(party[index].battleUnitPosition, baseMilitaryUnit);
+                instantiatedUnits.Add(party[index].battleUnitPosition, battleUnit);
             }
             
             return instantiatedUnits;

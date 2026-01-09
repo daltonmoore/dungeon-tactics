@@ -30,7 +30,7 @@ public class TurnQueueEntryController
     {
         Debug.Log("Mouse enter");
         var inBattleUnitTransform = _characterData.inBattleInstance.transform;
-        _characterData.inBattleInstance.GetComponent<IBattler>().HighlightForHover();
+        _characterData.inBattleInstance.GetComponent<BattleUnit>().HighlightForHover();
         var initialScale = inBattleUnitTransform.localScale;
         inBattleUnitTransform.DOScale(Vector3.one * 2, .25f).onComplete += () => inBattleUnitTransform.DOScale(initialScale, .25f);
     }
@@ -38,6 +38,6 @@ public class TurnQueueEntryController
     public void OnMouseLeave()
     {
         Debug.Log("Mouse leave"); 
-        _characterData.inBattleInstance.GetComponent<IBattler>().ResetHighlightForHover();
+        _characterData.inBattleInstance.GetComponent<BattleUnit>().ResetHighlightForHover();
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Battle;
 using Drawing;
+using EventBus;
 using Events;
 using HexGrid;
 using UnityEngine;
@@ -11,7 +12,7 @@ using UnityEngine.AI;
 
 namespace Units
 {
-    public class LeaderUnit : AbstractUnit, IAttacker, IAttackable
+    public class LeaderUnit : AbstractUnit, IAttacker, IAttackable, ISelectable
     {
         private static readonly int AnimatorDirectionHash = Animator.StringToHash("Direction");
         private static readonly int AnimatorSpeedHash = Animator.StringToHash("Speed");
@@ -23,6 +24,7 @@ namespace Units
         
         public PathNodeHex BattleNode { get; set; }
         public List<PathNodeHex> Path { get; set; }private int _movePointsLeft;
+        public bool IsSelected { private set; get; }
         
         private Transform _flagParent;
         private Rigidbody2D _rigidbody2D; 
@@ -210,6 +212,27 @@ namespace Units
             StopAllCoroutines();
             StartCoroutine(TravelPath(path, callback));
         }
+        
+        public void Select()
+        {
+            if (decal != null)
+            {
+                decal.gameObject.SetActive(true);
+            }
+            
+            IsSelected = true;
+            Bus<UnitSelectedEvent>.Raise(Owner, new UnitSelectedEvent(this));
+        }
+
+        public void Deselect()
+        {
+            // if (decal != null)
+            // {
+            //     decal.gameObject.SetActive(false);
+            // }
+            // IsSelected = false;
+        }
+        
         
         private IEnumerator MoveToPoint(List<Vector3> path)
         {

@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using HexGrid;
-using Units;
+﻿using Units;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Commands
 {
@@ -13,7 +9,7 @@ namespace Commands
         
         public override bool CanHandle(CommandContext context)
         {
-            return context.commandable is AbstractUnit
+            return context.commandable is LeaderUnit
                 && context.hit.collider != null
                 && context.Path != null;
         }
@@ -21,7 +17,7 @@ namespace Commands
         public override void Handle(CommandContext context)
         {
             Debug.Log("Move Command");
-            AbstractUnit unit = (AbstractUnit)context.commandable;
+            LeaderUnit unit = (LeaderUnit)context.commandable;
 
             if (unit.Path is not null && unit.Path.Count > 0 && unit.Path[^1] == context.Path[^1])
             {

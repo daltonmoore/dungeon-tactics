@@ -7,17 +7,17 @@ using UnityEngine.EventSystems;
 
 namespace Units
 {
-    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IPointerEnterHandler
+    public abstract class AbstractCommandable : MonoBehaviour, ISelectable, IPointerEnterHandler, IBattler
     {
         [field: SerializeField] public BaseCommand[] AvailableCommands { get; private set; }
         [field: SerializeField] public Transform Transform { get; private set; }
         [field: SerializeField] public bool IsSelected { get; protected set; }
         [field: SerializeField] public Owner Owner { get; set; }
         [field: SerializeField] public AbstractUnitSO UnitSO { get; private set; }
+        [field:SerializeField] public GameObject CurrentTurnHighlight { get; set; }
 
         [SerializeField] protected GameObject decal;
         [SerializeField] protected bool debug;
-        [SerializeField] private GameObject currentTurnHighlight;
         
         protected Animator Animator;
 
@@ -52,13 +52,45 @@ namespace Units
             
         }
 
-        public void CurrentTurnHighlight()
+
+        public bool IsMyTurn { get; set; }
+        public bool EndedTurn { get; set; }
+
+        public void HighlightForCurrentTurn()
         {
-            if (decal != null && currentTurnHighlight != null)
+            if (CurrentTurnHighlight != null)
+            {
+                CurrentTurnHighlight.SetActive(true);
+            }
+        }
+
+        public void ResetHighlightForCurrentTurn()
+        {
+            if (CurrentTurnHighlight != null)
+            {
+                CurrentTurnHighlight.SetActive(false);
+            }
+        }
+
+        public void HighlightForHover()
+        {
+            if (decal != null)
             {
                 decal.gameObject.SetActive(true);
-                currentTurnHighlight.SetActive(true);
             }
+        }
+
+        public void ResetHighlightForHover()
+        {
+            if (decal != null)
+            {
+                decal.gameObject.SetActive(false);
+            }
+        }
+
+        public void DoAction()
+        {
+            throw new NotImplementedException();
         }
 
         public void Select()

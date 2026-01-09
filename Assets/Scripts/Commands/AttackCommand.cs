@@ -29,7 +29,7 @@ namespace Commands
                       + " Path Final Node World Pos " 
                       + context.Path[^1].worldPosition 
                       + " Hit point " + context.hit.point);
-            AbstractUnit unit = (AbstractUnit)context.commandable;
+            LeaderUnit unit = (LeaderUnit)context.commandable;
             IAttacker attacker = context.commandable as IAttacker;
             IAttackable attackable = context.hit.collider.GetComponent<IAttackable>();
 

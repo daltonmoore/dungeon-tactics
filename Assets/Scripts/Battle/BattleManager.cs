@@ -19,7 +19,8 @@ namespace Battle
         
         [SerializeField] private GameObject battleUnitPrefab;
         
-        public Queue<AbstractBattleUnit> TurnOrder { get; set; } = new();
+        private readonly Queue<IBattler> _turnOrder = new();
+        private bool _battleInProgress;
 
         private void Awake()
         {
@@ -55,20 +56,46 @@ namespace Battle
                     ? playerUnitDict[battleUnitData.battleUnitPosition].gameObject
                     : enemyUnitDict[battleUnitData.battleUnitPosition].gameObject;
                 Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.initiative}");
-                
+
+                if (battleUnitData.inBattleInstance.TryGetComponent(out IBattler battler))
+                {
+                    _turnOrder.Enqueue(battler);
+                }
+                else
+                {
+                    Debug.LogError($"{battleUnitData.name} does not have IBattler component");
+                }
             }
             SimpleRuntimeUI.Instance.InitializeTurnOrder(turnOrder);
-            turnOrder.First().inBattleInstance.GetComponent<AbstractCommandable>().CurrentTurnHighlight();
+
+            StartCoroutine(BattleLoop());
         }
-        
-        private Dictionary<BattleUnitPosition, BaseMilitaryUnit> InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
+
+        private IEnumerator BattleLoop()
         {
-            Dictionary<BattleUnitPosition, BaseMilitaryUnit> instantiatedUnits = new();
+            _battleInProgress = true;
+            while (_battleInProgress)
+            {
+                IBattler currentBattler = _turnOrder.Dequeue();
+                currentBattler.HighlightForCurrentTurn();
+                while (!currentBattler.EndedTurn)
+                {
+                    currentBattler.IsMyTurn = true;
+                    yield return null;
+                }
+                currentBattler.ResetHighlightForCurrentTurn();
+                yield return null;
+            }
+        }
+
+        private Dictionary<BattleUnitPosition, LeaderUnit> InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
+        {
+            Dictionary<BattleUnitPosition, LeaderUnit> instantiatedUnits = new();
             for (int index = 0; index < party.Count; index++)
             {
                 var unitInstance = Instantiate(battleUnitPrefab, transform);
                 var gridSlot = GetGridSlot(isPlayerUnit, party[index].battleUnitPosition);
-                var baseMilitaryUnit = unitInstance.GetComponent<BaseMilitaryUnit>();
+                var baseMilitaryUnit = unitInstance.GetComponent<LeaderUnit>();
                 
                 baseMilitaryUnit.Owner = isPlayerUnit ? Owner.Player1 : Owner.AI1;
                 baseMilitaryUnit.GetComponent<Animator>().enabled = false;

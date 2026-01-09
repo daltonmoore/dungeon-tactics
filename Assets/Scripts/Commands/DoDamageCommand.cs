@@ -10,13 +10,15 @@ namespace Commands
         
         public override bool CanHandle(CommandContext context)
         {
-            return context is 
-                   { 
+            return context is
+                   {
                        hit:
                        {
                            collider: not null
                        }
                    }
+                   && context.commandable.TryGetComponent(out IBattler battler)
+                   && battler.IsMyTurn
                    && context.hit.collider.TryGetComponent(out IDamageable damageable)
                    && damageable.Owner != Owner.Player1;
         }
@@ -25,8 +27,12 @@ namespace Commands
         {
             AbstractUnit unit = (AbstractUnit)context.commandable;
             IDamageable damageable = context.hit.collider.GetComponent<IDamageable>();
+            IBattler battler = unit.GetComponent<IBattler>();
 
             damageable.TakeDamage(10);
+
+            battler.IsMyTurn = false;
+            battler.EndedTurn = true;
         }
 
         public override bool IsLocked(CommandContext context) => false;

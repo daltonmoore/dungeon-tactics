@@ -14,7 +14,7 @@ namespace Editor
 {
     public class PartyCustomEditor : EditorWindow
     {
-        private static AbstractUnit _unit;
+        private static LeaderUnit _unit;
         
         private Texture2D _addUnitToPartyIcon;
         private const string AddUnitToPartyTexturePath =
@@ -98,14 +98,14 @@ namespace Editor
             
             SetObjectFieldValueFromSelection();
 
-            _unit = (AbstractUnit)_objectField.value;
+            _unit = (LeaderUnit)_objectField.value;
             _folderPath = $"Assets/Parties/{_unit.name}/";
             
             var partyUnitButtons = root.Query<Image>(className: "party-unit-button").ToList();
             
             _objectField.RegisterValueChangedCallback(evt =>
             {
-                _unit = evt.newValue as AbstractUnit;
+                _unit = evt.newValue as LeaderUnit;
                 _folderPath = $"Assets/Parties/{_unit.name}/";
                 foreach (var image in partyUnitButtons)
                 {

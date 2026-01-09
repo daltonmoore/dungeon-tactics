@@ -189,10 +189,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalScale: {x: 0.585, y: 0.585, z: 0.585}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2462569284298868218}
+  m_Father: {fileID: 6275625022917560475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -131.84}
 --- !u!212 &2092592956036527362
 SpriteRenderer:
@@ -620,7 +620,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6687867884615623821}
-  - {fileID: 2791474577725624541}
   m_Father: {fileID: 6275625022917560475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -131.84}
 --- !u!212 &8688913758704189486
@@ -802,6 +801,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2462569284298868218}
+  - {fileID: 2791474577725624541}
   - {fileID: 3765227465433723017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -878,9 +878,9 @@ MonoBehaviour:
   <IsSelected>k__BackingField: 0
   <Owner>k__BackingField: 1
   <UnitSO>k__BackingField: {fileID: 11400000, guid: 2354da1c0028ac0428343cac8e35fd6f, type: 2}
+  <CurrentTurnHighlight>k__BackingField: {fileID: 2409991983262926210}
   decal: {fileID: 7197680728652791222}
   debug: 0
-  currentTurnHighlight: {fileID: 2409991983262926210}
   flagPrefab: {fileID: 8678833910985855508, guid: 2507468262cd99f43af120aa93219dd5, type: 3}
   moveSpeed: 10
   animationConfig: {fileID: 0}

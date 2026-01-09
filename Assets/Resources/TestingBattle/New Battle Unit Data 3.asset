@@ -9,8 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3643eb340afe4defa1df7d31dbb4411d, type: 3}
-  m_Name: Battle Unit 1
+  m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
+  m_Name: New Battle Unit Data 3
   m_EditorClassIdentifier: 
-  sprite: {fileID: 8038884255595702459, guid: 57a691464f2c511498fc1773f344f23c, type: 3}
-  initiative: 24
+  battleUnitPosition: 4
+  characterName: Jialas
+  level: 1
+  icon: {fileID: -2181144277630526561, guid: f45420af2b3846c43aca2c7b69b8156d, type: 3}
+  isLeader: 1
+  initiative: 8

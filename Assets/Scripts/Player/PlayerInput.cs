@@ -75,7 +75,6 @@ namespace Player
                 _isDragging = true;
                 // Capture the starting position in world space
                 _dragOrigin = camera.ScreenToWorldPoint(Input.mousePosition);
-                Debug.Log($"Drag Origin: {_dragOrigin}");
 
                 using (Draw.ingame.WithDuration(4f))
                 {

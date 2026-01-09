@@ -17,6 +17,7 @@ namespace Units
 
         [SerializeField] protected GameObject decal;
         [SerializeField] protected bool debug;
+        [SerializeField] private GameObject currentTurnHighlight;
         
         protected Animator Animator;
 
@@ -51,6 +52,15 @@ namespace Units
             
         }
 
+        public void CurrentTurnHighlight()
+        {
+            if (decal != null && currentTurnHighlight != null)
+            {
+                decal.gameObject.SetActive(true);
+                currentTurnHighlight.SetActive(true);
+            }
+        }
+
         public void Select()
         {
             if (decal != null)
@@ -64,7 +74,11 @@ namespace Units
 
         public void Deselect()
         {
-            
+            // if (decal != null)
+            // {
+            //     decal.gameObject.SetActive(false);
+            // }
+            // IsSelected = false;
         }
     }
 }

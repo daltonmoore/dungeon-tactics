@@ -52,6 +52,11 @@ namespace Units
             _flagParent = new GameObject("MoveFlags").transform;
             _directionTracker = GetComponent<PositionDirectionTracker>();
             _rigidbody2D = GetComponent<Rigidbody2D>();
+
+            foreach (BattleUnitData battleUnitData in PartyList)
+            {
+                battleUnitData.owner = Owner;
+            }
         }
 
         private void OnDestroy()
@@ -155,8 +160,8 @@ namespace Units
                                            PathfindingHex.CellSize + STOPPINGDISTANCE;
                 if (arrivedAtDestination || arrivedAtBattleNode)
                 {
-                    EventBus.Bus<StartBattleEvent>.Raise(Owner.Player1,
-                        new StartBattleEvent(
+                    EventBus.Bus<EngageInBattleEvent>.Raise(Owner.Player1,
+                        new EngageInBattleEvent(
                             PartyList, 
                             attackable.PartyList
                             ));

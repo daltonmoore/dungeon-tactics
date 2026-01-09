@@ -5,6 +5,7 @@ using System.Linq;
 using Events;
 using Grid;
 using HexGrid;
+using UI_Toolkit;
 using Units;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,37 +36,49 @@ namespace Battle
             
         }
 
-        public void StartBattle(StartBattleEvent evt)
+        public void StartBattle(EngageInBattleEvent evt)
         {
             
             // Setup Parties
-            InstantiateBattleUnits(true, evt.Party);
-            InstantiateBattleUnits(false, evt.EnemyParty);
+            var playerUnitDict = InstantiateBattleUnits(true, evt.Party);
+            var enemyUnitDict = InstantiateBattleUnits(false, evt.EnemyParty);
 
             var allUnits = new List<BattleUnitData>();
             allUnits.AddRange(evt.Party);
             allUnits.AddRange(evt.EnemyParty);
             var turnOrder = allUnits.OrderByDescending(u => u.initiative).ToList();
+            
             for (int index = 0; index < turnOrder.Count; index++)
             {
                 BattleUnitData battleUnitData = turnOrder[index];
+                battleUnitData.inBattleInstance = battleUnitData.owner == Owner.Player1
+                    ? playerUnitDict[battleUnitData.battleUnitPosition].gameObject
+                    : enemyUnitDict[battleUnitData.battleUnitPosition].gameObject;
                 Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.initiative}");
                 
             }
+            SimpleRuntimeUI.Instance.InitializeTurnOrder(turnOrder);
+            turnOrder.First().inBattleInstance.GetComponent<AbstractCommandable>().CurrentTurnHighlight();
         }
         
-        private void InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
+        private Dictionary<BattleUnitPosition, BaseMilitaryUnit> InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)
         {
-            foreach (var unit in party)
+            Dictionary<BattleUnitPosition, BaseMilitaryUnit> instantiatedUnits = new();
+            for (int index = 0; index < party.Count; index++)
             {
                 var unitInstance = Instantiate(battleUnitPrefab, transform);
-                var gridSlot = GetGridSlot(isPlayerUnit, unit.battleUnitPosition);
+                var gridSlot = GetGridSlot(isPlayerUnit, party[index].battleUnitPosition);
                 var baseMilitaryUnit = unitInstance.GetComponent<BaseMilitaryUnit>();
+                
                 baseMilitaryUnit.Owner = isPlayerUnit ? Owner.Player1 : Owner.AI1;
                 baseMilitaryUnit.GetComponent<Animator>().enabled = false;
-                unitInstance.transform.position = Pathfinder.Instance.Pathfinding.Grid.GetWorldPosition(gridSlot) ;
-                unitInstance.GetComponent<SpriteRenderer>().sprite = unit.icon;
+                unitInstance.transform.position = Pathfinder.Instance.Pathfinding.Grid.GetWorldPosition(gridSlot);
+                unitInstance.GetComponent<SpriteRenderer>().sprite = party[index].icon;
+                
+                instantiatedUnits.Add(party[index].battleUnitPosition, baseMilitaryUnit);
             }
+            
+            return instantiatedUnits;
         }
         
         private Vector2Int GetGridSlot(bool isPlayerUnit, BattleUnitPosition battleUnitPosition)
@@ -92,8 +105,6 @@ namespace Battle
                     slot = isPlayerUnit ? new Vector2Int(1,2) : new Vector2Int(2, 2);
                     break;
             }
-            
-            Debug.Log($"Slot is {slot.x}, {slot.y}");
             
             return slot;
         }

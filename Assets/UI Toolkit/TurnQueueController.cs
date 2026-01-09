@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Battle;
+using DG.Tweening;
 using Units;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,9 +18,10 @@ public class TurnQueueController
     
     private List<BattleUnitData> _battleUnits;
 
-    public void InitializeBattleUnitList(VisualElement root, VisualTreeAsset listElementTemplate)
+    public void InitializeBattleUnitList(VisualElement root, VisualTreeAsset listElementTemplate, List<BattleUnitData> battleUnits)
     {
-        EnumerateBattleUnits();
+        // DEBUG_EnumerateBattleUnits();
+        _battleUnits = battleUnits;
         
         // Store a reference to the template for the list entries
         _listEntryTemplate = listElementTemplate;
@@ -38,7 +40,7 @@ public class TurnQueueController
         _battleUnitList.selectionChanged += OnBattleUnitSelected;
     }
 
-    private void EnumerateBattleUnits()
+    private void DEBUG_EnumerateBattleUnits()
     {
         _battleUnits = new List<BattleUnitData>();
         _battleUnits.AddRange(Resources.LoadAll<BattleUnitData>("TestingBattle"));
@@ -60,6 +62,9 @@ public class TurnQueueController
             
             // Initialize the controller script
             newListEntryLogic.SetVisualElement(newListEntry);
+
+            newListEntry.RegisterCallback<MouseEnterEvent>(evt => newListEntryLogic.OnMouseEnter());
+            newListEntry.RegisterCallback<MouseLeaveEvent>(evt => newListEntryLogic.OnMouseLeave());
             
             // return the root of the instantiated visual tree
             return newListEntry;
@@ -82,7 +87,7 @@ public class TurnQueueController
     private void OnBattleUnitSelected(IEnumerable<object> selectedItems)
     {
         // Get the currently selected item directly from the ListView
-        var selectedCharacter = _battleUnitList.selectedItem as AbstractBattleUnitSO;
+        var selectedCharacter = _battleUnitList.selectedItem as BattleUnitData;
         
         // Handle none-selection (Escape to deselect everything)
         if (selectedCharacter == null)
@@ -98,6 +103,10 @@ public class TurnQueueController
         // Fill character details
         _charClassLabel.text = "CLASS?"; //selectedCharacter.name.ToString();
         _charNameLabel.text = selectedCharacter.characterName;
-        _charPortrait.style.backgroundImage = new StyleBackground(selectedCharacter.sprite);
+        _charPortrait.style.backgroundImage = new StyleBackground(selectedCharacter.icon);
+        var inBattleUnitTransform = selectedCharacter.inBattleInstance.transform;
+        var initialScale = inBattleUnitTransform.localScale;
+        inBattleUnitTransform.DOScale(Vector3.one * 2, .25f).onComplete += () => inBattleUnitTransform.DOScale(initialScale, .25f);
+            
     }
 }

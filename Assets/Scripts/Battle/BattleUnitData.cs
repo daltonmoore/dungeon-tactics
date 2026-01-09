@@ -14,6 +14,8 @@ namespace Battle
         [SerializeField] public Sprite icon;
         [SerializeField] public bool isLeader;
         [SerializeField] public int initiative;
+        [SerializeField] public GameObject inBattleInstance;
+        [SerializeField] public Owner owner;
 
         public void Initialize(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition,
             bool isLeader, int initiative)

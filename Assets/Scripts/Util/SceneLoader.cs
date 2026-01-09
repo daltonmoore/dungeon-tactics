@@ -26,7 +26,7 @@ namespace Util
             Instance = this;
             DontDestroyOnLoad(gameObject);
             
-            Bus<StartBattleEvent>.OnEvent[Owner.Player1] += OnStartBattle;
+            Bus<EngageInBattleEvent>.OnEvent[Owner.Player1] += OnStartBattle;
         }
 
         private void Start()
@@ -39,7 +39,7 @@ namespace Util
             progressLabel = _root.Q<Label>("progressLabel");
         }
 
-        private void OnStartBattle(StartBattleEvent args)
+        private void OnStartBattle(EngageInBattleEvent args)
         {
             LoadScene("BattleScene", () =>
             {

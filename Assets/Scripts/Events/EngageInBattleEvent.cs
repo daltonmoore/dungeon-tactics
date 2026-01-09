@@ -5,12 +5,12 @@ using EventBus;
 
 namespace Events
 {
-    public struct  StartBattleEvent : IEvent
+    public struct  EngageInBattleEvent : IEvent
     {
         public List<BattleUnitData> Party;
         public List<BattleUnitData> EnemyParty;
         
-        public StartBattleEvent(List<BattleUnitData> party, List<BattleUnitData> enemyParty)
+        public EngageInBattleEvent(List<BattleUnitData> party, List<BattleUnitData> enemyParty)
         {
             Party = party;
             EnemyParty = enemyParty;

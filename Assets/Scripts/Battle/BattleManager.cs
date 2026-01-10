@@ -61,7 +61,7 @@ namespace Battle
                 battleUnitData.inBattleInstance = battleUnit.gameObject;
                 _turnOrder.Enqueue(battleUnit);
             }
-            SimpleRuntimeUI.Instance.InitializeTurnOrder(turnOrder);
+            TurnUI.Instance.InitializeTurnOrder(turnOrder);
 
             StartCoroutine(BattleLoop());
         }
@@ -79,6 +79,9 @@ namespace Battle
                     yield return null;
                 }
                 CurrentBattler.ResetHighlightForCurrentTurn();
+                CurrentBattler.EndedTurn = false;
+                _turnOrder.Enqueue(CurrentBattler);
+                TurnUI.Instance.ShiftTopEntryToBottom();
                 yield return null;
             }
         }

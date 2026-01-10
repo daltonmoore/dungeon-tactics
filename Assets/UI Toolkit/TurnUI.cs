@@ -5,12 +5,13 @@ using UnityEngine.UIElements;
 
 namespace UI_Toolkit
 {
-    public class SimpleRuntimeUI : MonoBehaviour
+    public class TurnUI : MonoBehaviour
     {
         [SerializeField] private VisualTreeAsset listEntryTemplate; 
         [SerializeField] private UIDocument turnOrderDoc;
+        private TurnQueueController _turnQueueController;
 
-        public static SimpleRuntimeUI Instance { get; private set; }
+        public static TurnUI Instance { get; private set; }
         
         private void OnEnable()
         {
@@ -24,8 +25,13 @@ namespace UI_Toolkit
         
         public void InitializeTurnOrder(List<BattleUnitData> turnOrder)
         {
-            var turnQueueController = new TurnQueueController();
-            turnQueueController.InitializeBattleUnitList(turnOrderDoc.rootVisualElement, listEntryTemplate, turnOrder);
+            _turnQueueController = new TurnQueueController();
+            _turnQueueController.InitializeBattleUnitList(turnOrderDoc.rootVisualElement, listEntryTemplate, turnOrder);
+        }
+
+        public void ShiftTopEntryToBottom()
+        {
+            _turnQueueController.ShiftTopEntryToBottomOfList();
         }
     }
 }

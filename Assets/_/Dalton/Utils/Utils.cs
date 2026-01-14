@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using Util;
 
-namespace Dalton.Utils
+namespace @_.Dalton.Utils
 {
     public static class Utils
     {

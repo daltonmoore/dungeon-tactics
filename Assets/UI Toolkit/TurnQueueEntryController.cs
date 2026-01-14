@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class TurnQueueEntryController
 {
     private Label _label;
+    private VisualElement _icon;
     private BattleUnitData _characterData;
     
     // This function retrieves a reference to the
@@ -14,6 +15,7 @@ public class TurnQueueEntryController
     public void SetVisualElement(VisualElement visualElement)
     {
         _label = visualElement.Q<Label>("character-name");
+        _icon = visualElement.Q<VisualElement>("character-icon");
     }
     
     // This function receives the character whose name this list
@@ -24,6 +26,7 @@ public class TurnQueueEntryController
     {
         _characterData = characterData;
         _label.text = characterData.characterName;
+        _icon.style.backgroundImage = new StyleBackground(characterData.icon);
     }
 
     public void OnMouseEnter()

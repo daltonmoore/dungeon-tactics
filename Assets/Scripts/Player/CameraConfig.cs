@@ -10,6 +10,7 @@ namespace Player
         
         // Pan
         [field: SerializeField] public float PanDamping { get; private set; } = 10f;
+        [field: SerializeField] public float PanDragSpeed { get; private set; } = 10f;
         [field: SerializeField] public bool EnableEdgePan { get; private set; } = true;
         [field: SerializeField] public float EdgePanSize { get; private set; } = 50f;
         [field: SerializeField] public float KeyboardPanSpeed { get; private set; } = 10f;

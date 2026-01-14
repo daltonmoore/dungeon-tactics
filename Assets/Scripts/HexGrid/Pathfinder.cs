@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dalton.Utils;
+using _.Dalton.Utils;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -102,15 +102,15 @@ namespace HexGrid
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                SetTerrainTypeAtMousePosition();
-            }
-            
-            if (Input.GetMouseButtonDown(1))
-            {
-                DrawPathToMouse();
-            }
+            // if (Input.GetMouseButtonDown(0))
+            // {
+            //     SetTerrainTypeAtMousePosition();
+            // }
+            //
+            // if (Input.GetMouseButtonDown(1))
+            // {
+            //     DrawPathToMouse();
+            // }
 
             var newGridObject = Pathfinding.Grid.GetGridObject(Utils.GetMouseWorldPosition());
             

@@ -9,7 +9,7 @@ namespace UI_Toolkit
     public class TurnQueueController
     {
         // UXML template for list entries
-        VisualTreeAsset _listEntryTemplate;
+        private VisualTreeAsset _listEntryTemplate;
     
         // UI element references
         private ListView _battleUnitList;

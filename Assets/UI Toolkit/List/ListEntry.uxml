@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:Style src="ListEntry.uss"/>
-    <ui:VisualElement name="list-entry">
-        <ui:Label text="Label" display-tooltip-when-elided="true" name="character-name" />
+    <Style src="project://database/Assets/UI%20Toolkit/List/ListEntry.uss?fileID=7433441132597879392&amp;guid=a1a6c9ed34bf4224cb9a606bab439cf6&amp;type=3#ListEntry" />
+    <ui:VisualElement name="list-entry" style="flex-direction: row; height: 170px; align-self: auto; align-items: center;">
+        <ui:VisualElement name="character-icon" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset%20Store/tactical_rpg_overworld/3x/Character%20sprites/Acolyte_01_Idle.png?fileID=-2181144277630526561&amp;guid=f45420af2b3846c43aca2c7b69b8156d&amp;type=3#Acolyte_01_Idle_0&quot;); height: 100%; -unity-background-scale-mode: scale-to-fit;" />
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="character-name" style="flex-grow: 1; flex-shrink: 1; font-size: 21px;" />
     </ui:VisualElement>
 </ui:UXML>

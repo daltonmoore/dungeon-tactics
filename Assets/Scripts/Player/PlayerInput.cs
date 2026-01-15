@@ -176,7 +176,7 @@ namespace Player
                 return;
             }
             
-            Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Ray ray = camera.ScreenPointToRay(fakeCursor.transform.position);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, float.MaxValue, floorLayers);
             if (hit.collider != null)
             {
@@ -333,7 +333,7 @@ namespace Player
             
             if (!cameraConfig.EnableEdgePan) { return moveAmount; }
             
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Vector2 mousePosition = fakeCursor.transform.position;
             int screenWidth = Screen.width;
             int screenHeight = Screen.height;
 
@@ -362,7 +362,7 @@ namespace Player
         {
             if (camera == null) { return; } 
             
-            Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Ray ray = camera.ScreenPointToRay(fakeCursor.transform.position);
             RaycastHit2D selectableUnitHit = Physics2D.Raycast(
                 ray.origin, 
                 ray.direction,
@@ -397,7 +397,9 @@ namespace Player
         {
             if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
             
-            Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Vector3 screenPoint = camera.WorldToScreenPoint(fakeCursor.transform.position);
+            Ray ray = camera.ScreenPointToRay(screenPoint);
+            Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 1f);
             
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
                 interactableLayers | floorLayers | selectableUnitsLayers);

@@ -5,34 +5,22 @@ using UnityEngine;
 namespace Commands
 {
     [CreateAssetMenu(fileName = "Do Damage Action", menuName = "Units/Commands/Do Damage")]
-    public class DoDamageCommand : BaseCommand
+    public class DoDamageCommand : TurnBasedCommand
     {
         
         public override bool CanHandle(CommandContext context)
         {
-            return context is
-                   {
-                       hit:
-                       {
-                           collider: not null
-                       }
-                   }
-                   && context.commandable.TryGetComponent(out BattleUnit battler)
-                   && battler.IsMyTurn
+            return base.CanHandle(context)
                    && context.hit.collider.TryGetComponent(out IDamageable damageable)
-                   && damageable.Owner != Owner.Player1;
+                   && damageable.Owner != context.commandable.Owner;
         }
 
         public override void Handle(CommandContext context)
         {
-            AbstractUnit unit = (AbstractUnit)context.commandable;
+            base.Handle(context);
             IDamageable damageable = context.hit.collider.GetComponent<IDamageable>();
-            BattleUnit battler = unit.GetComponent<BattleUnit>();
 
             damageable.TakeDamage(10);
-
-            battler.IsMyTurn = false;
-            battler.EndedTurn = true;
         }
 
         public override bool IsLocked(CommandContext context) => false;

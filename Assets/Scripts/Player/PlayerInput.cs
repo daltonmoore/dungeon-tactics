@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _.Dalton.Utils;
 using Battle;
 using Commands;
 using Drawing;
@@ -41,13 +42,43 @@ namespace Player
         private bool _isDragging;
         private Vector2 _dragOrigin;
         private Vector3 _lastMousePos;
+        private InputSystem_Actions _inputActions;
 
         private void Awake()
         {
+            _inputActions = new InputSystem_Actions();
+            _inputActions.Dalton.Enable();
+            _inputActions.Dalton.Move.performed += OnMovePerformed;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleHexHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
             _cinemachineBrain = GetComponent<CinemachineBrain>();
+        }
+
+        private void OnMovePerformed(InputAction.CallbackContext obj)
+        {
+            if (_isDragging) return;
+            var moveAmount = obj.ReadValue<Vector2>();
+            fakeCursor.transform.position += new Vector3(moveAmount.x, moveAmount.y, 0) *
+                                             cameraConfig.MouseSensitivity / cameraConfig.MouseDamping;
+            ConfineFakeCursor();
+        }
+
+        private void ConfineFakeCursor()
+        {
+            var viewportSize = Utils.GetViewportWorldSize(camera);
+            var cameraPos = camera.transform.position;
+            var clampedPos = fakeCursor.transform.position;
+            
+            float minX = cameraPos.x - viewportSize.x / 2f;
+            float maxX = cameraPos.x + viewportSize.x / 2f;
+            float minY = cameraPos.y - viewportSize.y / 2f;
+            float maxY = cameraPos.y + viewportSize.y / 2f;
+
+            clampedPos.x = Mathf.Clamp(clampedPos.x, minX, maxX);
+            clampedPos.y = Mathf.Clamp(clampedPos.y, minY, maxY);
+            fakeCursor.transform.position = clampedPos;
         }
 
         private void Start()
@@ -72,11 +103,10 @@ namespace Player
             // Start dragging
             if (Input.GetMouseButtonDown(0)) // Use 0 for left click, 1 for right, 2 for middle
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                
                 _isDragging = true;
+                ConfineFakeCursor();
                 // Capture the starting position in world space
-                _dragOrigin = camera.ScreenToWorldPoint(Input.mousePosition);
+                _dragOrigin = fakeCursor.transform.position;
 
                 using (Draw.ingame.WithDuration(4f))
                 {
@@ -87,16 +117,13 @@ namespace Player
             // Stop dragging
             if (Input.GetMouseButtonUp(0))
             {
-                Cursor.lockState = CursorLockMode.None;
                 _isDragging = false;
             }
 
             if (!_isDragging)
             {
-                var cursorWorldPoint = camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-                cursorWorldPoint.z = 0;
-                fakeCursor.transform.position = cursorWorldPoint;
                 HandlePanning();
+                ConfineFakeCursor();
             }
             
             HandleScroll();
@@ -110,12 +137,13 @@ namespace Player
             if (_isDragging)
             {
                 fakeCursor.transform.position = _dragOrigin;
+                ConfineFakeCursor();
                 Vector2 delta = Mouse.current.delta.ReadValue();
                 if (delta.sqrMagnitude > 0)
                 {
                     Vector2 awayFromDragOrigin = -delta - _dragOrigin;
-                    Vector2 force = awayFromDragOrigin * cameraConfig.MousePanSpeed -
-                                    cameraTarget.linearVelocity * cameraConfig.PanDamping;
+                    Vector2 force = awayFromDragOrigin * cameraConfig.MouseEdgePanSpeed -
+                                    cameraTarget.linearVelocity * cameraConfig.DragDamping;
 
                     cameraTarget.AddForce(force, ForceMode2D.Force);
                     cameraTarget.linearVelocity = Vector2.ClampMagnitude(cameraTarget.linearVelocity, 1f);
@@ -311,20 +339,20 @@ namespace Player
 
             if (mousePosition.x <= cameraConfig.EdgePanSize)
             {
-                moveAmount.x -= cameraConfig.MousePanSpeed;
+                moveAmount.x -= cameraConfig.MouseEdgePanSpeed;
             }
             else if (mousePosition.x >= screenWidth - cameraConfig.EdgePanSize)
             {
-                moveAmount.x += cameraConfig.MousePanSpeed;
+                moveAmount.x += cameraConfig.MouseEdgePanSpeed;
             }
 
             if (mousePosition.y >= screenHeight - cameraConfig.EdgePanSize)
             {
-                moveAmount.y += cameraConfig.MousePanSpeed;
+                moveAmount.y += cameraConfig.MouseEdgePanSpeed;
             }
             else if (mousePosition.y <= cameraConfig.EdgePanSize)
             {
-                moveAmount.y -= cameraConfig.MousePanSpeed;           
+                moveAmount.y -= cameraConfig.MouseEdgePanSpeed;           
             }
             
             return moveAmount;

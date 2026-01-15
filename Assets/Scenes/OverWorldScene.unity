@@ -10973,6 +10973,14 @@ PrefabInstance:
       propertyPath: cameraTarget
       value: 
       objectReference: {fileID: 662375656}
+    - target: {fileID: 2324498920553916307, guid: a0474fa46b474a641953f9abdc79f391, type: 3}
+      propertyPath: cameraConfig.<MouseDamping>k__BackingField
+      value: 141
+      objectReference: {fileID: 0}
+    - target: {fileID: 2324498920553916307, guid: a0474fa46b474a641953f9abdc79f391, type: 3}
+      propertyPath: cameraConfig.<MouseSensitivity>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4846997676642555644, guid: a0474fa46b474a641953f9abdc79f391, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.35

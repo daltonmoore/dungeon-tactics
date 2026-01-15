@@ -48,6 +48,36 @@ namespace @_.Dalton.Utils
             return vec;
         }
 
+        public static float GetViewportWidth()
+        {
+            return Screen.width;
+        }
+
+        public static float GetViewportHeight()
+        {
+            return Screen.height;
+        }
+
+        public static Vector2 GetViewportWorldSize(Camera camera = null)
+        {
+            if (camera == null) camera = Camera.main;
+            if (camera == null) return Vector2.zero;
+
+            if (camera.orthographic)
+            {
+                float height = camera.orthographicSize * 2;
+                float width = height * camera.aspect;
+                return new Vector2(width, height);
+            }
+            else
+            {
+                // For perspective camera at a certain distance, it's more complex, 
+                // but usually for "viewport size" in 2D-ish games we mean the orthographic view
+                // or the screen dimensions.
+                return new Vector2(Screen.width, Screen.height);
+            }
+        }
+
         private static Vector3 GetMousePositionWithZ(Vector3 screenPosition, Camera worldCamera)
         {
             Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);

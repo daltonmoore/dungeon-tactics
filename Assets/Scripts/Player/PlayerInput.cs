@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using _.Dalton.Utils;
 using Battle;
 using Commands;
 using Drawing;
@@ -99,29 +98,6 @@ namespace Player
                 fakeCursor.transform.position = cursorWorldPoint;
                 HandlePanning();
             }
-            if (_isDragging)
-            {
-                fakeCursor.transform.position = _dragOrigin;
-                Vector2 delta = Mouse.current.delta.ReadValue();
-                Debug.Log(delta);
-                if (delta.sqrMagnitude > 0)
-                {
-                    Vector2 awayFromDragOrigin = -delta - _dragOrigin;
-                    Vector2 force = awayFromDragOrigin * cameraConfig.MousePanSpeed;
-
-                    using(Draw.ingame.WithDuration(.1f))
-                    {
-                        // Draw.ingame.Line(_dragOrigin, _dragOrigin + delta, Color.red);
-                        // Draw.ingame.Line(_dragOrigin, awayFromDragOrigin, Color.blue);
-                        // Draw.ingame.Line(_dragOrigin, force, Color.green);
-                        Draw.ingame.xy.Circle(awayFromDragOrigin, 0.2f, Color.blue);
-                    }
-
-                    // cameraTarget.position += force;
-                    cameraTarget.position = Vector3.MoveTowards(cameraTarget.transform.position, awayFromDragOrigin,
-                        cameraConfig.MousePanSpeed);
-                }
-            }
             
             HandleScroll();
             HandleSelect();
@@ -131,7 +107,24 @@ namespace Player
 
         private void FixedUpdate()
         {
-            
+            if (_isDragging)
+            {
+                fakeCursor.transform.position = _dragOrigin;
+                Vector2 delta = Mouse.current.delta.ReadValue();
+                if (delta.sqrMagnitude > 0)
+                {
+                    Vector2 awayFromDragOrigin = -delta - _dragOrigin;
+                    Vector2 force = awayFromDragOrigin * cameraConfig.MousePanSpeed -
+                                    cameraTarget.linearVelocity * cameraConfig.PanDamping;
+
+                    cameraTarget.AddForce(force, ForceMode2D.Force);
+                    cameraTarget.linearVelocity = Vector2.ClampMagnitude(cameraTarget.linearVelocity, 1f);
+                }
+                else
+                {
+                    cameraTarget.linearVelocity = Vector2.zero;
+                }
+            }
         }
 
         private IEnumerator WaitUntilACameraIsActive()

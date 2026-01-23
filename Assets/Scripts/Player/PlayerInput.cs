@@ -419,7 +419,7 @@ namespace Player
             Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
             if (hit.collider != null
-                && !hit.collider.gameObject.CompareTag("FogOfWar"))
+                && hit.collider.gameObject.layer != LayerMask.NameToLayer("FogOfWar"))
             {
                 CommandContext context;
                 if (BattleManager.Instance.BattleInProgress)

@@ -85,8 +85,8 @@ namespace HexGrid
                         Debug.LogWarning($"Tile at pos {pos} is null");
                         continue;
                     }
-                    Debug.Log($"Unwalkable tile pos is {pos}");
-                    Debug.Log($"Setting tile {tile.x}, {tile.y} to unwalkable");
+                    // Debug.Log($"Unwalkable tile pos is {pos}");
+                    // Debug.Log($"Setting tile {tile.x}, {tile.y} to unwalkable");
                     tile.SetWalkable(false);
                 }
             }

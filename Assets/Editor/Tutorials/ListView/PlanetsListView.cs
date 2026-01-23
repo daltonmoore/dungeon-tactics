@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 
 public class PlanetsListView : PlanetsWindow
 {
-    [SerializeField]
 
     [MenuItem("Planets/Standard List")]
     public static void Summon()

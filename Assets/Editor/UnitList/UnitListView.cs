@@ -6,8 +6,6 @@ namespace Editor.UnitList
 {
     public class UnitsListView : UnitWindow
     {
-        [SerializeField]
-
         [MenuItem("Units/Standard List")]
         public static void Summon()
         {

@@ -12,6 +12,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 using Slider = UnityEngine.UI.Slider;
 
 namespace Units
@@ -19,13 +20,14 @@ namespace Units
     public abstract class AbstractUnit : AbstractCommandable, IDamageable
     {
         [SerializeField] private AnimationConfigSO animationConfig;
+        [SerializeField] public GameObject deathPrefab;
 
         protected UnitSO unitSO;
-       
+
         private float _health;
         private float _healthMax;
-        
-        
+
+
         protected override void Awake()
         {
             base.Awake();
@@ -43,6 +45,11 @@ namespace Units
         {
             _health -= damage;
             HealthBar.value = _health/_healthMax;
+
+            if (_health <= 0)
+            {
+                Instantiate(deathPrefab, transform);
+            }
         }
     }
     

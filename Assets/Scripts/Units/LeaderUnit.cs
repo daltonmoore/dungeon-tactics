@@ -226,11 +226,11 @@ namespace Units
 
         public void Deselect()
         {
-            // if (decal != null)
-            // {
-            //     decal.gameObject.SetActive(false);
-            // }
-            // IsSelected = false;
+            if (decal != null)
+            {
+                decal.gameObject.SetActive(false);
+            }
+            IsSelected = false;
         }
         
         

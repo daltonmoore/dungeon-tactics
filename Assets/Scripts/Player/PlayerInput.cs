@@ -360,9 +360,9 @@ namespace Player
         
         private void HandleLeftClick()
         {
-            if (camera == null) { return; } 
-            
-            Ray ray = camera.ScreenPointToRay(fakeCursor.transform.position);
+            if (camera == null) { return; }
+
+            Ray ray = GenerateRayFromFakeCursor();
             RaycastHit2D selectableUnitHit = Physics2D.Raycast(
                 ray.origin, 
                 ray.direction,
@@ -374,6 +374,8 @@ namespace Player
                 float.MaxValue,
                 selectableUnitsLayers | interactableLayers | floorLayers);
             
+            Debug.DrawRay(ray.origin, ray.direction * 1000, Color.green, 1f);
+            
             if (_activeCommand is null 
                 && !RuntimeUI.IsPointerOverCanvas()
                 && selectableUnitHit.collider != null
@@ -381,6 +383,10 @@ namespace Player
                 && selectableUnitHit.collider.TryGetComponent(out AbstractUnit unit)
                 && unit.Owner == Owner.Player1)
             {
+                if (_selectedUnit != null)
+                {
+                    _selectedUnit.Deselect();
+                }
                 selectable.Select();
                 _selectedUnit = selectable;
             }
@@ -397,8 +403,7 @@ namespace Player
         {
             if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
             
-            Vector3 screenPoint = camera.WorldToScreenPoint(fakeCursor.transform.position);
-            Ray ray = camera.ScreenPointToRay(screenPoint);
+            Ray ray = GenerateRayFromFakeCursor();
             Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 1f);
             
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
@@ -414,7 +419,7 @@ namespace Player
             Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
             if (hit.collider != null
-                && hit.collider.gameObject.layer != LayerMask.NameToLayer("FogOfWar"))
+                && !hit.collider.gameObject.CompareTag("FogOfWar"))
             {
                 CommandContext context;
                 if (BattleManager.Instance.BattleInProgress)
@@ -438,7 +443,14 @@ namespace Player
                 }
             }
         }
-        
+
+        private Ray GenerateRayFromFakeCursor()
+        {
+            Vector3 screenPoint = camera.WorldToScreenPoint(fakeCursor.transform.position);
+            Ray ray = camera.ScreenPointToRay(screenPoint);
+            return ray;
+        }
+
         private void HandleHexHighlighted(HexHighlighted args)
         {
             if (!_isDragging && cursor != null)

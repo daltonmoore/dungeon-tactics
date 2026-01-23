@@ -875,5 +875,6 @@ MonoBehaviour:
   decal: {fileID: 7197680728652791222}
   debug: 0
   animationConfig: {fileID: 0}
+  deathPrefab: {fileID: 2577794284479840939, guid: e2deb2934e180c443bd5709c17b563e9, type: 3}
   <HealthBar>k__BackingField: {fileID: 178970069896062319}
   currentTurnHighlight: {fileID: 2409991983262926210}

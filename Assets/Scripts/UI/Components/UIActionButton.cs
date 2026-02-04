@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using Commands;
-using Units;
+﻿using TacticsCore.Commands;
+using TacticsCore.Units;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;

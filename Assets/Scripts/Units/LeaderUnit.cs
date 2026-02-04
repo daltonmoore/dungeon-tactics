@@ -4,15 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Battle;
 using Drawing;
-using EventBus;
 using Events;
-using HexGrid;
+using TacticsCore.Data;
+using TacticsCore.EventBus;
+using TacticsCore.Events;
+using TacticsCore.HexGrid;
+using TacticsCore.Interfaces;
+using TacticsCore.Units;
+using Units;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Units
+namespace TacticsCore.Units
 {
-    public class LeaderUnit : AbstractUnit, IAttacker, IAttackable, ISelectable
+    public class LeaderUnit : AbstractUnit, ISelectable
     {
         private static readonly int AnimatorDirectionHash = Animator.StringToHash("Direction");
         private static readonly int AnimatorSpeedHash = Animator.StringToHash("Speed");
@@ -40,9 +45,9 @@ namespace Units
             _flagParent = new GameObject("MoveFlags").transform;
             _rigidbody2D = GetComponent<Rigidbody2D>();
 
-            foreach (BattleUnitData battleUnitData in PartyList)
+            foreach (UnitSO unitData in PartyList)
             {
-                battleUnitData.owner = Owner;
+                unitData.owner = Owner;
             }
         }
         
@@ -122,7 +127,7 @@ namespace Units
         }
 
 
-        public void Attack(IAttackable attackable)
+        public void Attack(LeaderUnit enemyLeader)
         {
             // we clicked directly on the hex where the occupant is, so we need to move to the hex just before it.
             var tempPath = new List<PathNodeHex>(Path);
@@ -138,16 +143,16 @@ namespace Units
                                            PathfindingHex.CellSize + StoppingDistance;
                 if (arrivedAtDestination || arrivedAtBattleNode)
                 {
-                    EventBus.Bus<EngageInBattleEvent>.Raise(Owner.Player1,
+                    Bus<EngageInBattleEvent>.Raise(Owner.Player1,
                         new EngageInBattleEvent(
                             PartyList, 
-                            attackable.PartyList
+                            enemyLeader.PartyList
                             ));
                 }
             });
         }
 
-        public void ShowPath(List<PathNodeHex> path, IAttackable attackable, out  PathNodeHex battleNode)
+        public void ShowPath(List<PathNodeHex> path, LeaderUnit enemyLeader, out  PathNodeHex battleNode)
         {
             HidePath();
 
@@ -184,8 +189,10 @@ namespace Units
                         {
                             if (neighbor.IsOccupied && neighbor.Occupant != null && neighbor.Occupant.Owner != Owner)
                             {
-                                Debug.Log($"Neighbor is occupied");
-                                battleNode = neighbor;
+                                Pathfinder.Instance.Pathfinding.Grid.GetGridPosition(neighbor.worldPosition, out int x,
+                                    out int y);
+                                Debug.Log($"Neighbor ({x}, {y}) is occupied {neighbor.worldPosition}");
+                                battleNode = node;
                                 break;
                             }
                         }

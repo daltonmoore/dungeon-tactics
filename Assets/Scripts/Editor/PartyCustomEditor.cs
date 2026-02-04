@@ -2,8 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using Battle;
-using Editor.UnitList;
-using Units;
+using TacticsCore.Editor;
+using TacticsCore.Data;
+using TacticsCore.Units;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -127,11 +128,11 @@ namespace Editor
                 
                 var leader = _unit.PartyList.Where(u => u.isLeader).ToList().First();
                 
-                foreach (BattleUnitData battleUnitData in _unit.PartyList)
+                foreach (UnitSO unitData in _unit.PartyList)
                 {
-                    if (battleUnitData == leader) continue;
+                    if (unitData == leader) continue;
                     
-                    AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(battleUnitData));
+                    AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(unitData));
                 }
 
                 
@@ -190,7 +191,7 @@ namespace Editor
 
             void ClickCallback(ClickEvent _)
             {
-                if (manipulator.beganDrag)
+                if (manipulator.BeganDrag)
                     return;
                 
                 if (_unitWindow != null)
@@ -198,7 +199,7 @@ namespace Editor
                     _unitWindow.Close();
                 }
 
-                _unitWindow = EditorWindow.CreateWindow<UnitTreeView>();
+                _unitWindow = CreateWindow<UnitTreeView>();
 
                 void OnSelectedUnitForPartyCallback(IUnitOrGroup item)
                 {
@@ -207,10 +208,10 @@ namespace Editor
                         return;
                     }
 
-                    Debug.Log($"Selected unit {item.name} for position: {image.name}");
+                    Debug.Log($"Selected unit {item.Name} for position: {image.name}");
                     UpdatePartyWithNewUnit(Enum.Parse<BattleUnitPosition>(image.name), item);
 
-                    image.sprite = item.icon;
+                    image.sprite = item.Icon;
                 }
 
                 _unitWindow.OnSelectedUnitForPartyCallback = OnSelectedUnitForPartyCallback;
@@ -234,13 +235,13 @@ namespace Editor
 
             BattleUnitData so = CreateInstance<BattleUnitData>();
             so.name = battleUnitPosition.ToString();
-            so.Initialize(item.name, 1, item.icon, battleUnitPosition, isLeader, item.stats.Find(s => s.type == StatType.Initiative).value);
+            so.Initialize(item.Name, 1, item.Icon, battleUnitPosition, isLeader, item.Stats.Find(s => s.type == StatType.Initiative).value);
             _unit.PartyList.Add(so);
             CreateOrUpdateAsset(so, $"{_folderPath}{battleUnitPosition}.asset");
 
             if (isLeader)
             {
-                _unit.GetComponent<SpriteRenderer>().sprite = item.icon;
+                _unit.GetComponent<SpriteRenderer>().sprite = item.Icon;
             }
         }
         

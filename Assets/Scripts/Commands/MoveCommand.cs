@@ -1,4 +1,8 @@
-﻿using Units;
+﻿using TacticsCore.Commands;
+using TacticsCore.HexGrid;
+using TacticsCore.Interfaces;
+using TacticsCore.Units;
+using Units;
 using UnityEngine;
 
 namespace Commands
@@ -24,7 +28,7 @@ namespace Commands
                 if (unit.BattleNode != null)
                 {
                     Debug.Log("ATTACK");
-                    unit.Attack(unit.BattleNode.Occupant.GetComponent<IAttackable>());
+                    unit.Attack(unit.BattleNode.Occupant.GetComponent<LeaderUnit>());
                 }
                 else
                 {

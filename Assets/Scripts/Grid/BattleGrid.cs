@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Battle;
-using EventBus;
 using Events;
-using Units;
+using TacticsCore.Units;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Grid
 {

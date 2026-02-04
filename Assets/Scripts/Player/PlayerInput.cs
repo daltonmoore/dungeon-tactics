@@ -6,17 +6,17 @@ using _.Dalton.Utils;
 using Battle;
 using Commands;
 using Drawing;
-using EventBus;
 using Events;
-using HexGrid;
-using NUnit.Framework;
+using TacticsCore.Commands;
+using TacticsCore.Data;
+using TacticsCore.EventBus;
+using TacticsCore.Events;
+using TacticsCore.HexGrid;
+using TacticsCore.Interfaces;
+using TacticsCore.Units;
 using UI;
-using Units;
 using Unity.Cinemachine;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using MouseButton = UnityEngine.InputSystem.LowLevel.MouseButton;
 
@@ -376,6 +376,8 @@ namespace Player
             
             Debug.DrawRay(ray.origin, ray.direction * 1000, Color.green, 1f);
             
+            Debug.Log($"Left Click Hit: {selectableUnitHit.collider?.gameObject.name}");
+            
             if (_activeCommand is null 
                 && !RuntimeUI.IsPointerOverCanvas()
                 && selectableUnitHit.collider != null
@@ -418,8 +420,7 @@ namespace Player
             
             Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
-            if (hit.collider != null
-                && hit.collider.gameObject.layer != LayerMask.NameToLayer("FogOfWar"))
+            if (hit.collider != null && !hit.collider.TryGetComponent(out FogOfWar _))
             {
                 CommandContext context;
                 if (BattleManager.Instance.BattleInProgress)
@@ -428,7 +429,12 @@ namespace Player
                 }
                 else
                 {
-                    Pathfinder.Instance.FindPath(_selectedUnit.Transform.position, hit.point, out List<PathNodeHex> path);
+                    if (_selectedUnit == null) { return; }
+                    Pathfinder.Instance.FindPath(
+                        _selectedUnit.Transform.position,
+                        hit.point,
+                        out List<PathNodeHex> path
+                        );
                     context = new CommandContext(_selectedUnit as AbstractCommandable, hit, path, MouseButton.Right);
                 }
                 

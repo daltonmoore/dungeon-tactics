@@ -1,15 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Events;
-using Grid;
-using HexGrid;
+using TacticsCore.Data;
+using TacticsCore.HexGrid;
+using TacticsCore.Units;
 using UI_Toolkit;
 using Units;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Util;
 
 namespace Battle
 {

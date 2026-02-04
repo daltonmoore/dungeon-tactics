@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Commands;
-using EventBus;
-using Events;
+using TacticsCore.Commands;
+using TacticsCore.Data;
+using TacticsCore.EventBus;
+using TacticsCore.Events;
+using TacticsCore.Units;
 using UI.Components;
-using Units;
 using UnityEngine;
 using UnityEngine.Events;
 

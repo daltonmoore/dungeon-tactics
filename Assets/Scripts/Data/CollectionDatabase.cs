@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Battle;
+using TacticsCore;
 using UnityEngine;
 
 namespace Data

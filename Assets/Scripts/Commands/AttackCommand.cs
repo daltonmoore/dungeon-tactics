@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using TacticsCore.Commands;
+using TacticsCore.HexGrid;
+using TacticsCore.Interfaces;
+using TacticsCore.Units;
 using Units;
 using UnityEngine;
 
@@ -30,16 +34,15 @@ namespace Commands
                       + context.Path[^1].worldPosition 
                       + " Hit point " + context.hit.point);
             LeaderUnit unit = (LeaderUnit)context.commandable;
-            IAttacker attacker = context.commandable as IAttacker;
-            IAttackable attackable = context.hit.collider.GetComponent<IAttackable>();
+            LeaderUnit enemyLeader = context.hit.collider.GetComponent<LeaderUnit>();
 
             if (unit.Path is not null && unit.Path.Count > 0 && unit.Path[^1] == context.Path[^1])
             {
-                attacker.Attack(attackable);
+                unit.Attack(enemyLeader);
             }
             else
             {
-                attacker.ShowPath(context.Path, attackable, out PathNodeHex battleNode);
+                unit.ShowPath(context.Path, enemyLeader, out PathNodeHex battleNode);
                 unit.BattleNode = battleNode;
             }
         }

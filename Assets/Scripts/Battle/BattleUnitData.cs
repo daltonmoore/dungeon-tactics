@@ -1,23 +1,16 @@
-﻿using System;
-using Units;
+﻿using TacticsCore.Data;
+using TacticsCore.Units;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Battle
 {
     [CreateAssetMenu(fileName = "Battle Unit Data", menuName = "Battle/Battle Unit Data")]
-    public class BattleUnitData : ScriptableObject
+    public class BattleUnitData : UnitSO
     {
         [SerializeField] public BattleUnitPosition battleUnitPosition;
-        [SerializeField] public string characterName;
-        [SerializeField] public int level;
-        [SerializeField] public Sprite icon;
-        [SerializeField] public bool isLeader;
-        [SerializeField] public int initiative;
         [SerializeField] public GameObject inBattleInstance;
-        [SerializeField] public Owner owner;
 
-        public void Initialize(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition,
+        public override void Initialize(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition,
             bool isLeader, int initiative)
         {
             this.characterName = name;

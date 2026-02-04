@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using Battle;
-using EventBus;
 using Events;
 using Grid;
+using TacticsCore.Data;
+using TacticsCore.EventBus;
 using Units;
 using UnityEngine;
 using UnityEngine.SceneManagement;

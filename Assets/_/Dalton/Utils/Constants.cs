@@ -1,4 +1,4 @@
-﻿namespace Util
+﻿namespace @_.Dalton.Utils
 {
     public static class Constants
     {

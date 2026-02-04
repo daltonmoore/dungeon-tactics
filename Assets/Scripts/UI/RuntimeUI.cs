@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
-using EventBus;
-using Events;
+using TacticsCore.Data;
+using TacticsCore.EventBus;
+using TacticsCore.Events;
+using TacticsCore.Units;
 using UI.Containers;
-using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;

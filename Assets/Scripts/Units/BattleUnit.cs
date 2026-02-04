@@ -1,4 +1,5 @@
 ﻿using System;
+using TacticsCore.Units;
 using UnityEngine;
 
 namespace Units

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Battle;
 using Commands;
-using EventBus;
+using TacticsCore;
+using TacticsCore.Data;
+using TacticsCore.EventBus;
 
 namespace Events
 {

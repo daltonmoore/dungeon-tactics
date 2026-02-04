@@ -1,0 +1,16 @@
+{
+    "name": "Dalton",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2c29ea5109dd4aee9e0c61bb04bf079a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

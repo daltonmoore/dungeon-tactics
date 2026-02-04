@@ -13,6 +13,10 @@ using Object = UnityEngine.Object;
 
 namespace Editor
 {
+    /// <summary>
+    /// This is a custom ui toolkit window that allows a user to edit a leader's party via dragging and dropping tiles.
+    /// Based off of the party editing functionality in the scenario editor that comes with Disciples II.  
+    /// </summary>
     public class PartyCustomEditor : EditorWindow
     {
         private static LeaderUnit _unit;

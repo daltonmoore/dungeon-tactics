@@ -5,6 +5,6 @@ namespace Battle
 {
     public abstract class AbstractBattleUnit : MonoBehaviour
     {
-        [SerializeField] public AbstractBattleUnitSO battleUnitSO;
+        // [SerializeField] public AbstractBattleUnitSO battleUnitSO;
     }
 }

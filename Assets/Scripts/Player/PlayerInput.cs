@@ -404,20 +404,25 @@ namespace Player
         private void HandleRightClick()
         {
             if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
-            
+            Utils.ClearEditorLog();
             Ray ray = GenerateRayFromFakeCursor();
             Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 1f);
             
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, float.MaxValue, 
                 interactableLayers | floorLayers | selectableUnitsLayers);
+            
 
             if (hits.Length == 0) { return; }
 
-            var hitsOrderedByLayerThenByIsUnit = hits.OrderByDescending(hit =>
-                hit.transform.gameObject.TryGetComponent(out AbstractUnit _) ? 1 : 0);
-                
-            RaycastHit2D hit = hitsOrderedByLayerThenByIsUnit.First();
-            
+            var hitsOrderedByLayer = hits.OrderByDescending(hit => hit.transform.gameObject.layer).ToList();
+            RaycastHit2D hit = hitsOrderedByLayer.First();
+
+            for (int i = 0; i < hitsOrderedByLayer.Count; i++)
+            {
+                RaycastHit2D raycastHit2D = hitsOrderedByLayer[i];
+                Debug.Log($"Hit {i}: {raycastHit2D.collider.gameObject.name}");
+            }
+
             Debug.Log($"Right Click Hit: {hit.collider.gameObject.name}");
             
             if (hit.collider != null && !hit.collider.TryGetComponent(out FogOfWar _))

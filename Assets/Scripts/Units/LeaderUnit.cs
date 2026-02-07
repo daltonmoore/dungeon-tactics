@@ -28,6 +28,7 @@ namespace TacticsCore.Units
         [SerializeField] protected float moveSpeed = 10f;
         
         public PathNodeHex BattleNode { get; set; }
+        public LeaderUnit EnemyUnit { get; set; }
         public List<PathNodeHex> Path { get; set; }private int _movePointsLeft;
         public bool IsSelected { private set; get; }
         
@@ -131,10 +132,17 @@ namespace TacticsCore.Units
         {
             // we clicked directly on the hex where the occupant is, so we need to move to the hex just before it.
             var tempPath = new List<PathNodeHex>(Path);
+            
             if (Path[^1].Occupant != null)
             {
                 tempPath = Path.SkipLast(1).ToList();
             }
+
+            if (BattleNode != null)
+            {
+                Pathfinder.Instance.Pathfinding.FindPath(transform.position, BattleNode.worldPosition, out tempPath);
+            }
+            
             MoveTo(tempPath, arrivedAtDestination =>
             {
                 Debug.Log(arrivedAtDestination ? "Arrived at destination" : "Failed to reach destination");
@@ -152,19 +160,21 @@ namespace TacticsCore.Units
             });
         }
 
-        public void ShowPath(List<PathNodeHex> path, LeaderUnit enemyLeader, out  PathNodeHex battleNode)
+        public void ShowPath(List<PathNodeHex> path, out  PathNodeHex battleNode, out LeaderUnit enemyUnity)
         {
             HidePath();
 
             int movePointsLeft = _movePointsLeft;
             battleNode = null;
+            enemyUnity = null;
             
             if (path.Count > 0)
             {
                 Path = path;
 
-                foreach (PathNodeHex node in path)
+                for (int index = 0; index < path.Count; index++)
                 {
+                    PathNodeHex node = path[index];
                     Vector3 position = node.worldPosition;
 
                     using (Draw.ingame.WithDuration(2))
@@ -176,7 +186,7 @@ namespace TacticsCore.Units
                     flag.SetParent(_flagParent);
                     Color flagColor = movePointsLeft - node.gCost >= 0 ? Color.blue : Color.white;
                     movePointsLeft -= node.gCost;
-                    
+
                     // flag is red when attacking or moving within a hex of unit
                     if (battleNode == null)
                     {
@@ -185,14 +195,18 @@ namespace TacticsCore.Units
                             battleNode = node;
                         }
 
+                        Debug.Log($"Looking at node ({node.x}, {node.y})'s neighbors");
                         foreach (var neighbor in Pathfinder.Instance.Pathfinding.GetNeighborList(node))
                         {
+                            Debug.Log($"Looking at neighbor ({neighbor.x}, {neighbor.y})");
                             if (neighbor.IsOccupied && neighbor.Occupant != null && neighbor.Occupant.Owner != Owner)
                             {
                                 Pathfinder.Instance.Pathfinding.Grid.GetGridPosition(neighbor.worldPosition, out int x,
                                     out int y);
-                                Debug.Log($"Neighbor ({x}, {y}) is occupied {neighbor.worldPosition}");
-                                battleNode = node;
+                                Debug.Log($"Neighbor ({x}, {y}) is occupied by {neighbor.Occupant.name}");
+                                Debug.Log($"Node ({node.x}, {node.y}) is a battle node due to this nearby enemy.");
+                                enemyUnity = neighbor.Occupant as LeaderUnit;
+                                battleNode = node; // this is the first node on our path that is in range of the enemy.
                                 break;
                             }
                         }

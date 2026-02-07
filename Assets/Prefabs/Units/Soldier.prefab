@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 171826330564055428}
   - component: {fileID: 3711009486661749353}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: FogOfWarCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

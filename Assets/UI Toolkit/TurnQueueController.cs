@@ -41,6 +41,12 @@ namespace UI_Toolkit
             // Register to get a callback when an item is selected
             _battleUnitList.selectionChanged += OnBattleUnitSelected;
         }
+        
+        public void RemoveDeadUnit(BattleUnitData unitData)
+        {
+            _battleUnits.Remove(unitData);
+            _battleUnitList.RefreshItems();
+        }
 
         public void ShiftTopEntryToBottomOfList()
         {

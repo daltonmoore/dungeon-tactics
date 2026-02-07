@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Events;
 using TacticsCore.Data;
+using TacticsCore.EventBus;
 using TacticsCore.HexGrid;
 using TacticsCore.Units;
 using UI_Toolkit;
@@ -34,7 +35,13 @@ namespace Battle
                 DontDestroyOnLoad(gameObject);
             }
             
-            
+            Bus<UnitDied>.RegisterForAll(OnUnitDied);
+        }
+
+        private void OnUnitDied(UnitDied args)
+        {
+            Debug.Log($"This guy died {args.BattleUnit.name}");
+            TurnUI.Instance.RemoveDeadUnit(args.BattleUnit.UnitSO as BattleUnitData);
         }
 
         public void StartBattle(EngageInBattleEvent evt)

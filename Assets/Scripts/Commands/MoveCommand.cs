@@ -28,7 +28,7 @@ namespace Commands
                 if (unit.BattleNode != null)
                 {
                     Debug.Log("ATTACK");
-                    unit.Attack(unit.BattleNode.Occupant.GetComponent<LeaderUnit>());
+                    unit.Attack(unit.EnemyUnit);
                 }
                 else
                 {
@@ -37,8 +37,9 @@ namespace Commands
             }
             else
             {
-                unit.ShowPath(context.Path, null, out PathNodeHex battleNode);
+                unit.ShowPath(context.Path, out PathNodeHex battleNode, out LeaderUnit enemyUnit);
                 unit.BattleNode = battleNode;
+                unit.EnemyUnit = enemyUnit;
             }
         }
 

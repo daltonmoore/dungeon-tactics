@@ -30,6 +30,11 @@ namespace UI_Toolkit
             _turnQueueController.InitializeBattleUnitList(turnOrderDoc.rootVisualElement, listEntryTemplate, turnOrder);
         }
 
+        public void RemoveDeadUnit(BattleUnitData unitData)
+        {
+            _turnQueueController.RemoveDeadUnit(unitData);
+        }
+
         public void ShiftTopEntryToBottom()
         {
             _turnQueueController.ShiftTopEntryToBottomOfList();

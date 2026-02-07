@@ -1,10 +1,10 @@
-﻿using Battle;
+﻿using TacticsCore.Data;
 using UnityEngine;
 
-namespace Units
+namespace Battle
 {
     [CreateAssetMenu(fileName = "Battle Unit", menuName = "Units/Battle Unit")]
-    public class BattleUnitSO : AbstractBattleUnitSO
+    public class BattleUnitSO : AbstractUnitSO
     {
     }
 }

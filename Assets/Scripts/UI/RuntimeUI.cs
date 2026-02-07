@@ -67,9 +67,17 @@ namespace UI
         
         public static bool IsPointerOverCanvas()
         {
+            Vector2 position = Mouse.current.position.ReadValue();
+            return IsPointerOverCanvas(position);
+        }
+
+        public static bool IsPointerOverCanvas(Vector2 screenPosition)
+        {
+            if (_instance == null) return false;
+            
             PointerEventData eventData = new(EventSystem.current)
             {
-                position = Mouse.current.position.ReadValue()
+                position = screenPosition
             };
 
             List<RaycastResult> results = new List<RaycastResult>();

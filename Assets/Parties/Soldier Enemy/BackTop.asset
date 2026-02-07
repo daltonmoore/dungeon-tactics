@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
-  m_Name: FrontCenter
+  m_Name: BackTop
   m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
   <MovePoints>k__BackingField: 64
   <Health>k__BackingField: 100
   characterName: Soldier
   level: 1
   icon: {fileID: 7040412003157388535, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
-  isLeader: 1
+  isLeader: 0
   initiative: 0
   owner: 0
-  battleUnitPosition: 4
+  battleUnitPosition: 2
   inBattleInstance: {fileID: 0}

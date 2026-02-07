@@ -8302,6 +8302,7 @@ Transform:
   - {fileID: 662375655}
   - {fileID: 515349604}
   - {fileID: 1047072441}
+  - {fileID: 1781555012}
   - {fileID: 2069535212}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8939,6 +8940,61 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1781555011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1781555012}
+  - component: {fileID: 1781555013}
+  m_Layer: 0
+  m_Name: CursorDocument
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1781555012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781555011}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 650227226}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1781555013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781555011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 2c2bedf348c8adc41be77175645e9b21, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 100
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1001 &1821395106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10815,6 +10871,10 @@ PrefabInstance:
       propertyPath: cameraTarget
       value: 
       objectReference: {fileID: 662375656}
+    - target: {fileID: 2324498920553916307, guid: a0474fa46b474a641953f9abdc79f391, type: 3}
+      propertyPath: cursorDocument
+      value: 
+      objectReference: {fileID: 1781555013}
     - target: {fileID: 2324498920553916307, guid: a0474fa46b474a641953f9abdc79f391, type: 3}
       propertyPath: cameraConfig.<MouseDamping>k__BackingField
       value: 141
@@ -14660,7 +14720,7 @@ PrefabInstance:
     - target: {fileID: 9184092058724454878, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1573906884554247561, guid: d59cbea3f6811f446b15162bfec6d23b, type: 3}
+      objectReference: {fileID: 7040412003157388535, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

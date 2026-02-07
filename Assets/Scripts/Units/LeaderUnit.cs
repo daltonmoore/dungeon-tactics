@@ -42,7 +42,7 @@ namespace TacticsCore.Units
         {
             base.Awake();
             
-            _movePointsLeft = unitSO.MovePoints;
+            _movePointsLeft = UnitSO.MovePoints;
             _flagParent = new GameObject("MoveFlags").transform;
             _rigidbody2D = GetComponent<Rigidbody2D>();
 

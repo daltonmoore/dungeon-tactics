@@ -99,7 +99,7 @@ namespace Battle
                 var unitInstance = Instantiate(battleUnitPrefab, transform);
                 var gridSlot = GetGridSlot(isPlayerUnit, party[index].battleUnitPosition);
                 var battleUnit = unitInstance.GetComponent<BattleUnit>();
-                battleUnit.unitData = party[index];
+                battleUnit.UnitSO = party[index];
                 
                 battleUnit.Owner = isPlayerUnit ? Owner.Player1 : Owner.AI1;
                 battleUnit.GetComponent<Animator>().enabled = false;

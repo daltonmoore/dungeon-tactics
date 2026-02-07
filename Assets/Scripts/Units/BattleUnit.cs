@@ -1,6 +1,7 @@
 ﻿using System;
 using Battle;
 using Events;
+using TacticsCore.Data;
 using TacticsCore.EventBus;
 using TacticsCore.Interfaces;
 using TacticsCore.Units;
@@ -13,8 +14,8 @@ namespace Units
     {
         [SerializeField] public GameObject currentTurnHighlight;
 
-        public BattleUnitData unitData;
-        
+        public override UnitSO UnitSO { get; set; }
+
         public bool IsMyTurn { get; set; }
         public bool EndedTurn { get; set; }
         
@@ -29,8 +30,8 @@ namespace Units
         protected override void Awake()
         {
             base.Awake();
-            _healthMax = unitSO.Health;
-            _health = unitSO.Health;
+            _healthMax = UnitSO.Health;
+            _health = UnitSO.Health;
         }
 
         public void HighlightForCurrentTurn()

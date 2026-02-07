@@ -18,6 +18,8 @@ using UI;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 using MouseButton = UnityEngine.InputSystem.LowLevel.MouseButton;
 
 namespace Player
@@ -32,6 +34,9 @@ namespace Player
         [SerializeField] private LayerMask selectableUnitsLayers;
         [SerializeField] private LayerMask interactableLayers;
         [SerializeField] private LayerMask floorLayers;
+        
+        [SerializeField] private UIDocument cursorDocument;
+        private VisualElement _uiCursor;
         
         private BaseCommand _activeCommand;
         private ISelectable _selectedUnit;
@@ -54,6 +59,30 @@ namespace Player
             Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleHexHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
             _cinemachineBrain = GetComponent<CinemachineBrain>();
+
+            if (cursorDocument != null)
+            {
+                _uiCursor = new VisualElement
+                {
+                    pickingMode = PickingMode.Ignore,
+                    usageHints = UsageHints.DynamicTransform,
+                    style =
+                    {
+                        width = 32,
+                        height = 32,
+                        position = Position.Absolute,
+                        visibility = Visibility.Hidden,
+                    }
+                };
+
+                // Try to get sprite from fakeCursor if it has one
+                if (fakeCursor != null && fakeCursor.TryGetComponent<SpriteRenderer>(out var sr))
+                {
+                    _uiCursor.style.backgroundImage = new StyleBackground(sr.sprite);
+                }
+
+                cursorDocument.rootVisualElement.Add(_uiCursor);
+            }
         }
 
         private void OnMovePerformed(InputAction.CallbackContext obj)
@@ -98,8 +127,14 @@ namespace Player
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] -= HandleCommandSelected;
         }
 
+        private Vector2 _lastFakeCursorScreenPos;
+
         private void Update()
         {
+            HandleUIToolkitInteraction();
+            Debug.Log($"Is Pointer Over Canvas: {RuntimeUI.IsPointerOverCanvas(_lastFakeCursorScreenPos)}");
+            if (RuntimeUI.IsPointerOverCanvas(_lastFakeCursorScreenPos)) return;
+            
             // Start dragging
             if (Input.GetMouseButtonDown(0)) // Use 0 for left click, 1 for right, 2 for middle
             {
@@ -333,7 +368,7 @@ namespace Player
             
             if (!cameraConfig.EnableEdgePan) { return moveAmount; }
             
-            Vector2 mousePosition = fakeCursor.transform.position;
+            Vector2 mousePosition = camera.WorldToScreenPoint(fakeCursor.transform.position);
             int screenWidth = Screen.width;
             int screenHeight = Screen.height;
 
@@ -358,10 +393,113 @@ namespace Player
             return moveAmount;
         }
         
+        private void  HandleUIToolkitInteraction()
+        {
+            Vector2 screenPos = camera.WorldToScreenPoint(fakeCursor.transform.position);
+
+            if (_uiCursor != null)
+            {
+                _uiCursor.style.visibility = Visibility.Visible;
+                // Convert Screen space (Y-up) to Panel space (Y-down)
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(_uiCursor.panel, screenPos);
+                
+                // Using style.left and style.top instead of transform.position to avoid "opposite" movement issues
+                // that can occur with transform in some Panel configurations.
+                _uiCursor.style.left = panelPos.x;
+                _uiCursor.style.top = panelPos.y;
+            }
+            
+            // If the fake cursor moved, dispatch a PointerMoveEvent to UI Toolkit panels
+            if (screenPos != _lastFakeCursorScreenPos)
+            {
+                DispatchPointerMoveEvent(screenPos);
+                _lastFakeCursorScreenPos = screenPos;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                DispatchPointerDownEvent(screenPos);
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                DispatchPointerUpEvent(screenPos);
+            }
+        }
+
+        private void DispatchPointerMoveEvent(Vector2 screenPos)
+        {
+            var uiDocuments = FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
+            foreach (var doc in uiDocuments)
+            {
+                if (doc.rootVisualElement == null) continue;
+                
+                // ScreenToPanel expects Y-up screen coordinates and returns Y-down panel coordinates
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, screenPos);
+                
+                var imguiEvt = new Event
+                {
+                    type = EventType.MouseMove,
+                    mousePosition = panelPos
+                };
+
+                using (PointerMoveEvent evt = PointerMoveEvent.GetPooled(imguiEvt))
+                {
+                    doc.rootVisualElement.panel.visualTree.SendEvent(evt);
+                }
+            }
+        }
+
+        private void DispatchPointerDownEvent(Vector2 screenPos)
+        {
+            var uiDocuments = FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
+            foreach (var doc in uiDocuments)
+            {
+                if (doc.rootVisualElement == null) continue;
+                
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, screenPos);
+                
+                var imguiEvt = new Event
+                {
+                    type = EventType.MouseDown,
+                    button = 0,
+                    mousePosition = panelPos
+                };
+
+                using (PointerDownEvent evt = PointerDownEvent.GetPooled(imguiEvt))
+                {
+                    doc.rootVisualElement.panel.visualTree.SendEvent(evt);
+                }
+            }
+        }
+
+        private void DispatchPointerUpEvent(Vector2 screenPos)
+        {
+            var uiDocuments = FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
+            foreach (var doc in uiDocuments)
+            {
+                if (doc.rootVisualElement == null) continue;
+                
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, screenPos);
+                
+                var imguiEvt = new Event
+                {
+                    type = EventType.MouseUp,
+                    button = 0,
+                    mousePosition = panelPos
+                };
+
+                using (PointerUpEvent evt = PointerUpEvent.GetPooled(imguiEvt))
+                {
+                    doc.rootVisualElement.panel.visualTree.SendEvent(evt);
+                }
+            }
+        }
+
         private void HandleLeftClick()
         {
             if (camera == null) { return; }
 
+            Vector2 screenPos = camera.WorldToScreenPoint(fakeCursor.transform.position);
             Ray ray = GenerateRayFromFakeCursor();
             RaycastHit2D selectableUnitHit = Physics2D.Raycast(
                 ray.origin, 
@@ -379,7 +517,7 @@ namespace Player
             Debug.Log($"Left Click Hit: {selectableUnitHit.collider?.gameObject.name}");
             
             if (_activeCommand is null 
-                && !RuntimeUI.IsPointerOverCanvas()
+                && !RuntimeUI.IsPointerOverCanvas(screenPos)
                 && selectableUnitHit.collider != null
                 && selectableUnitHit.collider.TryGetComponent(out ISelectable selectable)
                 && selectableUnitHit.collider.TryGetComponent(out AbstractUnit unit)
@@ -393,7 +531,7 @@ namespace Player
                 _selectedUnit = selectable;
             }
             else if (_activeCommand is not null 
-                     && !RuntimeUI.IsPointerOverCanvas()
+                     && !RuntimeUI.IsPointerOverCanvas(screenPos)
                      && commandHit.collider != null)
             {
                 ActivateCommand(commandHit);

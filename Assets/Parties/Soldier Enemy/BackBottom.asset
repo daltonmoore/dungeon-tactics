@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
   <MovePoints>k__BackingField: 64
   <Health>k__BackingField: 100
-  characterName: Acolyte
+  characterName: Archer
   level: 1
-  icon: {fileID: -1573906884554247561, guid: d59cbea3f6811f446b15162bfec6d23b, type: 3}
+  icon: {fileID: 8012177053804024785, guid: 18464a621460fa84498d2e4fa37af756, type: 3}
   isLeader: 0
   initiative: 0
   owner: 0

@@ -27300,6 +27300,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1690861528}
   - component: {fileID: 1690861527}
+  - component: {fileID: 1690861529}
   m_Layer: 5
   m_Name: TurnQueue
   m_TagString: Untagged
@@ -27345,6 +27346,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1690861529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690861526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a79c4e23d4d4b64bfa5fa9e6671a460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UIElements.PanelRaycaster
 --- !u!1 &1824963289
 GameObject:
   m_ObjectHideFlags: 0

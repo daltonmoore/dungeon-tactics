@@ -147,7 +147,8 @@ namespace Editor
                 {
                     UpdateImageWithPartyIcon(unitButton);
                 }
-            
+                
+                EditorUtility.SetDirty(_unit);
             });
         }
 
@@ -247,6 +248,8 @@ namespace Editor
             {
                 _unit.GetComponent<SpriteRenderer>().sprite = item.Icon;
             }
+            
+            EditorUtility.SetDirty(_unit);
         }
         
         private static void CreateOrUpdateAsset(Object asset, string path)
@@ -299,6 +302,7 @@ namespace Editor
             }
             AssetDatabase.RenameAsset($"{_folderPath}_temp_{toPosition}.asset", $"{toPosition}.asset");
             AssetDatabase.SaveAssets();
+            EditorUtility.SetDirty(_unit);
         }
     }
 }

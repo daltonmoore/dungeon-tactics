@@ -62,8 +62,10 @@ namespace Player
 
             if (cursorDocument != null)
             {
+                cursorDocument.name = "UICursorDocument";
                 _uiCursor = new VisualElement
                 {
+                    name = "ui-cursor",
                     pickingMode = PickingMode.Ignore,
                     usageHints = UsageHints.DynamicTransform,
                     style =
@@ -131,10 +133,10 @@ namespace Player
 
         private void Update()
         {
-            HandleUIToolkitInteraction();
-            Debug.Log($"Is Pointer Over Canvas: {RuntimeUI.IsPointerOverCanvas(_lastFakeCursorScreenPos)}");
-            if (RuntimeUI.IsPointerOverCanvas(_lastFakeCursorScreenPos)) return;
+            Vector2 screenPos = camera.WorldToScreenPoint(fakeCursor.transform.position);
+            HandleUIToolkitInteraction(screenPos);
             
+            if (RuntimeUI.IsPointerOverCanvas(screenPos)) return;
             // Start dragging
             if (Input.GetMouseButtonDown(0)) // Use 0 for left click, 1 for right, 2 for middle
             {
@@ -393,15 +395,16 @@ namespace Player
             return moveAmount;
         }
         
-        private void  HandleUIToolkitInteraction()
+        private void  HandleUIToolkitInteraction(Vector2 screenPos)
         {
-            Vector2 screenPos = camera.WorldToScreenPoint(fakeCursor.transform.position);
-
             if (_uiCursor != null)
             {
                 _uiCursor.style.visibility = Visibility.Visible;
-                // Convert Screen space (Y-up) to Panel space (Y-down)
-                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(_uiCursor.panel, screenPos);
+                
+                // ScreenToPanel in Unity 6 expects Y-down coordinates (IMGUI style)
+                // camera.WorldToScreenPoint returns Y-up coordinates (Unity Screen style)
+                Vector2 flippedScreenPos = new Vector2(screenPos.x, Screen.height - screenPos.y);
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(_uiCursor.panel, flippedScreenPos);
                 
                 // Using style.left and style.top instead of transform.position to avoid "opposite" movement issues
                 // that can occur with transform in some Panel configurations.
@@ -433,8 +436,9 @@ namespace Player
             {
                 if (doc.rootVisualElement == null) continue;
                 
-                // ScreenToPanel expects Y-up screen coordinates and returns Y-down panel coordinates
-                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, screenPos);
+                // ScreenToPanel expects Y-down screen coordinates and returns Y-down panel coordinates
+                Vector2 flippedScreenPos = new Vector2(screenPos.x, Screen.height - screenPos.y);
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, flippedScreenPos);
                 
                 var imguiEvt = new Event
                 {
@@ -456,7 +460,8 @@ namespace Player
             {
                 if (doc.rootVisualElement == null) continue;
                 
-                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, screenPos);
+                Vector2 flippedScreenPos = new Vector2(screenPos.x, Screen.height - screenPos.y);
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, flippedScreenPos);
                 
                 var imguiEvt = new Event
                 {
@@ -479,7 +484,8 @@ namespace Player
             {
                 if (doc.rootVisualElement == null) continue;
                 
-                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, screenPos);
+                Vector2 flippedScreenPos = new Vector2(screenPos.x, Screen.height - screenPos.y);
+                Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, flippedScreenPos);
                 
                 var imguiEvt = new Event
                 {

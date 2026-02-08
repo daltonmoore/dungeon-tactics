@@ -7,6 +7,7 @@ using UI.Containers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 namespace UI
 {
@@ -81,16 +82,66 @@ namespace UI
             };
 
             List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, results);
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.RaycastAll(eventData, results);
+            }
 
             foreach (RaycastResult result in results)
             {
-                if (result.gameObject.transform.IsChildOf(_instance.transform))
+                // If it's a standard Canvas UI element, it will have a GameObject
+                if (result.gameObject != null)
                 {
-                    return true; // Pointer is over an element within the target canvas
+                    // If it's part of our runtime UI canvas
+                    if (result.gameObject.transform.IsChildOf(_instance.transform))
+                    {
+                        return true;
+                    }
                 }
             }
-            return false; // Pointer is not over any element within the target canvas
+            
+            // Check all UI Toolkit documents. 
+            // We use a fallback because RaycastAll might fail if PanelRaycaster is missing,
+            // or for specific UI Toolkit setups.
+            var allDocs = Object.FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
+            foreach (var doc in allDocs)
+            {
+                // Skip the cursor document
+                if (doc.name == "UICursorDocument") continue;
+                
+                if (IsPointerOverUIToolkit(doc, screenPosition))
+                {
+                    Debug.Log($"Pointer over UI Toolkit document: {doc.name}");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsPointerOverUIToolkit(UIDocument doc, Vector2 screenPosition)
+        {
+            if (doc == null || doc.rootVisualElement == null) return false;
+
+            // UI Toolkit panel.Pick expects panel-space coordinates (Y-down)
+            Vector2 flippedScreenPos = new Vector2(screenPosition.x, Screen.height - screenPosition.y);
+            Vector2 panelPos = RuntimePanelUtils.ScreenToPanel(doc.rootVisualElement.panel, flippedScreenPos);
+            
+            VisualElement picked = doc.rootVisualElement.panel.Pick(panelPos);
+            
+            // If we picked something and it's not the root and it's not set to Ignore picking
+            if (picked == null || picked == doc.rootVisualElement || picked.pickingMode == PickingMode.Ignore)
+            {
+                return false;
+            }
+
+            // Explicitly ignore the cursor element if it's in this document
+            if (picked.name == "ui-cursor") 
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

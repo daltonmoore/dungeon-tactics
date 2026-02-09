@@ -19,11 +19,6 @@ namespace Units
         public bool IsMyTurn { get; set; }
         public bool EndedTurn { get; set; }
         
-        public enum EActionType
-        {
-            Attack
-        }
-        
         private float _health;
         private float _healthMax;
 
@@ -32,6 +27,8 @@ namespace Units
             base.Awake();
             _healthMax = UnitSO.Health;
             _health = UnitSO.Health;
+
+            UnitSO = base.UnitSO as BattleUnitData;
         }
 
         public void HighlightForCurrentTurn()
@@ -66,15 +63,27 @@ namespace Units
             }
         }
 
-        public void DoAction()
+        private Stat GetStat(StatType type)
         {
-            throw new NotImplementedException();
+            BattleUnitData battleUnitData = UnitSO as BattleUnitData;
+            return battleUnitData.stats.Find(s => s.type == type);
+        }
+
+
+        public float RollDamage()
+        {
+            return RollStat(GetStat(StatType.Damage));
+        }
+
+        private float RollStat(Stat stat)
+        {
+            return UnityEngine.Random.Range(stat.value - stat.range.Start.Value, stat.value + stat.range.End.Value);
         }
 
         [field:SerializeField]
         public Slider HealthBar { get; set; }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             _health -= damage;
             HealthBar.value = _health/_healthMax;

@@ -9,6 +9,7 @@ using TacticsCore.Units;
 using UI_Toolkit;
 using Units;
 using UnityEngine;
+using Util;
 
 namespace Battle
 {
@@ -21,7 +22,9 @@ namespace Battle
         
         [SerializeField] private GameObject battleUnitPrefab;
         
-        private readonly Queue<BattleUnit> _turnOrder = new();
+        private Queue<BattleUnit> _turnOrder = new();
+        private Dictionary<BattleUnitPosition, BattleUnit> _playerUnitDict;
+        private Dictionary<BattleUnitPosition, BattleUnit> _enemyUnitDict;
 
         private void Awake()
         {
@@ -41,27 +44,33 @@ namespace Battle
         private void OnUnitDied(UnitDied args)
         {
             Debug.Log($"This guy died {args.BattleUnit.name}");
-            TurnUI.Instance.RemoveDeadUnit(args.BattleUnit.UnitSO as BattleUnitData);
+            _turnOrder = new Queue<BattleUnit>(_turnOrder.Where(u => u != args.BattleUnit));
+            var battleUnitData = args.BattleUnit.UnitSO as BattleUnitData;
+            if (!_playerUnitDict.Remove(battleUnitData.battleUnitPosition))
+            {
+                _enemyUnitDict.Remove(battleUnitData.battleUnitPosition);
+            }
+            TurnUI.Instance.RemoveDeadUnit(battleUnitData);
         }
 
         public void StartBattle(EngageInBattleEvent evt)
         {
             
             // Setup Parties
-            var playerUnitDict = InstantiateBattleUnits(true, evt.Party);
-            var enemyUnitDict = InstantiateBattleUnits(false, evt.EnemyParty);
+            _playerUnitDict = InstantiateBattleUnits(true, evt.Party);
+            _enemyUnitDict = InstantiateBattleUnits(false, evt.EnemyParty);
 
             var allUnits = new List<BattleUnitData>();
             allUnits.AddRange(evt.Party);
             allUnits.AddRange(evt.EnemyParty);
-            List<BattleUnitData> turnOrder = allUnits.OrderByDescending(u => u.initiative).ToList();
+            List<BattleUnitData> turnOrder = allUnits.OrderByDescending(u => u.stats.Find(s => s.type == StatType.Initiative).value).ToList();
             
             for (int index = 0; index < turnOrder.Count; index++)
             {
                 BattleUnitData battleUnitData = turnOrder[index];
                 BattleUnit battleUnit = battleUnitData.owner == Owner.Player1
-                    ? playerUnitDict[battleUnitData.battleUnitPosition]
-                    : enemyUnitDict[battleUnitData.battleUnitPosition];
+                    ? _playerUnitDict[battleUnitData.battleUnitPosition]
+                    : _enemyUnitDict[battleUnitData.battleUnitPosition];
                 
                 battleUnitData.inBattleInstance = battleUnit.gameObject;
                 _turnOrder.Enqueue(battleUnit);
@@ -87,6 +96,13 @@ namespace Battle
                 CurrentBattler.EndedTurn = false;
                 _turnOrder.Enqueue(CurrentBattler);
                 TurnUI.Instance.ShiftTopEntryToBottom();
+
+                if (_playerUnitDict.Count == 0 || _enemyUnitDict.Count == 0)
+                {
+                    BattleInProgress = false;
+                    SceneLoader.Instance.LoadScene(DTConstants.SceneNames.OverWorld, () => { });
+                    break;
+                }
                 yield return null;
             }
         }

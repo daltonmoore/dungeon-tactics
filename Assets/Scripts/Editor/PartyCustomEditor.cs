@@ -240,7 +240,11 @@ namespace Editor
 
             BattleUnitData so = CreateInstance<BattleUnitData>();
             so.name = battleUnitPosition.ToString();
-            so.Initialize(item.Name, 1, item.Icon, battleUnitPosition, isLeader, item.Stats.Find(s => s.type == StatType.Initiative).value);
+            so.battleUnitPosition = battleUnitPosition;
+            so.isLeader = isLeader;
+            so.icon = item.Icon;
+            so.stats = item.Stats;
+            so.level = 1;
             _unit.PartyList.Add(so);
             CreateOrUpdateAsset(so, $"{_folderPath}{battleUnitPosition}.asset");
 

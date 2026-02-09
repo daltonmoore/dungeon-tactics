@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Battle;
 using Events;
+using TacticsCore.Data;
 using TacticsCore.Units;
 using UnityEngine;
 
@@ -30,11 +31,11 @@ namespace Grid
             var allUnits = new List<BattleUnitData>();
             allUnits.AddRange(evt.Party);
             allUnits.AddRange(evt.EnemyParty);
-            var turnOrder = allUnits.OrderByDescending(u => u.initiative).ToList();
+            var turnOrder = allUnits.OrderByDescending(u => u.stats.Find(s => s.type == StatType.Initiative)).ToList();
             for (int index = 0; index < turnOrder.Count; index++)
             {
                 BattleUnitData battleUnitData = turnOrder[index];
-                Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.initiative}");
+                Debug.Log($"{index}: {battleUnitData.name} initiative {battleUnitData.stats.Find(s => s.type == StatType.Initiative)}");
                 
             }
         }

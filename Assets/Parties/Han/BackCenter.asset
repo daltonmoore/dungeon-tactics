@@ -11,10 +11,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
   m_Name: BackCenter
-  m_EditorClassIdentifier: 
-  battleUnitPosition: 1
-  characterName: Archer
+  m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
+  <MovePoints>k__BackingField: 64
+  <Health>k__BackingField: 100
+  characterName: 
   level: 1
   icon: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
   isLeader: 1
-  initiative: 70
+  owner: 0
+  battleUnitPosition: 1
+  inBattleInstance: {fileID: 0}
+  stats:
+  - type: 0
+    value: 0

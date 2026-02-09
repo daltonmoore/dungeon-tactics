@@ -42,7 +42,7 @@ namespace Util
 
         private void OnStartBattle(EngageInBattleEvent args)
         {
-            LoadScene("BattleScene", () =>
+            LoadScene(DTConstants.SceneNames.Battle, () =>
             {
                 BattleManager.Instance.StartBattle(args);
             });

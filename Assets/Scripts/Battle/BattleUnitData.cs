@@ -1,4 +1,5 @@
-﻿using TacticsCore.Data;
+﻿using System.Collections.Generic;
+using TacticsCore.Data;
 using TacticsCore.Units;
 using UnityEngine;
 
@@ -9,27 +10,22 @@ namespace Battle
     {
         [SerializeField] public BattleUnitPosition battleUnitPosition;
         [SerializeField] public GameObject inBattleInstance;
-
-        public override void Initialize(string name, int level, Sprite icon, BattleUnitPosition battleUnitPosition,
-            bool isLeader, int initiative)
-        {
-            this.characterName = name;
-            this.level = level;
-            this.icon = icon;
-            this.battleUnitPosition = battleUnitPosition;
-            this.isLeader = isLeader;
-            this.initiative = initiative;
-        }
-
+        [SerializeField] public List<Stat> stats = new();
+        
         public override string ToString()
         {
-            return 
-                $"BattleUnitPosition {battleUnitPosition} "
-                + $" Name {characterName}" 
-                + $" Lv. {level}"
-                + $" Icon {(icon ? icon.name : " none ")}"
-                + $" Initiative {initiative}"
-                + " Leader " + isLeader;
+            string output = $"BattleUnitPosition {battleUnitPosition} "
+                            + $" Name {characterName}" 
+                            + $" Lv. {level}"
+                            + $" Icon {(icon ? icon.name : " none ")}"
+                            + " Leader " + isLeader;
+
+            foreach (var stat in stats)
+            {
+                output += $" {stat.type.ToString()} {stat.value}";
+            }
+            
+            return output;
         }
     }
 }

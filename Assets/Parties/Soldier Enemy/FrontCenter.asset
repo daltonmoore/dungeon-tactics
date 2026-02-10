@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
   <MovePoints>k__BackingField: 64
   <Health>k__BackingField: 100
-  characterName: Soldier
+  characterName: 
   level: 1
   icon: {fileID: 7040412003157388535, guid: 093825987eef01c4ca7f52e8f02761f2, type: 3}
   isLeader: 1
-  initiative: 0
   owner: 0
   battleUnitPosition: 4
   inBattleInstance: {fileID: 0}
+  stats:
+  - type: 0
+    value: 0

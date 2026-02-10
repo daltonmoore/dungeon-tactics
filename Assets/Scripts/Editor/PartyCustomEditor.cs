@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Battle;
@@ -35,6 +36,7 @@ namespace Editor
         private Image _crownImage;
         private UnitWindow _unitWindow;
         private ObjectField _objectField;
+        private List<DragAndDropManipulator> _dragAndDropManipulators = new();
 
         private void OnEnable()
         {
@@ -87,9 +89,11 @@ namespace Editor
         }
 
         public void CreateGUI()
-        {
+        { 
             // Each editor window contains a root VisualElement object
             VisualElement root = rootVisualElement;
+            
+            root.RegisterCallback<GeometryChangedEvent>(OnGeoChanged);
 
             // Instantiate UXML
             VisualElement uxml = m_VisualTreeAsset.Instantiate();
@@ -118,12 +122,16 @@ namespace Editor
                 }
             });
             
+            _dragAndDropManipulators.Clear();
+            
             foreach (var image in partyUnitButtons)
             { 
                 DragAndDropManipulator manipulator = new(image, root);
                 UpdateImageWithPartyIcon(image);
-                manipulator.SetPositionOfTargetToSpecificSlot(Enum.Parse<BattleUnitPosition>(image.name));
+                manipulator.BattleUnitPosition = Enum.Parse<BattleUnitPosition>(image.name);
+                manipulator.SetPositionOfTargetToSpecificSlot(manipulator.BattleUnitPosition);
                 CreateUnitButtonHandler(image, manipulator);
+                _dragAndDropManipulators.Add(manipulator);
             }
 
             var clearButton = root.Q<Button>("Clear");
@@ -134,12 +142,31 @@ namespace Editor
                 
                 foreach (UnitSO unitData in _unit.PartyList)
                 {
+                    Debug.Log($"Deleting {unitData.name}");
                     if (unitData == leader) continue;
                     
                     AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(unitData));
                 }
 
-                
+                // DELETE ALL files in the folder we are working in just as a fallback
+                if (AssetDatabase.IsValidFolder(_folderPath))
+                {
+                    string[] assetGuids = AssetDatabase.FindAssets("", new[] { _folderPath });
+
+                    foreach (string guid in assetGuids)
+                    {
+                        string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                        UnitSO unitSO = AssetDatabase.LoadAssetAtPath<UnitSO>(assetPath);
+                        if (unitSO.isLeader) continue;
+                        AssetDatabase.DeleteAsset(assetPath);
+                    }
+                    Debug.Log($"Deleted all assets in folder: {_folderPath}");
+                    // Note: This leaves the 'Unused' folder itself, but deletes its contents.
+                }
+                else
+                {
+                    Debug.LogWarning($"Folder not found or not a valid Asset folder: {_folderPath}");
+                }
                 
                 _unit.PartyList.RemoveAll(u => !u.isLeader);
                 
@@ -150,6 +177,23 @@ namespace Editor
                 
                 EditorUtility.SetDirty(_unit);
             });
+                        
+            var pingButton = root.Q("Ping");
+            pingButton.RegisterCallback<ClickEvent>(_ =>
+            {
+                EditorUtility.FocusProjectWindow();
+                var folder = _folderPath.EndsWith("/") ? _folderPath.Substring(0, _folderPath.Length - 1) : _folderPath;
+                Debug.Log(folder);
+                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(folder, typeof(Object)));
+            });
+        }
+
+        private void OnGeoChanged(GeometryChangedEvent evt)
+        {
+            foreach (DragAndDropManipulator dragAndDropManipulator in _dragAndDropManipulators)
+            {
+                dragAndDropManipulator.SetPositionOfTargetToSpecificSlot(dragAndDropManipulator.BattleUnitPosition);
+            }
         }
 
         private void SetObjectFieldValueFromSelection()

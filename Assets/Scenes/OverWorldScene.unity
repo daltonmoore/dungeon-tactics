@@ -8260,16 +8260,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: <PartyList>k__BackingField.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: '<PartyList>k__BackingField.Array.data[0]'
       value: 
-      objectReference: {fileID: 892520817}
+      objectReference: {fileID: 11400000, guid: 341aaac65f1423649adf4a82fac158e5, type: 2}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: '<PartyList>k__BackingField.Array.data[1]'
       value: 
-      objectReference: {fileID: 698694006}
+      objectReference: {fileID: 11400000, guid: 4b726c1b1a9a4bf4bba4bbf20a788a17, type: 2}
+    - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+      propertyPath: '<PartyList>k__BackingField.Array.data[2]'
+      value: 
+      objectReference: {fileID: 811946916}
     - target: {fileID: 7131028529335719295, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
       propertyPath: '<PartyList>k__BackingField.Array.data[6]'
       value: 
@@ -8440,30 +8444,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &698694006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
-  m_Name: BackCenter
-  m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
-  <MovePoints>k__BackingField: 64
-  <Health>k__BackingField: 100
-  characterName: 
-  level: 1
-  icon: {fileID: 5861789324648562600, guid: b7b0051f52e3f2a48992ff9c1e94b4f6, type: 3}
-  isLeader: 1
-  owner: 0
-  battleUnitPosition: 1
-  inBattleInstance: {fileID: 0}
-  stats:
-  - type: 0
-    value: 0
 --- !u!1 &736475791
 GameObject:
   m_ObjectHideFlags: 0
@@ -8542,7 +8522,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 101.7, y: 1}
   m_EdgeRadius: 0
---- !u!114 &892520817
+--- !u!114 &811946916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8552,42 +8532,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
-  m_Name: FrontCenter
+  m_Name: BackTop
   m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
   <MovePoints>k__BackingField: 64
   <Health>k__BackingField: 100
   characterName: 
   level: 1
-  icon: {fileID: 6859300915453738199, guid: e7ba6fa938f32e841b64f94be32b04a1, type: 3}
+  icon: {fileID: -3050702870277809060, guid: aecb201471240464e99c4fcbfeaf73db, type: 3}
   isLeader: 0
   owner: 0
-  battleUnitPosition: 4
+  battleUnitPosition: 2
   inBattleInstance: {fileID: 0}
   stats:
   - type: 0
     value: 0
---- !u!114 &998496433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc63d532333949b191ed25f44ab116b6, type: 3}
-  m_Name: BackCenter
-  m_EditorClassIdentifier: Assembly-CSharp::Battle.BattleUnitData
-  <MovePoints>k__BackingField: 64
-  <Health>k__BackingField: 100
-  characterName: Archer
-  level: 1
-  icon: {fileID: 8012177053804024785, guid: 18464a621460fa84498d2e4fa37af756, type: 3}
-  isLeader: 0
-  owner: 0
-  battleUnitPosition: 1
-  inBattleInstance: {fileID: 0}
-  stats: []
 --- !u!1 &1047072439
 GameObject:
   m_ObjectHideFlags: 0
@@ -14678,11 +14636,11 @@ PrefabInstance:
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: '<PartyList>k__BackingField.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: aaa08670652a5f24ba87dc8f49cbe132, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: '<PartyList>k__BackingField.Array.data[1]'
       value: 
-      objectReference: {fileID: 998496433}
+      objectReference: {fileID: 11400000, guid: aaa08670652a5f24ba87dc8f49cbe132, type: 2}
     - target: {fileID: 6404931754683676839, guid: 0a1ff6d587079754fa3b92920b5d22f9, type: 3}
       propertyPath: <Party>k__BackingField.Array.data[1].icon
       value: 

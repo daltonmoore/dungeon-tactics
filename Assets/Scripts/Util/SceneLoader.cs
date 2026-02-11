@@ -38,6 +38,9 @@ namespace Util
             
             progressBar = _root.Q<ProgressBar>("progressBar");
             progressLabel = _root.Q<Label>("progressLabel");
+            
+            // Immediately load to the main menu or overworld
+            LoadScene(DTConstants.SceneNames.OverWorld, () => { });
         }
 
         private void OnStartBattle(EngageInBattleEvent args)

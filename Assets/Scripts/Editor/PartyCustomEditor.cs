@@ -298,6 +298,7 @@ namespace Editor
             }
             
             EditorUtility.SetDirty(_unit);
+            AssetDatabase.SaveAssets();
         }
         
         private static void CreateOrUpdateAsset(Object asset, string path)

@@ -77,7 +77,7 @@ namespace Units
 
         private float RollStat(Stat stat)
         {
-            return UnityEngine.Random.Range(stat.value - stat.range.Start.Value, stat.value + stat.range.End.Value);
+            return UnityEngine.Random.Range(stat.range.x, stat.range.y);
         }
 
         [field:SerializeField]

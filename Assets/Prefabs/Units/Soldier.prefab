@@ -379,19 +379,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2e68cfc150bd9e14a96bf209aac09b9f, type: 2}
   <Transform>k__BackingField: {fileID: 0}
   <Owner>k__BackingField: 1
-  <UnitSO>k__BackingField: {fileID: 11400000, guid: 2354da1c0028ac0428343cac8e35fd6f, type: 2}
   decal: {fileID: 7197680728652791222}
   debug: 0
   animationConfig: {fileID: 11400000, guid: 60fdc75fa2b7a71469795ff6123e7ee1, type: 2}
   deathPrefab: {fileID: 0}
-  <HealthBar>k__BackingField: {fileID: 0}
-  <PartyList>k__BackingField:
-  - {fileID: 11400000, guid: 2b71c4283e31f1e44a4100fb4669ef0d, type: 2}
-  - {fileID: 11400000, guid: 4b726c1b1a9a4bf4bba4bbf20a788a17, type: 2}
-  - {fileID: 11400000, guid: 6730fee163b21de4ba45ad23b829c908, type: 2}
-  - {fileID: 11400000, guid: 6b2ff3435b3c7e74589df18a88029901, type: 2}
-  - {fileID: 11400000, guid: 341aaac65f1423649adf4a82fac158e5, type: 2}
-  - {fileID: 11400000, guid: ee4286ebb18d2d442a43ba76e7f8ae58, type: 2}
+  <UnitSO>k__BackingField: {fileID: 11400000, guid: 2354da1c0028ac0428343cac8e35fd6f, type: 2}
+  <PartyList>k__BackingField: []
   flagPrefab: {fileID: 8678833910985855508, guid: 2507468262cd99f43af120aa93219dd5, type: 3}
   moveSpeed: 3.57
 --- !u!50 &1638568630136211383
@@ -429,7 +422,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8735539727599892369}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 42a58458b3d66a9498f9f3d8c9cac011, type: 2}
   m_CullingMode: 0

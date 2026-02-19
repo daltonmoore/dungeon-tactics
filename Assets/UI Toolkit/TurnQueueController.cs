@@ -95,10 +95,6 @@ namespace UI_Toolkit
                 (item.userData as TurnQueueEntryController)?.SetCharacterData(_battleUnits[index]);
             };
         
-            // Set a fixed item height matching the height of the item provided in makeItem.
-            // For dynamic height, see the virtualizationMethod property
-            _battleUnitList.fixedItemHeight = 45;
-        
             // Set the actual item's source list/array
             _battleUnitList.itemsSource = _battleUnits;
         }

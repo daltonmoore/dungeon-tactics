@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5512956150852119886}
   - component: {fileID: 8042583386593995781}
   - component: {fileID: 5297679691807557119}
+  - component: {fileID: 7109278001582078775}
   m_Layer: 0
   m_Name: SceneLoader
   m_TagString: Untagged
@@ -69,3 +70,15 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &7109278001582078775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8963087121444188750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724af8a56844ac641b05e52cda65f464, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DontDestroyOnLoad

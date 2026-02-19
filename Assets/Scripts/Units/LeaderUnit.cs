@@ -151,11 +151,14 @@ namespace TacticsCore.Units
                                            PathfindingHex.CellSize + StoppingDistance;
                 if (arrivedAtDestination || arrivedAtBattleNode)
                 {
-                    Bus<EngageInBattleEvent>.Raise(Owner.Player1,
+                    Bus<EngageInBattleEvent>.Raise(
+                        Owner.Player1,
                         new EngageInBattleEvent(
+                            this,
                             PartyList, 
                             enemyLeader.PartyList
-                            ));
+                        )
+                    );
                 }
             });
         }

@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 using Events;
 using TacticsCore.Data;
 using TacticsCore.EventBus;
 using TacticsCore.HexGrid;
+using TacticsCore.Save;
 using TacticsCore.Units;
 using UI_Toolkit;
 using Units;
@@ -25,6 +27,7 @@ namespace Battle
         private Queue<BattleUnit> _turnOrder = new();
         private Dictionary<BattleUnitPosition, BattleUnit> _playerUnitDict;
         private Dictionary<BattleUnitPosition, BattleUnit> _enemyUnitDict;
+        private List<BattleUnitData> _allUnits;
 
         private void Awake()
         {
@@ -35,9 +38,9 @@ namespace Battle
             else
             { 
                 Instance = this;
-                DontDestroyOnLoad(gameObject);
             }
-            
+
+            Bus<EngageInBattleEvent>.OnEvent[Owner.Player1] += OnEngageInBattle;
             Bus<UnitDied>.RegisterForAll(OnUnitDied);
         }
 
@@ -46,11 +49,32 @@ namespace Battle
             Debug.Log($"This guy died {args.BattleUnit.name}");
             _turnOrder = new Queue<BattleUnit>(_turnOrder.Where(u => u != args.BattleUnit));
             var battleUnitData = args.BattleUnit.UnitSO as BattleUnitData;
+            
+            _allUnits.Find(u => u == battleUnitData).isDead = true;
+            
             if (!_playerUnitDict.Remove(battleUnitData.battleUnitPosition))
             {
                 _enemyUnitDict.Remove(battleUnitData.battleUnitPosition);
             }
             TurnUI.Instance.RemoveDeadUnit(battleUnitData);
+        }
+        
+        private void OnEngageInBattle(EngageInBattleEvent evt)
+        {
+            LeaderUnit[] leaders = FindObjectsByType<LeaderUnit>(FindObjectsSortMode.None);
+            List<LeaderSaveData> leadersToSave = new();
+            foreach (var leader in leaders)
+            {
+                LeaderSaveData leaderData = 
+                    new(leader.Owner,
+                        leader.transform.position,
+                        leader.GetComponent<SpriteRenderer>().sprite.texture.name,
+                        leader.PartyList);
+                leadersToSave.Add(leaderData);
+            }
+            
+            SaveManager.Save(new TDSaveData(leadersToSave));
+            SceneLoader.Instance.LoadScene(DTConstants.SceneNames.Battle, () => StartBattle(evt));
         }
 
         public void StartBattle(EngageInBattleEvent evt)
@@ -60,10 +84,10 @@ namespace Battle
             _playerUnitDict = InstantiateBattleUnits(true, evt.Party);
             _enemyUnitDict = InstantiateBattleUnits(false, evt.EnemyParty);
 
-            var allUnits = new List<BattleUnitData>();
-            allUnits.AddRange(evt.Party);
-            allUnits.AddRange(evt.EnemyParty);
-            List<BattleUnitData> turnOrder = allUnits.OrderByDescending(u => u.stats.Find(s => s.type == StatType.Initiative).value).ToList();
+            _allUnits = new List<BattleUnitData>();
+            _allUnits.AddRange(_playerUnitDict.Values.Select(u => u.UnitSO as BattleUnitData));
+            _allUnits.AddRange(_enemyUnitDict.Values.Select(u => u.UnitSO as BattleUnitData));
+            List<BattleUnitData> turnOrder = _allUnits.OrderByDescending(u => u.stats.Find(s => s.type == StatType.Initiative).value).ToList();
             
             for (int index = 0; index < turnOrder.Count; index++)
             {
@@ -99,8 +123,18 @@ namespace Battle
 
                 if (_playerUnitDict.Count == 0 || _enemyUnitDict.Count == 0)
                 {
+                    yield return new WaitForSeconds(1);
+                    foreach (Transform child in transform)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                    _turnOrder.Clear();
                     BattleInProgress = false;
-                    SceneLoader.Instance.LoadScene(DTConstants.SceneNames.OverWorld, () => { });
+                    SceneLoader.Instance.LoadScene(DTConstants.SceneNames.OverWorld, () =>
+                    {
+                        Bus<ExitBattleEvent>.Raise(Owner.Player1, new ExitBattleEvent());
+
+                    });
                     break;
                 }
                 yield return null;
@@ -115,7 +149,7 @@ namespace Battle
                 var unitInstance = Instantiate(battleUnitPrefab, transform);
                 var gridSlot = GetGridSlot(isPlayerUnit, party[index].battleUnitPosition);
                 var battleUnit = unitInstance.GetComponent<BattleUnit>();
-                battleUnit.UnitSO = party[index];
+                battleUnit.UnitSO = Instantiate(party[index]);
                 
                 battleUnit.Owner = isPlayerUnit ? Owner.Player1 : Owner.AI1;
                 battleUnit.GetComponent<Animator>().enabled = false;

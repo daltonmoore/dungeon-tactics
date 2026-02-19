@@ -5,9 +5,12 @@ using Events;
 using Grid;
 using TacticsCore.Data;
 using TacticsCore.EventBus;
+using TacticsCore.Events;
+using TacticsCore.Save;
 using Units;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.U2D;
 using UnityEngine.UIElements;
 
 namespace Util
@@ -25,9 +28,6 @@ namespace Util
         private void Awake()
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            
-            Bus<EngageInBattleEvent>.OnEvent[Owner.Player1] += OnStartBattle;
         }
 
         private void Start()
@@ -40,26 +40,21 @@ namespace Util
             progressLabel = _root.Q<Label>("progressLabel");
             
             // Immediately load to the main menu or overworld
-            LoadScene(DTConstants.SceneNames.OverWorld, () => { });
+            LoadScene(DTConstants.SceneNames.OverWorld,
+                () => Bus<InitialSceneLoadedEvent>.Raise(Owner.Player1, new InitialSceneLoadedEvent()),
+                isInitialLoad: true);
         }
 
-        private void OnStartBattle(EngageInBattleEvent args)
-        {
-            LoadScene(DTConstants.SceneNames.Battle, () =>
-            {
-                BattleManager.Instance.StartBattle(args);
-            });
-        }
-
-        public void LoadScene(string sceneToLoad, Action onFinishedLoading)
+        public void LoadScene(string sceneToLoad, Action onFinishedLoading, bool isInitialLoad = false)
         {
             _root.visible = true;
-            StartCoroutine(LoadAsyncOperation(sceneToLoad, onFinishedLoading));
+            StartCoroutine(LoadAsyncOperation(sceneToLoad, onFinishedLoading, isInitialLoad));
         }
 
-        private IEnumerator LoadAsyncOperation(string sceneName, Action onFinishedLoading)
+        private IEnumerator LoadAsyncOperation(string sceneName, Action onFinishedLoading, bool isInitialLoad)
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+            
             operation.allowSceneActivation = false;
             progressBar.value = 0f;
             progressLabel.text = "Loading...0%";
@@ -95,6 +90,12 @@ namespace Util
             }
             
             _root.visible = false;
+            
+            if (!isInitialLoad)
+            {
+                Bus<SceneLoadedEvent>.Raise(Owner.Player1, new SceneLoadedEvent());
+            }
+            
             onFinishedLoading();
         }
     }

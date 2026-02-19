@@ -14,8 +14,6 @@ namespace Units
     {
         [SerializeField] public GameObject currentTurnHighlight;
 
-        public override UnitSO UnitSO { get; set; }
-
         public bool IsMyTurn { get; set; }
         public bool EndedTurn { get; set; }
         
@@ -27,8 +25,6 @@ namespace Units
             base.Awake();
             _healthMax = UnitSO.Health;
             _health = UnitSO.Health;
-
-            UnitSO = base.UnitSO as BattleUnitData;
         }
 
         public void HighlightForCurrentTurn()

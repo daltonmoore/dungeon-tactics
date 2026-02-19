@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/TurnQueue.uss?fileID=7433441132597879392&amp;guid=79ead2b9282c7e0408bb61bc8aee84df&amp;type=3#TurnQueue"/>
     <ui:VisualElement name="background" picking-mode="Ignore">
-        <ui:VisualElement name="main-container" style="align-self: flex-end; height: 763px;">
-            <ui:ListView focusable="false" name="character-list" virtualization-method="DynamicHeight" style="width: 343px;"/>
-            <ui:VisualElement name="right-container">
-                <ui:VisualElement name="details-container">
+        <ui:VisualElement name="main-container" style="align-self: flex-end; height: auto;">
+            <ui:ListView focusable="false" name="character-list" virtualization-method="DynamicHeight"/>
+            <ui:VisualElement name="right-container" style="display: none; visibility: visible;">
+                <ui:VisualElement name="details-container" style="width: 170px;">
                     <ui:VisualElement name="details">
                         <ui:VisualElement name="character-portrait"/>
                     </ui:VisualElement>

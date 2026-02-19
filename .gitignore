@@ -20,6 +20,7 @@
 /[Aa]ssets/Art.meta
 /[Aa]ssets/Plugins
 /[Aa]ssets/Plugins.meta
+/[Pp]ackages/com.arongranberg.aline/*
 
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1

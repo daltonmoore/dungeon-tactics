@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3239603505585961328}
   - component: {fileID: 7527092005860477}
+  - component: {fileID: 9119574194260793430}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: Untagged
@@ -45,3 +46,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleUnitPrefab: {fileID: 8735539727599892369, guid: d8c87015befbae04b9bbbef201f0fc05, type: 3}
+--- !u!114 &9119574194260793430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6739582034104753642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724af8a56844ac641b05e52cda65f464, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DontDestroyOnLoad

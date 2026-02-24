@@ -1,12 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using _.Dalton.Utils;
 using Battle;
 using Commands;
 using Drawing;
-using Events;
 using TacticsCore.Commands;
 using TacticsCore.Data;
 using TacticsCore.EventBus;
@@ -98,7 +95,7 @@ namespace Player
 
         private void ConfineFakeCursor()
         {
-            var viewportSize = Utils.GetViewportWorldSize(camera);
+            var viewportSize = DaltonUtils.Utils.GetViewportWorldSize(camera);
             var cameraPos = camera.transform.position;
             var clampedPos = fakeCursor.transform.position;
             
@@ -548,7 +545,7 @@ namespace Player
         private void HandleRightClick()
         {
             if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
-            Utils.ClearEditorLog();
+            DaltonUtils.Editor.Utils.ClearEditorLog();
             Ray ray = GenerateRayFromFakeCursor();
             Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 1f);
             

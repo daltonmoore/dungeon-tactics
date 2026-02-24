@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Map.OverworldManager
   leaderUnitPrefab: {fileID: 8735539727599892369, guid: e8cfd12cad25cae41b0466a265056c38, type: 3}
+  spriteAtlas: {fileID: 100100200, guid: 77033250f2c40364bb7a557ba1a6d6db, type: 3}
 --- !u!114 &7956978285746604115
 MonoBehaviour:
   m_ObjectHideFlags: 0

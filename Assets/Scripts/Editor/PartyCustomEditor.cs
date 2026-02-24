@@ -31,7 +31,7 @@ namespace Editor
         private static string _folderPath;
         
         [SerializeField]
-        private VisualTreeAsset m_VisualTreeAsset = default;
+        private VisualTreeAsset visualTreeAsset;
 
         private Image _crownImage;
         private UnitWindow _unitWindow;
@@ -96,7 +96,7 @@ namespace Editor
             root.RegisterCallback<GeometryChangedEvent>(OnGeoChanged);
 
             // Instantiate UXML
-            VisualElement uxml = m_VisualTreeAsset.Instantiate();
+            VisualElement uxml = visualTreeAsset.Instantiate();
             root.Add(uxml);
 
             // Reference the UI elements by the names you set in UI Builder

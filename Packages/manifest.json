@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "com.daltonmoore.daltonutils": "file:D:/source/repos/UnityPackages/com.daltonmoore.daltonutils",
-    "com.daltonmoore.tacticscore": "file:D:/source/repos/UnityPackages/com.daltonmoore.tacticscore",
+    "com.daltonmoore.daltonutils": "file:C:/Users/dalto/source/Unity Packages/com.daltonmoore.daltonutils",
+    "com.daltonmoore.tacticscore": "file:C:/Users/dalto/source/Unity Packages/tactics-core",
     "com.h8man.2d.navmeshplus": "https://github.com/h8man/NavMeshPlus.git#master",
-    "com.unity.ai.navigation": "2.0.9",
+    "com.unity.ai.navigation": "2.0.10",
     "com.unity.cinemachine": "3.1.5",
-    "com.unity.collab-proxy": "2.11.2",
+    "com.unity.collab-proxy": "2.11.3",
     "com.unity.feature.2d": "2.0.2",
     "com.unity.ide.rider": "3.0.39",
     "com.unity.ide.visualstudio": "2.0.26",

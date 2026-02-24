@@ -8,12 +8,14 @@ using TacticsCore.Events;
 using TacticsCore.Save;
 using TacticsCore.Units;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace Map
 {
     public class OverworldManager : MonoBehaviour
     {
         [SerializeField] private GameObject leaderUnitPrefab;
+        [SerializeField] private SpriteAtlas spriteAtlas;
         
         private void Awake()
         {
@@ -58,7 +60,7 @@ namespace Map
                 leaderUnit.Owner = leaderSaveData.owner;
                 
                 leaderInstance.transform.position = leaderSaveData.position;
-                leaderInstance.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Character sprites/"+leaderSaveData.spriteName);
+                leaderInstance.GetComponent<SpriteRenderer>().sprite = spriteAtlas.GetSprite(leaderSaveData.spriteName);
                 leaderInstance.GetComponent<LeaderUnit>().PartyList = leaderSaveData.party;
             }
         }

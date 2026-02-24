@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Scripts/Editor/TextureImporterEditor.uss?fileID=7433441132597879392&amp;guid=d22947c13e548394e86a254720a9211b&amp;type=3#TextureImporterEditor"/>
+    <ui:Button text="Select Folder" name="SelectFolder"/>
+    <ui:Button text="Import" name="Import"/>
+</ui:UXML>

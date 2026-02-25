@@ -89,6 +89,10 @@ namespace Units
                 Instantiate(deathPrefab, transform);
                 Bus<UnitDied>.Raise(Owner, new UnitDied(this));
             }
+            else
+            {
+                Bus<UnitDamaged>.Raise(Owner, new UnitDamaged(this, damage));
+            }
         }
     }
 }

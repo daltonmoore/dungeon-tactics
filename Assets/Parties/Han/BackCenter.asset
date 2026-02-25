@@ -16,7 +16,7 @@ MonoBehaviour:
   <Health>k__BackingField: 100
   characterName: 
   level: 1
-  icon: {fileID: 6859300915453738199, guid: b7528fe001bae5d4d99a5fbdbc3c7cd9, type: 3}
+  icon: {fileID: 1551514337, guid: b1859ec42f5af0b4b935c1ea6591ae53, type: 3}
   isLeader: 1
   owner: 1
   battleUnitPosition: 1
@@ -29,5 +29,5 @@ MonoBehaviour:
   - type: 1
     value: 68
     useRolls: 1
-    range: {x: 10, y: 15}
+    range: {x: 10, y: 43.861794}
   isDead: 0

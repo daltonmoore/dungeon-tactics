@@ -117,7 +117,7 @@ namespace Editor
                     spriteRect.rect = new Rect(x, y - sliceHeight, sliceWidth, sliceHeight);
                     spriteRect.pivot = new Vector2(0.5f, 0f);
                     spriteRect.name = $"{textureName}_{x / sliceWidth}_{y / sliceHeight}";
-                    spriteRect.alignment = SpriteAlignment.BottomCenter;
+                    spriteRect.alignment = SpriteAlignment.Center;
                     spriteRect.border = new Vector4(0, 0, 0, 0);
 
                     spriteRects.Add(spriteRect);

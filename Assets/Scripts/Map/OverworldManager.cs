@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Battle;
 using Data;
 using Events;
 using TacticsCore.Data;
@@ -61,7 +62,17 @@ namespace Map
                 
                 leaderInstance.transform.position = leaderSaveData.position;
                 leaderInstance.GetComponent<SpriteRenderer>().sprite = spriteAtlas.GetSprite(leaderSaveData.spriteName);
-                leaderInstance.GetComponent<LeaderUnit>().PartyList = leaderSaveData.party;
+                leaderInstance.GetComponent<SpriteRenderer>().sprite.name = leaderSaveData.spriteName;
+                leaderUnit.PartyList = new List<BattleUnitData>();
+                foreach (var battleUnitSaveData in leaderSaveData.party)
+                {
+                    var unitData = ScriptableObject.CreateInstance<BattleUnitData>();
+                    unitData.battleUnitPosition = battleUnitSaveData.battleUnitPosition;
+                    unitData.isDead = battleUnitSaveData.isDead;
+                    unitData.Health = battleUnitSaveData.health;
+                    unitData.level = battleUnitSaveData.level;
+                    leaderUnit.PartyList.Add(unitData);
+                }
             }
         }
     }

@@ -30,4 +30,16 @@ namespace Battle
             return output;
         }
     }
+
+    [System.Serializable]
+    public class BattleUnitSaveData
+    {
+        [SerializeField] public BattleUnitPosition battleUnitPosition;
+        [SerializeField] public bool isDead = false;
+        [SerializeField] public float health;
+        [SerializeField] public string characterName;
+        [SerializeField] public int level;
+        [SerializeField] public Sprite icon;
+        [SerializeField] public bool isLeader;
+    }
 }

@@ -28,6 +28,7 @@ namespace Battle
         private Dictionary<BattleUnitPosition, BattleUnit> _playerUnitDict;
         private Dictionary<BattleUnitPosition, BattleUnit> _enemyUnitDict;
         private List<BattleUnitData> _allUnits;
+        private List<LeaderSaveData> _leadersToSave;
 
         private void Awake()
         {
@@ -42,6 +43,17 @@ namespace Battle
 
             Bus<EngageInBattleEvent>.OnEvent[Owner.Player1] += OnEngageInBattle;
             Bus<UnitDied>.RegisterForAll(OnUnitDied);
+            Bus<UnitDamaged>.RegisterForAll(OnUnitDamaged);
+        }
+
+        private void OnUnitDamaged(UnitDamaged args)
+        {
+            var battleUnitData = args.BattleUnit.UnitSO as BattleUnitData;
+            BattleUnitSaveData battleUnitSaveData = _leadersToSave.Find(l => l.owner == battleUnitData.owner).party
+                .Find(u => u.battleUnitPosition == battleUnitData.battleUnitPosition);
+            
+            battleUnitSaveData.health -= args.Damage;
+            SaveManager.Save(new TDSaveData(_leadersToSave));
         }
 
         private void OnUnitDied(UnitDied args)
@@ -49,9 +61,14 @@ namespace Battle
             Debug.Log($"This guy died {args.BattleUnit.name}");
             _turnOrder = new Queue<BattleUnit>(_turnOrder.Where(u => u != args.BattleUnit));
             var battleUnitData = args.BattleUnit.UnitSO as BattleUnitData;
+
+            BattleUnitSaveData battleUnitSaveData = _leadersToSave.Find(l => l.owner == battleUnitData.owner).party
+                .Find(u => u.battleUnitPosition == battleUnitData.battleUnitPosition);
+
+            battleUnitSaveData.isDead = true;
+            battleUnitSaveData.health = 0;
             
-            _allUnits.Find(u => u == battleUnitData).isDead = true;
-            
+            SaveManager.Save(new TDSaveData(_leadersToSave));
             if (!_playerUnitDict.Remove(battleUnitData.battleUnitPosition))
             {
                 _enemyUnitDict.Remove(battleUnitData.battleUnitPosition);
@@ -62,18 +79,32 @@ namespace Battle
         private void OnEngageInBattle(EngageInBattleEvent evt)
         {
             LeaderUnit[] leaders = FindObjectsByType<LeaderUnit>(FindObjectsSortMode.None);
-            List<LeaderSaveData> leadersToSave = new();
+            _leadersToSave = new();
             foreach (var leader in leaders)
             {
+                List<BattleUnitSaveData> party = new List<BattleUnitSaveData>();
+                foreach (BattleUnitData battleUnitData in leader.PartyList)
+                {
+                    party.Add(new BattleUnitSaveData
+                    {
+                        battleUnitPosition = battleUnitData.battleUnitPosition,
+                        health = battleUnitData.Health,
+                        isDead = battleUnitData.isDead,
+                        characterName = battleUnitData.characterName,
+                        icon = battleUnitData.icon,
+                        level =  battleUnitData.level,
+                        isLeader = battleUnitData.isLeader,
+                    });
+                }
                 LeaderSaveData leaderData = 
                     new(leader.Owner,
                         leader.transform.position,
-                        leader.GetComponent<SpriteRenderer>().sprite.texture.name,
-                        leader.PartyList);
-                leadersToSave.Add(leaderData);
+                        leader.GetComponent<SpriteRenderer>().sprite.name,
+                        party);
+                _leadersToSave.Add(leaderData);
             }
             
-            SaveManager.Save(new TDSaveData(leadersToSave));
+            SaveManager.Save(new TDSaveData(_leadersToSave));
             SceneLoader.Instance.LoadScene(DTConstants.SceneNames.Battle, () => StartBattle(evt));
         }
 
@@ -107,6 +138,8 @@ namespace Battle
         private IEnumerator BattleLoop()
         {
             BattleInProgress = true;
+            bool DEBUG_EndBattleImmediately = false;
+            
             while (BattleInProgress)
             {
                 CurrentBattler = _turnOrder.Dequeue();
@@ -114,6 +147,11 @@ namespace Battle
                 while (!CurrentBattler.EndedTurn)
                 {
                     CurrentBattler.IsMyTurn = true;
+                    if (Input.GetKeyDown(KeyCode.Quote))
+                    {
+                        DEBUG_EndBattleImmediately = true;
+                        break;
+                    }
                     yield return null;
                 }
                 CurrentBattler.ResetHighlightForCurrentTurn();
@@ -121,7 +159,7 @@ namespace Battle
                 _turnOrder.Enqueue(CurrentBattler);
                 TurnUI.Instance.ShiftTopEntryToBottom();
 
-                if (_playerUnitDict.Count == 0 || _enemyUnitDict.Count == 0)
+                if (_playerUnitDict.Count == 0 || _enemyUnitDict.Count == 0 || DEBUG_EndBattleImmediately)
                 {
                     yield return new WaitForSeconds(1);
                     foreach (Transform child in transform)

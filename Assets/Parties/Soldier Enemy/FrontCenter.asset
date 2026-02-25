@@ -16,7 +16,7 @@ MonoBehaviour:
   <Health>k__BackingField: 100
   characterName: 
   level: 1
-  icon: {fileID: 8012177053804024785, guid: f734392641c51114899977d35cb7a6c4, type: 3}
+  icon: {fileID: 1411612822, guid: 2eff9aec7423d4c4f85e5aec6a1c2f39, type: 3}
   isLeader: 1
   owner: 2
   battleUnitPosition: 4

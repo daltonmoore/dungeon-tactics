@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Battle;
+using DaltonUtils;
 using Drawing;
 using Events;
 using TacticsCore.Data;
@@ -11,6 +12,7 @@ using TacticsCore.Events;
 using TacticsCore.HexGrid;
 using TacticsCore.Interfaces;
 using TacticsCore.Units;
+using TMPro;
 using Units;
 using UnityEngine;
 using UnityEngine.AI;
@@ -29,18 +31,21 @@ namespace TacticsCore.Units
         
         public PathNodeHex BattleNode { get; set; }
         public LeaderUnit EnemyUnit { get; set; }
-        public List<PathNodeHex> Path { get; set; }private int _movePointsLeft;
+        public List<PathNodeHex> Path { get; set; }
         public bool IsSelected { private set; get; }
         
+        private int _movePointsLeft;
         private Transform _flagParent;
         private Rigidbody2D _rigidbody2D; 
         private Vector3 _targetPosition;
         private bool _moving;
         private Vector2 _previousPosition;
 
+        private TextMeshPro _debugMovePointsText;
+
         protected override void Awake()
         {
-            base.Awake();
+            base.Awake();   
             
             _movePointsLeft = UnitSO.MovePoints;
             _flagParent = new GameObject("MoveFlags").transform;
@@ -57,6 +62,16 @@ namespace TacticsCore.Units
             var gridObject = Pathfinder.Instance.Pathfinding.Grid.GetGridObject(transform.position);
             gridObject.IsOccupied = true;
             gridObject.Occupant = this;
+            
+            _debugMovePointsText = Utils.CreateWorldText(
+                "mp left: ",
+                transform,
+                transform.position + new Vector3(.5f,0,0),
+                Mathf.RoundToInt(Pathfinder.Instance.Pathfinding.Grid.GetCellSize()),
+                Color.white,
+                TextAlignmentOptions.Center,
+                0,
+                Constants.PlayerSortingLayer);
         }
         
         private void FixedUpdate()
@@ -92,7 +107,6 @@ namespace TacticsCore.Units
                 {
                     Vector2 currentVelocity = (_rigidbody2D.position - _previousPosition) / Time.fixedDeltaTime;
                     
-                    Debug.Log($"Current Velocity is: {currentVelocity}");
                     switch (currentVelocity)
                     {
                         case { x: > 0.7f, y: < 0.7f and > -0.7f }:
@@ -189,6 +203,7 @@ namespace TacticsCore.Units
                     flag.SetParent(_flagParent);
                     Color flagColor = movePointsLeft - node.gCost >= 0 ? Color.blue : Color.white;
                     movePointsLeft -= node.gCost;
+                    _debugMovePointsText.text = $"move points left: {movePointsLeft}";
 
                     // flag is red when attacking or moving within a hex of unit
                     if (battleNode == null)
@@ -198,16 +213,16 @@ namespace TacticsCore.Units
                             battleNode = node;
                         }
 
-                        Debug.Log($"Looking at node ({node.x}, {node.y})'s neighbors");
+                        // Debug.Log($"Looking at node ({node.x}, {node.y})'s neighbors");
                         foreach (var neighbor in Pathfinder.Instance.Pathfinding.GetNeighborList(node))
                         {
-                            Debug.Log($"Looking at neighbor ({neighbor.x}, {neighbor.y})");
+                            // Debug.Log($"Looking at neighbor ({neighbor.x}, {neighbor.y})");
                             if (neighbor.IsOccupied && neighbor.Occupant != null && neighbor.Occupant.Owner != Owner)
                             {
                                 Pathfinder.Instance.Pathfinding.Grid.GetGridPosition(neighbor.worldPosition, out int x,
                                     out int y);
-                                Debug.Log($"Neighbor ({x}, {y}) is occupied by {neighbor.Occupant.name}");
-                                Debug.Log($"Node ({node.x}, {node.y}) is a battle node due to this nearby enemy.");
+                                // Debug.Log($"Neighbor ({x}, {y}) is occupied by {neighbor.Occupant.name}");
+                                // Debug.Log($"Node ({node.x}, {node.y}) is a battle node due to this nearby enemy.");
                                 enemyUnity = neighbor.Occupant as LeaderUnit;
                                 battleNode = node; // this is the first node on our path that is in range of the enemy.
                                 break;

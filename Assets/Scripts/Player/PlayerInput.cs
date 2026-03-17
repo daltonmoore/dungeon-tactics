@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Battle;
 using Commands;
 using Drawing;
@@ -55,6 +57,7 @@ namespace Player
             Cursor.visible = false;
             Bus<HexHighlighted>.OnEvent[Owner.Player1] += HandleHexHighlighted; 
             Bus<CommandSelectedEvent>.OnEvent[Owner.Player1] += HandleCommandSelected;
+            Bus<TeleportCameraEvent>.OnEvent[Owner.Player1] += OnTeleportCamera;
             _cinemachineBrain = GetComponent<CinemachineBrain>();
 
             if (cursorDocument != null)
@@ -82,6 +85,11 @@ namespace Player
 
                 cursorDocument.rootVisualElement.Add(_uiCursor);
             }
+        }
+
+        private void OnTeleportCamera(TeleportCameraEvent args)
+        {
+            cameraTarget.position = args.Position;
         }
 
         private void OnMovePerformed(InputAction.CallbackContext obj)
@@ -130,6 +138,11 @@ namespace Player
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.RightBracket))
+            {
+                DaltonUtils.Editor.Utils.ClearEditorLog();
+            }
+            
             Vector2 screenPos = camera.WorldToScreenPoint(fakeCursor.transform.position);
             HandleUIToolkitInteraction(screenPos);
             
@@ -180,7 +193,7 @@ namespace Player
                                     cameraTarget.linearVelocity * cameraConfig.DragDamping;
 
                     cameraTarget.AddForce(force, ForceMode2D.Force);
-                    cameraTarget.linearVelocity = Vector2.ClampMagnitude(cameraTarget.linearVelocity, 1f);
+                    // cameraTarget.linearVelocity = Vector2.ClampMagnitude(cameraTarget.linearVelocity, 1f);
                 }
                 else
                 {
@@ -545,7 +558,7 @@ namespace Player
         private void HandleRightClick()
         {
             if (!Mouse.current.rightButton.wasReleasedThisFrame) return;
-            DaltonUtils.Editor.Utils.ClearEditorLog();
+            
             Ray ray = GenerateRayFromFakeCursor();
             Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 1f);
             
@@ -555,12 +568,26 @@ namespace Player
 
             if (hits.Length == 0) { return; }
 
-            var hitsOrderedByLayer = hits.OrderByDescending(hit => hit.transform.gameObject.layer).ToList();
-            RaycastHit2D hit = hitsOrderedByLayer.First();
+            RaycastHit2D hit = hits.First();
+            
+            StringBuilder stringBuilder = new StringBuilder();
 
-            for (int i = 0; i < hitsOrderedByLayer.Count; i++)
+            stringBuilder.Append("Unordered hits: \n");
+            for (var i = 0; i < hits.Length; i++)
             {
-                RaycastHit2D raycastHit2D = hitsOrderedByLayer[i];
+                var h = hits[i];
+                stringBuilder.Append("Hit ");
+                stringBuilder.Append(i);
+                stringBuilder.Append(": ");
+                stringBuilder.Append(h.collider.name);
+                stringBuilder.Append('\n');
+            }
+
+            Debug.Log(stringBuilder.ToString());
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                RaycastHit2D raycastHit2D = hits[i];
                 Debug.Log($"Hit {i}: {raycastHit2D.collider.gameObject.name}");
             }
 

@@ -22,9 +22,9 @@ namespace Data
         public Owner owner;
         public Vector3 position;
         public string spriteName;
-        public List<BattleUnitSaveData> party;
+        public List<BattleUnitData> party;
 
-        public LeaderSaveData(Owner owner, Vector3 position, string spriteName, List<BattleUnitSaveData> party)
+        public LeaderSaveData(Owner owner, Vector3 position, string spriteName, List<BattleUnitData> party)
         {
             this.owner = owner;
             this.position = position;

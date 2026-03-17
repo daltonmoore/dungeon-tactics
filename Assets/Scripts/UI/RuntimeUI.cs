@@ -111,7 +111,6 @@ namespace UI
                 
                 if (IsPointerOverUIToolkit(doc, screenPosition))
                 {
-                    Debug.Log($"Pointer over UI Toolkit document: {doc.name}");
                     return true;
                 }
             }

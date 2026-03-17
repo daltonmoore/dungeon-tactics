@@ -5,13 +5,13 @@ namespace Events
 {
     public struct UnitDamaged : IEvent
     {
-        public BattleUnit BattleUnit;
-        public float Damage;
+        public BattleUnit battleUnit;
+        public float damage;
 
         public UnitDamaged(BattleUnit battleUnit, float damage)
         {
-            BattleUnit = battleUnit;
-            Damage = damage;
+            this.battleUnit = battleUnit;
+            this.damage = damage;
         }
     }
 }

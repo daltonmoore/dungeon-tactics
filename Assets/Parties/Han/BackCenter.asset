@@ -29,5 +29,5 @@ MonoBehaviour:
   - type: 1
     value: 68
     useRolls: 1
-    range: {x: 10, y: 43.861794}
+    range: {x: 66.13821, y: 100}
   isDead: 0

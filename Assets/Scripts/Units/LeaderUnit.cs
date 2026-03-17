@@ -169,6 +169,7 @@ namespace TacticsCore.Units
                         Owner.Player1,
                         new EngageInBattleEvent(
                             this,
+                            enemyLeader,
                             PartyList, 
                             enemyLeader.PartyList
                         )

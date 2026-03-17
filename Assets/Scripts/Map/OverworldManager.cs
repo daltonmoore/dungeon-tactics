@@ -69,7 +69,7 @@ namespace Map
                     var unitData = ScriptableObject.CreateInstance<BattleUnitData>();
                     unitData.battleUnitPosition = battleUnitSaveData.battleUnitPosition;
                     unitData.isDead = battleUnitSaveData.isDead;
-                    unitData.Health = battleUnitSaveData.health;
+                    unitData.Health = battleUnitSaveData.Health;
                     unitData.level = battleUnitSaveData.level;
                     leaderUnit.PartyList.Add(unitData);
                 }

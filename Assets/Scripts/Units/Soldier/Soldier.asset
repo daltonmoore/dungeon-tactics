@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 737de9d0dbdd4b578548c67e797d2885, type: 3}
   m_Name: Soldier
   m_EditorClassIdentifier: 
-  <MovePoints>k__BackingField: 64
+  <MovePoints>k__BackingField: 300
   <Health>k__BackingField: 68.8
+  characterName: 
+  level: 0
+  icon: {fileID: 0}
+  isLeader: 0
+  owner: 0

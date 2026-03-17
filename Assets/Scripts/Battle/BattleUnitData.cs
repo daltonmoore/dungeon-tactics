@@ -32,8 +32,9 @@ namespace Battle
     }
 
     [System.Serializable]
-    public class BattleUnitSaveData
+    public class BattleUnitSaveRecord
     {
+        [SerializeField] public string unitId;
         [SerializeField] public BattleUnitPosition battleUnitPosition;
         [SerializeField] public bool isDead = false;
         [SerializeField] public float health;

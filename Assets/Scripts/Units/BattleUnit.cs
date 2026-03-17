@@ -94,5 +94,12 @@ namespace Units
                 Bus<UnitDamaged>.Raise(Owner, new UnitDamaged(this, damage));
             }
         }
+        
+        public BattleUnitSaveRecord ToSaveRecord() => new BattleUnitSaveRecord
+        {
+            unitId  = UnitSO.unitId,
+            health = UnitSO.Health,
+            isDead  = UnitSO
+        };
     }
 }

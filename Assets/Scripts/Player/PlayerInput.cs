@@ -47,9 +47,11 @@ namespace Player
         private Vector2 _dragOrigin;
         private Vector3 _lastMousePos;
         private InputSystem_Actions _inputActions;
+        private Vector3 _previousCameraPosition; // camera position before a teleport
 
         private void Awake()
         {
+            Debug.Log($"HDR On? {HDROutputSettings.main.active}");
             _inputActions = new InputSystem_Actions();
             _inputActions.Dalton.Enable();
             _inputActions.Dalton.Move.performed += OnMovePerformed;
@@ -89,6 +91,7 @@ namespace Player
 
         private void OnTeleportCamera(TeleportCameraEvent args)
         {
+            _previousCameraPosition = cameraTarget.position;
             cameraTarget.position = args.Position;
         }
 
@@ -138,10 +141,12 @@ namespace Player
 
         private void Update()
         {
+            #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.RightBracket))
             {
                 DaltonUtils.Editor.Utils.ClearEditorLog();
             }
+            #endif
             
             Vector2 screenPos = camera.WorldToScreenPoint(fakeCursor.transform.position);
             HandleUIToolkitInteraction(screenPos);

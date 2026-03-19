@@ -19,17 +19,10 @@ namespace Data
     [System.Serializable]
     public struct LeaderSaveData
     {
+        public string id;
         public Owner owner;
         public Vector3 position;
         public string spriteName;
-        public List<BattleUnitData> party;
-
-        public LeaderSaveData(Owner owner, Vector3 position, string spriteName, List<BattleUnitData> party)
-        {
-            this.owner = owner;
-            this.position = position;
-            this.spriteName = spriteName;
-            this.party = party;
-        }
+        public List<BattleUnitSaveRecord> party;
     }
 }

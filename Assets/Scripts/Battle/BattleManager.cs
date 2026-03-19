@@ -53,9 +53,10 @@ namespace Battle
         private void OnUnitDamaged(UnitDamaged args)
         {
             var battleUnitData = args.battleUnit.UnitSO as BattleUnitData;
-            saveData[args.battleUnit.Owner].party.First(u => u == battleUnitData).Health -= args.damage;
+            Debug.Log($"Looking for unit with id = {battleUnitData.unitId}");
+            saveData[args.battleUnit.Owner].party.First(u => u.unitId == battleUnitData.unitId).health -= args.damage;
              
-            // SaveManager.Save(new TDSaveData(_leadersToSave));
+            SaveManager.Save(new TDSaveData(saveData.Values.ToList()));
         }
 
         private void OnUnitDied(UnitDied args)
@@ -63,31 +64,35 @@ namespace Battle
             Debug.Log($"This guy died {args.BattleUnit.name}");
             _turnOrder = new Queue<BattleUnit>(_turnOrder.Where(u => u != args.BattleUnit));
             var battleUnitData = args.BattleUnit.UnitSO as BattleUnitData;
-            
-            // SaveManager.Save(new TDSaveData(_leadersToSave));
+            Debug.Log($"Looking for unit with id = {battleUnitData.unitId}");
+            var partyUnitRecord =
+                saveData[args.BattleUnit.Owner].party
+                    .First(u => u.unitId == battleUnitData.unitId);
+            partyUnitRecord.health = 0;
+            partyUnitRecord.isDead = true;
+            SaveManager.Save(new TDSaveData(saveData.Values.ToList()));
+
             if (!_playerUnitDict.Remove(battleUnitData.battleUnitPosition))
             {
                 _enemyUnitDict.Remove(battleUnitData.battleUnitPosition);
             }
             TurnUI.Instance.RemoveDeadUnit(battleUnitData);
         }
-        
         private void OnEngageInBattle(EngageInBattleEvent evt)
         {
             // no longer do scene transition.
             // Let's just move over to the battle area in the overworld scene
-            
             
             Bus<TeleportCameraEvent>.Raise(Owner.Player1, new TeleportCameraEvent(battleCameraTeleport.position));
             StartBattle(evt);
 
             LeaderSaveData GatherLeaderData(LeaderUnit leader)
             {
-                List<BattleUnitData> partySave =  new List<BattleUnitData>(); 
+                List<BattleUnitSaveRecord> partySave =  new List<BattleUnitSaveRecord>(); 
                 foreach (BattleUnitData battleUnitData in leader.PartyList)
                 {
-                    var so = Instantiate(battleUnitData);
-                    partySave.Add(so);
+                    
+                    partySave.Add(battleUnitData.ToSaveRecord());
                 }
                 return new LeaderSaveData()
                 {
@@ -176,7 +181,7 @@ namespace Battle
         /// </summary>
         private void ExitBattle()
         {
-            
+            Bus<TeleportCameraEvent>.Raise(Owner.Player1, new TeleportCameraEvent());
         }
 
         private Dictionary<BattleUnitPosition, BattleUnit> InstantiateBattleUnits(bool isPlayerUnit, List<BattleUnitData> party)

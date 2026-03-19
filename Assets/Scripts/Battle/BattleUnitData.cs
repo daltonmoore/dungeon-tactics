@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TacticsCore.Data;
 using TacticsCore.Units;
 using UnityEngine;
@@ -12,7 +13,15 @@ namespace Battle
         [SerializeField] public GameObject inBattleInstance;
         [SerializeField] public List<Stat> stats = new();
         [SerializeField] public bool isDead = false;
-        
+
+        private void OnValidate()
+        {
+            if (string.IsNullOrEmpty(unitId))
+            {
+                unitId = Guid.NewGuid().ToString();
+            }
+        }
+
         public override string ToString()
         {
             string output = $"BattleUnitPosition {battleUnitPosition} "
@@ -28,6 +37,23 @@ namespace Battle
             }
             
             return output;
+        }
+
+        public BattleUnitSaveRecord ToSaveRecord()
+        {
+            BattleUnitSaveRecord record = new BattleUnitSaveRecord
+            {
+                battleUnitPosition = battleUnitPosition,
+                isDead = isDead,
+                characterName = characterName,
+                level = level,
+                icon = icon,
+                isLeader = isLeader,
+                health = Health,
+                unitId = unitId
+            };
+
+            return record;
         }
     }
 
